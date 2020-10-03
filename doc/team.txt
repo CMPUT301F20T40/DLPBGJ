@@ -10,3 +10,5 @@ Name: Loyaljot Singh Bajwa  CCID: loyaljot  Github Username: bajwa10
 Name: Hussain Chitalwala CCID: chitalwa Username: HussainChitalwala
 Name: Loyaljot Singh Bajwa CCID: loyalot Git Username: bajwa10
 >>>>>>> 17804d92f90c007f092b6aab82830ad4ef852862
+Name: Siddhant Rawal 	CCID: srawal  GitHub Username: Siddhant64
+
