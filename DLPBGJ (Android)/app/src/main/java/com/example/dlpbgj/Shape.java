@@ -1,11 +1,12 @@
 package com.example.dlpbgj;
 
 public abstract class Shape {
-    private int x,y;
+    private int x,y, String color;
 
     public Shape(int x, int y) {
         this.x = x;
         this.y = y;
+        this.color=color;
     }
 
     public int getX() {
