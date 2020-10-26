@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
                                     //TODO Initialize new activity after login Successful and pass user object in it
                                 }
                                 else {
-                                    msg.setText(fail);}
+                                msg.setText(fail);}
                             }
                             else{
                                 msg.setText(noExist);
