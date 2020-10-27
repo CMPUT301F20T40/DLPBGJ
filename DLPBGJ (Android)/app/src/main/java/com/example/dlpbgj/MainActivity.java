@@ -16,6 +16,7 @@ import android.widget.EditText;
 
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         user = findViewById(R.id.editUserName);
         pass = findViewById(R.id.editUserPassword);
-        msg = findViewById(R.id.displayMessage);
         login = findViewById(R.id.login_button);
         signUp = findViewById(R.id.signup_button);
         final String sucess = "Login Successful!";
@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         final CollectionReference collectionReference = userDb.collection("Users");
         login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 final String userName = user.getText().toString();
                 final String userPass = pass.getText().toString();
                 User newUser = new User(userName,userPass);
@@ -84,18 +84,19 @@ public class MainActivity extends AppCompatActivity {
                             if (document.exists()){
                                 Map<String,Object> data = document.getData();
                                 final String temp = (String)data.get("Password");
-                                System.out.println(temp);
-                                System.out.println(userPass);
                                 if (Objects.equals(temp, userPass)){
-                                    System.out.println("done");
-                                    msg.setText(sucess);
+                                    Toast toast = Toast.makeText(v.getContext(), sucess, Toast.LENGTH_SHORT);
+                                    toast.show();
                                     //TODO Initialize new activity after login Successful and pass user object in it
                                 }
                                 else {
-                                msg.setText(fail);}
+                                    Toast toast = Toast.makeText(v.getContext(), fail, Toast.LENGTH_SHORT);
+                                    toast.show();
+                                     }
                             }
                             else{
-                                msg.setText(noExist);
+                                Toast toast = Toast.makeText(v.getContext(), noExist, Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                         }
                         else{
@@ -107,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         });
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 final String userName = user.getText().toString();
                 final String userPass = pass.getText().toString();
                 final User newUser = new User(userName,userPass);
@@ -120,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             DocumentSnapshot document = task.getResult();
                             if (document.exists()){
-                                msg.setText(exist);
+                                Toast toast = Toast.makeText(v.getContext(), exist, Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                             else {
                                 collectionReference
@@ -130,7 +132,8 @@ public class MainActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 Log.d(TAG,"Data has been added succesfully");
-                                                msg.setText(signUpS);
+                                                Toast toast = Toast.makeText(v.getContext(), signUpS, Toast.LENGTH_SHORT);
+                                                toast.show();
                                                 //TODO Initialize new activity after login Successful and pass user object in it
                                             }
                                         })
