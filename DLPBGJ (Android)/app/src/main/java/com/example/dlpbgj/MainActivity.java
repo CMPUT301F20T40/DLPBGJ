@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,7 +41,9 @@ import java.util.Map;
 import java.util.Objects;
 
 
+//Main activity is the login activity. Yet to add comments (Loyal)
 public class MainActivity extends AppCompatActivity {
+    public static final String EXTRA_MESSAGE1 = "com.example.dlpbgj.MESSAGE1";
     EditText user;
     EditText pass;
     TextView msg;
@@ -73,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(final View v) {
                 final String userName = user.getText().toString();
                 final String userPass = pass.getText().toString();
-                User newUser = new User(userName,userPass);
-                DocumentReference docRef = collectionReference.document(userName);
+                final User newUser = new User(userName,userPass);
+                DocumentReference docRef = collectionReference.document(userName); //If username does not exist then prompt for a sign-up
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
@@ -88,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
                                     Toast toast = Toast.makeText(v.getContext(), sucess, Toast.LENGTH_SHORT);
                                     toast.show();
                                     //TODO Initialize new activity after login Successful and pass user object in it
+                                    Intent intent = new Intent(getApplicationContext(),HomePage.class);
+                                    intent.putExtra(EXTRA_MESSAGE1, newUser);
+                                    startActivity(intent);
+
                                 }
                                 else {
                                     Toast toast = Toast.makeText(v.getContext(), fail, Toast.LENGTH_SHORT);
