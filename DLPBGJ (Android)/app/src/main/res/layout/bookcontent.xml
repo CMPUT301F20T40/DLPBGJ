@@ -3,7 +3,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="100">
+    >
 
 
     <TextView
@@ -13,19 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="90dp"
         android:id="@+id/textView1"
-        android:layout_weight="50"/>
+        android:textSize="20sp"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="50">
+        android:layout_weight="1">
 
         <TextView
             android:gravity="center"
             android:text="TextView2"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:textSize="15sp"
             android:id="@+id/textView2"/>
 
         <TextView
@@ -34,17 +36,23 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:id="@+id/textView3"
+            android:textSize="15sp"
             android:layout_below="@+id/textView2"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
         <TextView
             android:gravity="center"
             android:text="TextView4"
             android:layout_width="match_parent"
             android:layout_height="30dp"
+            android:textSize="15sp"
             android:id="@+id/textView4"
             android:layout_below="@+id/textView4"/>
-
-
-
     </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
