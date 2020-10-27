@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         final CollectionReference collectionReference = userDb.collection("Users");
         login.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 final String userName = user.getText().toString();
                 final String userPass = pass.getText().toString();
                 User newUser = new User(userName,userPass);
@@ -87,9 +88,10 @@ public class MainActivity extends AppCompatActivity {
                                 System.out.println(temp);
                                 System.out.println(userPass);
                                 if (Objects.equals(temp, userPass)){
-                                    System.out.println("done");
                                     msg.setText(sucess);
                                     //TODO Initialize new activity after login Successful and pass user object in it
+                                    Intent intent = new Intent(v.getContext(),barcode_scanner.class);
+
                                 }
                                 else {
                                 msg.setText(fail);}
