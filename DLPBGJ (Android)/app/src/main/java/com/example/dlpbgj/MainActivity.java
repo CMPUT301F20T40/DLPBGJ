@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
                                 if (Objects.equals(temp, userPass)){
                                     msg.setText(sucess);
                                     //TODO Initialize new activity after login Successful and pass user object in it
-                                    Intent intent = new Intent(v.getContext(),barcode_scanner.class);
-
                                 }
                                 else {
                                 msg.setText(fail);}
