@@ -1,6 +1,9 @@
 package com.example.dlpbgj;
 
-public class User {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class User implements Serializable {
     private String username;
     private String password;
 
