@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                                 Map<String,Object> data = document.getData();
                                 final String temp = (String)data.get("Password");
                                 if (Objects.equals(temp, userPass)){
+
                                     Toast toast = Toast.makeText(v.getContext(), sucess, Toast.LENGTH_SHORT);
                                     toast.show();
                                     //TODO Initialize new activity after login Successful and pass user object in it
