@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ListView;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,10 +25,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 //When the user clicks MyBooks button from HomePage, this activity gets invoked
 public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFragmentInteractionListener{
-
     ListView bookList;
     ArrayAdapter<Book> bookAdapter; //A custom adapter
     ArrayList<Book> bookDataList;   //List of all the books user owns
@@ -34,6 +36,16 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     private User currentUser;
     CollectionReference userBookCollectionReference;    //This is the sub-collection reference for the user who's logged in pointing to the collection of owned books
     String TAG = "Sample";
+    CheckBox checkAvailable;
+    CheckBox checkBorrowed;
+    String availableConstraint = "a";
+    String borrowedConstraint = "b";
+    int checkCount = 0;
+    boolean aUncheck = false;
+    boolean bUncheck = false;
+
+
+
 
 
     @Override
@@ -57,9 +69,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             }
         });
 
-        db = FirebaseFirestore.getInstance();
-        userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks" );    //Creating/pointing to a sub-collection of the books that user owns
 
+
+        db = FirebaseFirestore.getInstance();
+        userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks" );//Creating/pointing to a sub-collection of the books that user owns
         userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
@@ -79,15 +92,111 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
 
             }
 
-
         });
 
+        checkAvailable = findViewById(R.id.checkAvailable);
+        checkBorrowed = findViewById(R.id.checkBorrowed);
+            //Code Added to update results depending on whether user wants to see only available or all books
+        checkAvailable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked ) {
+                    userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) { //Manages the state of the sub-collection
+                            if(!checkBorrowed.isChecked())
+                                bookDataList.clear();
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                Log.d(TAG, String.valueOf(doc.getData().get("Book Author")));
+                                String book_title = doc.getId();
+                                String book_author = (String) doc.getData().get("Book Author");
+                                String book_ISBN = (String) doc.getData().get("Book ISBN");
+                                String book_status = (String) doc.getData().get("Book Status");
+                                if (book_status.toLowerCase().equals(availableConstraint))
+                                    bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));// Adding the cities and provinces from FireStore
+                                //if (checkBorrowed.isChecked() && (book_status.toLowerCase().equals(borrowedConstraint)))
+                                    //bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));
+                            }
+                            bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
 
-
-
-
+                        }
+                    });
+                } else {
+                    userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) { //Manages the state of the sub-collection
+                            if(checkBorrowed.isChecked())
+                                bookDataList.clear();
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                Log.d(TAG, String.valueOf(doc.getData().get("Book Author")));
+                                String book_title = doc.getId();
+                                String book_author = (String) doc.getData().get("Book Author");
+                                String book_ISBN = (String) doc.getData().get("Book ISBN");
+                                String book_status = (String) doc.getData().get("Book Status");
+                                //bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));// Adding the cities and provinces from FireStore
+                                if (checkBorrowed.isChecked() && book_status.toLowerCase().equals(borrowedConstraint))
+                                    bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));
+                                else if (!checkBorrowed.isChecked())
+                                    bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));
+                            }
+                            bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
+                        }
+                    });
+                }
+            }
+        }
+        );
+        checkBorrowed.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) { //Manages the state of the sub-collection
+                            if(!checkAvailable.isChecked())
+                                bookDataList.clear();
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                Log.d(TAG, String.valueOf(doc.getData().get("Book Author")));
+                                String book_title = doc.getId();
+                                String book_author = (String) doc.getData().get("Book Author");
+                                String book_ISBN = (String) doc.getData().get("Book ISBN");
+                                String book_status = (String) doc.getData().get("Book Status");
+                                if (book_status.toLowerCase().equals(borrowedConstraint))
+                                    bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status)); // Adding the cities and provinces from FireStore
+                                //if (checkAvailable.isChecked() && (book_status.toLowerCase().equals(availableConstraint)))
+                                  //  bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));
+                            }
+                            bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
+                        }
+                    });
+                } else {
+                    userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) { //Manages the state of the sub-collection
+                            if(checkAvailable.isChecked())
+                                bookDataList.clear();
+                            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                                Log.d(TAG, String.valueOf(doc.getData().get("Book Author")));
+                                String book_title = doc.getId();
+                                String book_author = (String) doc.getData().get("Book Author");
+                                String book_ISBN = (String) doc.getData().get("Book ISBN");
+                                String book_status = (String) doc.getData().get("Book Status");
+                                //bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));// Adding the cities and provinces from FireStore
+                                if (checkAvailable.isChecked() && book_status.toLowerCase().equals(availableConstraint))
+                                    bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));
+                                else if (!checkAvailable.isChecked())
+                                    bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status));
+                            }
+                            bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
+                        }
+                    });
+                }
+            }
+        });
 
     }
+
+
 
     @Override
     public void onOkPressed(Book newBook) { //Whenever the user adds a book, this method is called where the added book is sent as a parameter from the fragment
@@ -127,4 +236,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     }
 
 }
+
+
 
