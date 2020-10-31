@@ -20,6 +20,10 @@
         android:inputType="textPersonName"
         android:hint="Enter book's author" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <EditText
         android:id="@+id/book_ISBN_editText"
         android:layout_width="match_parent"
@@ -27,6 +31,18 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:hint="Enter book's ISBN code" />
+
+     <Button
+         android:id="@+id/scan2"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:padding="10dp"
+         android:layout_marginLeft="50dp"
+         android:text="Scan ISBN">
+
+     </Button>
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/book_status_editText"
