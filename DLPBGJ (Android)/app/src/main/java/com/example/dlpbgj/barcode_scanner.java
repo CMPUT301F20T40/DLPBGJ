@@ -21,9 +21,13 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class barcode_scanner extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     public static final String varText = "com.example.dlpbgj.MESSAGE2";
+    public String getSeeResult;
     private ZXingScannerView scanB;
     private TextView seeResult;
 
+    public TextView getSeeResult() {
+        return seeResult;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +35,8 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
         setContentView(R.layout.barcode_scanner);
 
         // Initialising the scanner and text view on the scanner activity
-        scanB = (ZXingScannerView)findViewById(R.id.zxscan);
-        seeResult = (TextView)findViewById(R.id.txt_result);
+        scanB = findViewById(R.id.zxscan);
+        seeResult = findViewById(R.id.txt_result);
 
 
         //Asking permission for opening the camera
@@ -72,16 +76,18 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
 
     /**
      * gets and sets the ISBN
-     * shows the ISBN on HomePage
+     * calls the AddBookFragment
+     * shows the ISBN inside the fragment
      * @param isbnCode
      */
     @Override
     public void handleResult(Result isbnCode) {
-        seeResult.setText(isbnCode.getText());
-        Intent intent = new Intent(getApplicationContext(),HomePage.class);
-        intent.putExtra(varText, isbnCode.getText());
-        startActivity(intent);
-        // scannerView.startCamera();
+        getSeeResult().setText(isbnCode.getText());
+        Intent i = new Intent();
+        i.putExtra("ISBN",isbnCode.getText());
+        setResult(-1,i);
+        finish();
+
     }
 
 
