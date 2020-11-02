@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -191,6 +192,33 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                         }
                     });
                 }
+            }
+        });
+        /* just creating a function to remove the book from the data list if the reader decides to do so
+        maybe later I will create an activity where the user can select multiple books at once to delete them all
+        */
+        bookList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Book tempBook = bookDataList.get(position);
+                userBookCollectionReference
+                        .document(tempBook.getTitle())
+                        .delete()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "user book data has been deleted");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG,"Failed to delete the user book data");
+                            }
+                        });
+                bookDataList.remove(position);
+                bookAdapter.notifyDataSetChanged();
+                return false;
             }
         });
 
