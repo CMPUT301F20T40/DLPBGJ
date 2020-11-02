@@ -71,8 +71,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             }
         });
 
-
-
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks" );//Creating/pointing to a sub-collection of the books that user owns
         userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -200,25 +198,11 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         */
         bookList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Book tempBook = bookDataList.get(position);
-                userBookCollectionReference
-                        .document(tempBook.getTitle())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "user book data has been deleted");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG,"Failed to delete the user book data");
-                            }
-                        });
-                bookDataList.remove(position);
-                bookAdapter.notifyDataSetChanged();
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Book book = bookDataList.get(i);
+                Intent intent = new Intent(view.getContext(),ViewBookDetails.class);
+                intent.putExtra("Book",book);
+                startActivity(intent);
                 return false;
             }
         });
@@ -340,6 +324,27 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 }
             }
         });
+        bookAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onDeletePressed(Book book){
+        userBookCollectionReference
+                .document(book.getTitle())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "user book data has been deleted");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG,"Failed to delete the user book data");
+                    }
+                });
+        bookDataList.remove(book);
         bookAdapter.notifyDataSetChanged();
     }
 

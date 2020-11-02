@@ -29,7 +29,8 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
 
     public interface OnFragmentInteractionListener {
         void onOkPressed(Book newBook);
-        void onOkPressed(Book newBook,String oldBookName);
+        void onOkPressed(Book book,String oldBookName);
+        void onDeletePressed(Book book);
         void onOkPressed();
     }
 
@@ -91,6 +92,18 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                 .setView(view)
                 .setTitle(title)
                 .setNegativeButton("Cancel", null)
+                .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (getArguments()!=null){
+                            Book book = (Book) getArguments().get("Book");
+                            listener.onDeletePressed(book);
+                        }
+                        else{
+                            listener.onOkPressed();
+                        }
+                    }
+                })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
