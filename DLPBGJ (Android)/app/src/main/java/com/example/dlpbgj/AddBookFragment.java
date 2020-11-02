@@ -29,6 +29,17 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
 
     public interface OnFragmentInteractionListener {
         void onOkPressed(Book newBook);
+        void onOkPressed(Book book,String oldBookName);
+        void onDeletePressed(Book book);
+        void onOkPressed();
+    }
+
+    static AddBookFragment newInstance(Book book){
+        Bundle args = new Bundle();
+        args.putSerializable("Book",book);
+        AddBookFragment fragment = new AddBookFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
 
@@ -54,7 +65,15 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         bookISBN = view.findViewById(R.id.book_ISBN_editText);
         bookStatus = view.findViewById(R.id.book_status_editText);
         Button scan = view.findViewById(R.id.scan2);
-
+        String title = "Add Book";
+        if (getArguments() != null){
+            Book book = (Book) getArguments().get("Book");
+            title = "Edit Book";
+            bookTitle.setText(book.getTitle());
+            bookAuthor.setText(book.getAuthor());
+            bookISBN.setText(book.getISBN());
+            bookStatus.setText(book.getStatus());
+        }
         /**
          * When scan button is clicked
          * Starts new activity for scanning the barcode
@@ -71,8 +90,20 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Add Book")
+                .setTitle(title)
                 .setNegativeButton("Cancel", null)
+                .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (getArguments()!=null){
+                            Book book = (Book) getArguments().get("Book");
+                            listener.onDeletePressed(book);
+                        }
+                        else{
+                            listener.onOkPressed();
+                        }
+                    }
+                })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -80,8 +111,21 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                         String book_author = bookAuthor.getText().toString();
                         String book_ISBN = bookISBN.getText().toString();
                         String book_status = bookStatus.getText().toString();
-
-                        listener.onOkPressed(new Book(book_title,book_author,book_ISBN,book_status)); //Send the inputted book as a parameter to the main function's implementation of this method
+                        if (bookTitle.getText().toString().equals("")||bookAuthor.getText().toString().equals("")||bookISBN.getText().toString().equals("")||bookStatus.getText().toString().equals("")){
+                                listener.onOkPressed();
+                        }
+                        else if (getArguments()!=null){
+                            Book book = (Book)  getArguments().get("Book");
+                            String temp = book.getTitle();
+                            book.setAuthor(book_author);
+                            book.setISBN(book_ISBN);
+                            book.setStatus(book_status);
+                            book.setTitle(book_title);
+                            listener.onOkPressed(book,temp);
+                        }
+                        else {
+                            listener.onOkPressed(new Book(book_title, book_author, book_ISBN, book_status)); //Send the inputted book as a parameter to the main function's implementation of this method
+                        }
                     }}).create();
     }
 

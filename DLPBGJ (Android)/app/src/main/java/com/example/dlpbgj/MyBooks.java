@@ -14,10 +14,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -46,9 +50,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     boolean bUncheck = false;
 
 
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,8 +70,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 new AddBookFragment().show(getSupportFragmentManager(), "ADD_BOOK");
             }
         });
-
-
 
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks" );//Creating/pointing to a sub-collection of the books that user owns
@@ -199,26 +198,22 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         */
         bookList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Book tempBook = bookDataList.get(position);
-                userBookCollectionReference
-                        .document(tempBook.getTitle())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "user book data has been deleted");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG,"Failed to delete the user book data");
-                            }
-                        });
-                bookDataList.remove(position);
-                bookAdapter.notifyDataSetChanged();
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Book book = bookDataList.get(i);
+                Intent intent = new Intent(view.getContext(),ViewBookDetails.class);
+                intent.putExtra("Book",book);
+                startActivity(intent);
                 return false;
+            }
+        });
+
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Book temp = bookDataList.get(i);
+                System.out.println(temp.getAuthor());
+                AddBookFragment fragment = AddBookFragment.newInstance(temp);
+                fragment.show(getSupportFragmentManager(),"ADD_BOOK");
             }
         });
 
@@ -259,8 +254,103 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                         Log.d(TAG, "Data could not be added!" + e.toString());
                     }
                 });
+    }
 
+    @Override
+    public void onOkPressed(final Book newBook, final String oldBookName){
+        final HashMap<String, Object> data = new HashMap<>();
+        data.put("Book Author", newBook.getAuthor());
+        data.put("Book ISBN", newBook.getISBN());
+        data.put("Book Status",newBook.getStatus());
+        DocumentReference docRef = userBookCollectionReference.document(newBook.getTitle());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        userBookCollectionReference
+                                .document(newBook.getTitle())
+                                .update(data)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "Data has been updated successfully!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "Data could not be updated!" + e.toString());
+                                    }
+                                });
+                    }
+                    else {
+                        userBookCollectionReference
+                                .document(oldBookName)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "user book data has been deleted");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG,"Failed to delete the user book data");
+                                    }
+                                });
+                        bookDataList.remove(newBook);
+                        userBookCollectionReference
+                                .document(newBook.getTitle())
+                                .set(data)
+                                //Debugging methods
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // These are a method which gets executed when the task is succeeded
+                                        Log.d(TAG, "Data has been added successfully!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // These are a method which gets executed if there’s any problem
+                                        Log.d(TAG, "Data could not be added!" + e.toString());
+                                    }
+                                });
+                    }
+                }
+            }
+        });
+        bookAdapter.notifyDataSetChanged();
+    }
 
+    @Override
+    public void onDeletePressed(Book book){
+        userBookCollectionReference
+                .document(book.getTitle())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "user book data has been deleted");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG,"Failed to delete the user book data");
+                    }
+                });
+        bookDataList.remove(book);
+        bookAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onOkPressed(){
+        //Do nothing
     }
 
 }
