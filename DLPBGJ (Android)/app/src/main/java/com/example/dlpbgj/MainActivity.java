@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     TextView msg;
     Button login;
     Button signUp;
+    Button MyInfo;
     String TAG = "Sample";
 
     @Override
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         pass = findViewById(R.id.editUserPassword);
         login = findViewById(R.id.login_button);
         signUp = findViewById(R.id.signup_button);
+        MyInfo = findViewById(R.id.MyInfo);
         final String sucess = "Login Successful!";
         final String fail = "Invalid Login Details";
         final String noExist = "Please Sign Up";
@@ -158,7 +160,13 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
-
+        MyInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent UserIntent = new Intent(view.getContext(),UserProfile.class);
+                startActivity(UserIntent);
+            }
+        });
         //for realtime database update
         collectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
