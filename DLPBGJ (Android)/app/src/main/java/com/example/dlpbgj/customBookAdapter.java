@@ -25,7 +25,13 @@ public class customBookAdapter extends ArrayAdapter<Book> {
         this.context = context;
     }
 
-
+    /**
+     * Function to use our custom array adapter to show the books of a user.
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

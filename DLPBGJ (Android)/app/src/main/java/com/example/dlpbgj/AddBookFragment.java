@@ -42,7 +42,11 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         return fragment;
     }
 
-
+    /**
+     * context is the host activity. Attaches the fragment to the host activity.
+     * This is because this fragment may be used launched by more than one activities.
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -54,6 +58,11 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         }
     }
 
+    /**
+     * When a book is selected, the edit fragment opens up
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -93,6 +102,12 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                 .setTitle(title)
                 .setNegativeButton("Cancel", null)
                 .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+                    /**
+                     * When the button to delete a book is selected from the fragment.
+                     * Calls onDeletePressed listener to notify that the book must be deleted.
+                     * @param dialogInterface
+                     * @param i
+                     */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (getArguments()!=null){
@@ -105,6 +120,13 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                     }
                 })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    /**
+                     * To update the given book
+                     * If user enters valid details of new book, the given book will be updated to the new book
+                     * If invalid details are entered then it will do nothing
+                     * @param dialogInterface
+                     * @param i
+                     */
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String book_title = bookTitle.getText().toString();

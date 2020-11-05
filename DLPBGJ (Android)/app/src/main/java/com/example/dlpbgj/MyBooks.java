@@ -49,7 +49,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     boolean aUncheck = false;
     boolean bUncheck = false;
 
-
+    /**
+     * onCreate Called when MyBooks activity is launched.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -219,7 +222,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
 
     }
 
-
+    /**
+     * When user wants to add a new book to their list of books. No return value.
+     * @param newBook
+     */
 
     @Override
     public void onOkPressed(Book newBook) { //Whenever the user adds a book, this method is called where the added book is sent as a parameter from the fragment
@@ -256,6 +262,11 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 });
     }
 
+    /**
+     *This function is used for the fragment that gives the user the option to edit a book or delete it.
+     * @param newBook
+     * @param oldBookName
+     */
     @Override
     public void onOkPressed(final Book newBook, final String oldBookName){
         final HashMap<String, Object> data = new HashMap<>();
@@ -326,6 +337,11 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         });
         bookAdapter.notifyDataSetChanged();
     }
+
+    /**
+     * When a user wants to delete the selected book. This function will delete it from the database as well.
+     * @param book
+     */
 
     @Override
     public void onDeletePressed(Book book){
