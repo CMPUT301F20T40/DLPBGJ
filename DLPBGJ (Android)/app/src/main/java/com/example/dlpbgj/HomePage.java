@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.Serializable;
+
 //As soon as the user successfully logs in, this activity gets invoked. This is the home page of the user.
 public class HomePage extends AppCompatActivity {
     public static final String EXTRA_MESSAGE2 = "com.example.dlpbgj.MESSAGE2";
@@ -32,7 +34,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {        //When user clicks this button, a list of all the books that the owner owns is shown
                 Intent intent = new Intent(getApplicationContext(),MyBooks.class);
-                intent.putExtra(EXTRA_MESSAGE2, currentUser);   //Sending the current user as a parameter to the MyBooks activity
+                intent.putExtra("UserObject", currentUser);   //Sending the current user as a parameter to the MyBooks activity
                 startActivity(intent);
             }
         });
