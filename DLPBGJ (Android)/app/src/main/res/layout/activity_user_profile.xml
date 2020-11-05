@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".UserProfile">
+
+    <TextView
+        android:id="@+id/SearchUser"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:hint="Search for antother user"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/UserFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:hint="Enter your First name"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/UserLastName"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:hint="Enter your last name"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/UserBirthDate"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:hint="Enter birth Date (DD/MM/YYYY)"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/ContactInfo"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:hint="Enter your email or phone"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/UserFav"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter your prefered genres"
+        android:text="TextView" />
+
+</LinearLayout>

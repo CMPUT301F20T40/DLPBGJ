@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
@@ -191,11 +192,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                         }
                     });
                 }
+
             }
         });
-        /* just creating a function to remove the book from the data list if the reader decides to do so
-        maybe later I will create an activity where the user can select multiple books at once to delete them all
-        */
+
         bookList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
