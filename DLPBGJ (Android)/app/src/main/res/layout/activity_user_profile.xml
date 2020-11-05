@@ -7,46 +7,52 @@
     android:orientation="vertical"
     tools:context=".UserProfile">
 
-    <TextView
-        android:id="@+id/SearchUser"
+    <EditText
+        android:id="@+id/UserName"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:hint="Search for antother user"
-        android:text="TextView" />
+        android:hint="User Name"
+        android:textColor="#B59C34"
+         />
 
-    <TextView
+    <EditText
         android:id="@+id/UserFirstName"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:hint="Enter your First name"
-        android:text="TextView" />
+        android:textColor="#B59C34"
+        />
 
-    <TextView
+    <EditText
         android:id="@+id/UserLastName"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:hint="Enter your last name"
-        android:text="TextView" />
+        android:textColor="#B59C34"
+         />
 
-    <TextView
+    <EditText
         android:id="@+id/UserBirthDate"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:hint="Enter birth Date (DD/MM/YYYY)"
-        android:text="TextView" />
+        android:textColor="#B59C34"
+         />
 
-    <TextView
+    <EditText
         android:id="@+id/ContactInfo"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:hint="Enter your email or phone"
-        android:text="TextView" />
+        android:textColor="#B59C34"
+         />
 
-    <TextView
+    <EditText
         android:id="@+id/UserFav"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Enter your prefered genres"
-        android:text="TextView" />
+        android:textColor="#B59C34"
+         />
 
 </LinearLayout>
