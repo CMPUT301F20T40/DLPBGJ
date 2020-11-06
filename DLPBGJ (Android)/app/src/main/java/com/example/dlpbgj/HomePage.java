@@ -28,6 +28,7 @@ public class HomePage extends AppCompatActivity {
         Button myBooksButton=findViewById(R.id.MyBooks);
         Button search = findViewById(R.id.Search);
         Button signOut = findViewById(R.id.SignOut);
+        Button request = findViewById(R.id.RequestABook);
 
 
         final String success = "Signed Out!";
@@ -68,7 +69,13 @@ public class HomePage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent RIntent = new Intent(getApplicationContext(),RequestBooks.class);
+                startActivity(RIntent);
+            }
+        });
 
     }
 }

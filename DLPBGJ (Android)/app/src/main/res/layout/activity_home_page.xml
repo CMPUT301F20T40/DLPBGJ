@@ -34,13 +34,20 @@
         android:background="@drawable/gradient"
         android:text="Search" />
 
+    <Button
+        android:id="@+id/RequestABook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:text="Request" />
+
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
+        android:layout_height="512dp"
         android:layout_gravity="left|bottom"
+        android:layout_weight="1"
         android:gravity="bottom"
-        android:orientation="vertical"
-        android:layout_weight="1">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/SignOut"
