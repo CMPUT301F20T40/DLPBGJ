@@ -14,6 +14,10 @@ public class HomePage extends AppCompatActivity {
     public static final String EXTRA_MESSAGE2 = "com.example.dlpbgj.MESSAGE2";
     private User currentUser;
 
+    /**
+     * Activity is launched when a user successfully signs in.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

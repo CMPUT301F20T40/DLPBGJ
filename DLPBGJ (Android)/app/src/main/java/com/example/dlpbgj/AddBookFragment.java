@@ -45,7 +45,11 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         return fragment;
     }
 
-
+    /**
+     * context is the host activity. Attaches the fragment to the host activity.
+     * This is because this fragment may be used launched by more than one activities.
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -57,6 +61,11 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         }
     }
 
+    /**
+     * When a book is selected, the edit fragment opens up
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -103,6 +112,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                 .setView(view)
                 .setTitle(title)
                 .setNegativeButton("Cancel", null)
+
                 .setNeutralButton("delete", null)
                 .setPositiveButton(android.R.string.ok, null)
                 .create();
@@ -126,6 +136,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                         dialog.dismiss();
 
                     }
+
                 });
 
                 bOk.setOnClickListener(new View.OnClickListener() {

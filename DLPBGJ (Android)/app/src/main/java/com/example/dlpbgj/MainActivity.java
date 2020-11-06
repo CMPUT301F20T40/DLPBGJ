@@ -51,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
     Button signUp;
     String TAG = "Sample";
 
+    /**
+     * When app is launched.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
 
         final CollectionReference collectionReference = userDb.collection("Users");
         login.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When user chooses to log in
+             * Validates whether user with given credentials exists or not
+             * If exists, it will launch the HomePage activity and pass the user as an argument.
+             * If user does not exist, it prompts the user to sign up.
+             * @param v
+             */
             @Override
             public void onClick(final View v) {
                 final String userName = user.getText().toString();
@@ -115,6 +126,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         signUp.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When user chooses to signup
+             * If a user with given credentials already exists, it prompts an error message
+             * Otherwise, it creates a new user with given credentials.
+             * @param v
+             */
             @Override
             public void onClick(final View v) {
                 final String userName = user.getText().toString();
@@ -139,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                /**
+                                                 * If a new user is successfully registered to the database.
+                                                 */
                                                 Log.d(TAG,"Data has been added succesfully");
                                                 Toast toast = Toast.makeText(v.getContext(), signUpS, Toast.LENGTH_SHORT);
                                                 toast.show();
