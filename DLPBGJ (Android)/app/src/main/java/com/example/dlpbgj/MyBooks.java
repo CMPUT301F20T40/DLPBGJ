@@ -44,8 +44,8 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     String TAG = "Sample";
     CheckBox checkAvailable;
     CheckBox checkBorrowed;
-    String availableConstraint = "a";
-    String borrowedConstraint = "b";
+    String availableConstraint = "available";
+    String borrowedConstraint = "borrowed";
     int checkCount = 0;
     boolean aUncheck = false;
     boolean bUncheck = false;
@@ -132,7 +132,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                     userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) { //Manages the state of the sub-collection
-                            if(checkBorrowed.isChecked())
+                            if(!checkBorrowed.isChecked())
                                 bookDataList.clear();
                             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                                 Log.d(TAG, String.valueOf(doc.getData().get("Book Author")));
@@ -186,7 +186,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                     userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException error) { //Manages the state of the sub-collection
-                            if(checkAvailable.isChecked())
+                            if(!checkAvailable.isChecked())
                                 bookDataList.clear();
                             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                                 Log.d(TAG, String.valueOf(doc.getData().get("Book Author")));
