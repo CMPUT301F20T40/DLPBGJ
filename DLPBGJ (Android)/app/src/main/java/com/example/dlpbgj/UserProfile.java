@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,47 +25,60 @@ public class UserProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        User user = (User) getIntent().getSerializableExtra("User");
-        final String FirstName;
-        final String LastName;
-        final String BirthDate;
-        final String Prefrence;
-        final String User_name;
-        final String ContactInfo;
+        final User user = (User) getIntent().getSerializableExtra("User");
+        Button update;
+        Button back;
         FirebaseFirestore Userdb;
-        EditText UserFirstName = (EditText) findViewById(R.id.UserFirstName);
-        EditText UserLastName = (EditText) findViewById(R.id.UserLastName);
-        EditText UserBirthDate = (EditText) findViewById(R.id.UserBirthDate);
-        EditText UserPrefrence = (EditText) findViewById(R.id.UserFav);
-        EditText UserName = (EditText) findViewById(R.id.UserName);
-        EditText UserContact = (EditText) findViewById(R.id.ContactInfo);
-        FirstName = UserFirstName.getText().toString();
-        LastName = UserLastName.getText().toString();
-        BirthDate = UserBirthDate.getText().toString();
-        Prefrence = UserPrefrence.getText().toString();
-        User_name = UserName.getText().toString();
-        ContactInfo = UserContact.getText().toString();
+        final EditText UserFirstName = (EditText) findViewById(R.id.UserFirstName);
+        final EditText UserLastName = (EditText) findViewById(R.id.UserLastName);
+        final EditText UserBirthDate = (EditText) findViewById(R.id.UserBirthDate);
+        final EditText UserPrefrence = (EditText) findViewById(R.id.UserFav);
+        final EditText UserName = (EditText) findViewById(R.id.UserName);
+        final EditText UserContact = (EditText) findViewById(R.id.ContactInfo);
+        back = findViewById(R.id.BackButton);
+        update = findViewById(R.id.Update);
+        UserFirstName.setText(user.getFirst_name());
+        UserLastName.setText(user.getLast_name());
+        UserBirthDate.setText(user.getDOB());
+        UserName.setText(user.getUsername());
         Userdb = FirebaseFirestore.getInstance();
-        CollectionReference userBookCollectionReference = Userdb.collection("Users");
-        HashMap<String,Object> data = new HashMap<>();
-        data.put("First Name",FirstName);
-        data.put("Last Name",LastName);
-        data.put("Date of Birth", BirthDate);
-        data.put("Email",ContactInfo);
-        userBookCollectionReference
-                .document(user.getUsername())
-                .update(data)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Sample", "Data has been updated successfully!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d("Sample", "Failed to update the values!");
-                    }
-                });
+        final CollectionReference userBookCollectionReference = Userdb.collection("Users");
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+        update.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final String FirstName = UserFirstName.getText().toString();
+                final String LastName = UserLastName.getText().toString();
+                final String BirthDate = UserBirthDate.getText().toString();
+                final String Prefrence = UserPrefrence.getText().toString();
+                final String User_name = UserName.getText().toString();
+                final String ContactInfo = UserContact.getText().toString();
+                HashMap<String,Object> data = new HashMap<>();
+                data.put("First Name",FirstName);
+                data.put("Last Name",LastName);
+                data.put("Date of Birth", BirthDate);
+                data.put("Email",ContactInfo);
+                userBookCollectionReference
+                        .document(user.getUsername())
+                        .update(data)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Sample", "Data has been updated successfully!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d("Sample", "Failed to update the values!");
+                            }
+                        });
+            }
+        });
     }
 }

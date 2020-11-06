@@ -54,5 +54,26 @@
         android:hint="Enter your prefered genres"
         android:textColor="#B59C34"
          />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_gravity="left|bottom"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:layout_weight="1">
+
+        <Button
+            android:id="@+id/BackButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient"
+            android:text="BACK" />
+        <Button
+            android:id="@+id/Update"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient"
+            android:text="UPDATE" />
+    </LinearLayout>
 
 </LinearLayout>
