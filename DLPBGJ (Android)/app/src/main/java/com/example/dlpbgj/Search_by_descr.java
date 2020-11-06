@@ -41,6 +41,8 @@ public class Search_by_descr extends AppCompatActivity {
     Button search;
     CheckBox checkAvail;
     CheckBox checkBorr;
+    String availableConstraint = "available";
+    String borrowedConstraint = "borrowed";
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -88,17 +90,17 @@ public class Search_by_descr extends AppCompatActivity {
                                                 Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, username);
                                                 bookDataList.add(thisBook);
                                                 if(checkAvail.isChecked()&&checkBorr.isChecked()){
-                                                    if(!(book_status.toLowerCase().equals("available")||book_status.toLowerCase().equals("borrowed"))){
+                                                    if(!(book_status.toLowerCase().equals(availableConstraint)||book_status.toLowerCase().equals(borrowedConstraint))){
                                                         bookDataList.remove(thisBook);}}
                                                 if(checkBorr.isChecked()&&!checkAvail.isChecked())
                                                 {
-                                                    if(!(book_status.toLowerCase().equals("borrowed"))){
+                                                    if(!(book_status.toLowerCase().equals(borrowedConstraint))){
                                                         bookDataList.remove(thisBook);
                                                     }
                                                 }
                                                 if(!checkBorr.isChecked()&&checkAvail.isChecked())
                                                 {
-                                                    if(!(book_status.toLowerCase().equals("available"))){
+                                                    if(!(book_status.toLowerCase().equals(availableConstraint))){
                                                         bookDataList.remove(thisBook);
                                                     }
                                                 }
@@ -125,11 +127,11 @@ public class Search_by_descr extends AppCompatActivity {
                     for (int i = 0; i < bookDataList.size(); i++) {
                         Book book = bookDataList.get(i);
                         if (checkBorr.isChecked()){
-                            if(book.getStatus().toLowerCase().equals("available")||book.getStatus().toLowerCase().equals("borrowed"))
+                            if(book.getStatus().toLowerCase().equals(availableConstraint)||book.getStatus().toLowerCase().equals(borrowedConstraint))
                                 filteredDataList.add(book);
                         }
                         else{
-                            if(book.getStatus().toLowerCase().equals("available"))
+                            if(book.getStatus().toLowerCase().equals(availableConstraint))
                                 filteredDataList.add(book);
                         }
 
@@ -148,7 +150,7 @@ public class Search_by_descr extends AppCompatActivity {
                     for (int i = 0; i < bookDataList.size(); i++) {
                         Book book = bookDataList.get(i);
                         filteredDataList.add(book);
-                        if (!(book.getStatus().toLowerCase().equals("borrowed"))) {
+                        if (!(book.getStatus().toLowerCase().equals(borrowedConstraint))) {
                             filteredDataList.remove(book);
                         }
 
@@ -169,11 +171,11 @@ public class Search_by_descr extends AppCompatActivity {
                     for (int i = 0; i < bookDataList.size(); i++) {
                         Book book = bookDataList.get(i);
                         if (checkAvail.isChecked()){
-                            if(book.getStatus().toLowerCase().equals("available")||book.getStatus().toLowerCase().equals("borrowed"))
+                            if(book.getStatus().toLowerCase().equals(availableConstraint)||book.getStatus().toLowerCase().equals(borrowedConstraint))
                                 filteredDataList.add(book);
                         }
                         else{
-                            if(book.getStatus().toLowerCase().equals("borrowed"))
+                            if(book.getStatus().toLowerCase().equals(borrowedConstraint))
                                 filteredDataList.add(book);
                         }
 
@@ -192,7 +194,7 @@ public class Search_by_descr extends AppCompatActivity {
                         for (int i = 0; i < bookDataList.size(); i++) {
                             Book book = bookDataList.get(i);
                             filteredDataList.add(book);
-                            if (!(book.getStatus().toLowerCase().equals("available"))) {
+                            if (!(book.getStatus().toLowerCase().equals(availableConstraint))) {
                                 filteredDataList.remove(book);
                             }
 
