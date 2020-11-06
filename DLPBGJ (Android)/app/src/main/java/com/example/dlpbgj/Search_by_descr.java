@@ -39,14 +39,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Search_by_descr extends AppCompatActivity implements RequestBookFragment.OnFragmentInteractionListener {
+
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
     ArrayList<Book> filteredDataList;
     ArrayAdapter<Book> filteredBookAdapter;
     FirebaseFirestore db;
-    EditText description;
-    Button search;
+    EditText description
+    CollectionReference userBookCollectionReference;
+    String TAG = "Sample";
+    private User currentUser;
     CheckBox checkAvail;
     CheckBox checkBorr;
     String availableConstraint = "available";
@@ -92,7 +95,6 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                         String book_description = (String) f.getData().get("Book Description");
                                         if(book_description != null){
                                             if(book_description.contains(descinput)){
-                                                System.out.println("Reached If like a boss!!");
                                                 String book_title = f.getId();
                                                 String book_author = (String) f.getData().get("Book Author");
                                                 String book_ISBN = (String) f.getData().get("Book ISBN");
@@ -129,6 +131,9 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             }
 
         });
+        Intent intent = getIntent();
+        currentUser = (User)getIntent().getSerializableExtra(HomePage.EXTRA_MESSAGE2);
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
         currentUser = (User) getIntent().getSerializableExtra("User");
         System.out.println(currentUser.getUsername());
@@ -223,11 +228,96 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Book temp = bookDataList.get(i);
+
                 RequestBookFragment fragment = RequestBookFragment.newInstance(temp, currentUser);
                 fragment.show(getSupportFragmentManager(),"REQUEST_BOOK");
             }
         });
 
+                System.out.println("Reached fragment creator");
+                RequestBookFragment r = RequestBookFragment.newInstance(temp, currentUser);
+                r.show(getSupportFragmentManager(), "REQUEST_BOOK");
+            }
+        });
+    }
+
+    @Override
+    public void onOkPressed(final Book book, User user) {
+        final HashMap<String, Object> data = new HashMap<>();
+        data.put("Book Author", book.getAuthor());
+        data.put("Book ISBN", book.getISBN());
+        data.put("Book Status",book.getStatus());
+        data.put("Book Description",book.getDescription());
+        data.put("Owner",book.getOwner());
+        data.put("Requests", book.getRequests().addRequest(user.getUsername()));
+        userBookCollectionReference = db.collection(book.getOwner());
+
+        DocumentReference docRef = userBookCollectionReference.document(book.getTitle());
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    //if (document.exists()){
+                    userBookCollectionReference
+                            .document(book.getTitle())
+                            .update(data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "Data has been updated successfully!");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "Data could not be updated!" + e.toString());
+                                }
+                            });
+                    //}
+                    /*else {
+                        userBookCollectionReference
+                                .document(oldBookName)
+                                .delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "user book data has been deleted");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG,"Failed to delete the user book data");
+                                    }
+                                });
+                        bookDataList.remove(newBook);
+                        userBookCollectionReference
+                                .document(newBook.getTitle())
+                                .set(data)
+                                //Debugging methods
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // These are a method which gets executed when the task is succeeded
+                                        Log.d(TAG, "Data has been added successfully!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // These are a method which gets executed if there’s any problem
+                                        Log.d(TAG, "Data could not be added!" + e.toString());
+                                    }
+                                });
+                    }*/
+                }
+            }
+        });
+        bookAdapter.notifyDataSetChanged();
+    }
+}
+        });*/
 
 
     }
