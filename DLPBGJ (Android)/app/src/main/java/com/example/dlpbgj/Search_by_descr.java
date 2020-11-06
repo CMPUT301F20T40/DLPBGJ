@@ -1,9 +1,11 @@
 package com.example.dlpbgj;
 
 import android.app.AppComponentFactory;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,29 +56,23 @@ public class Search_by_descr extends AppCompatActivity {
                         bookDataList.clear();
                         final String descinput = description.getText().toString();
                         for(QueryDocumentSnapshot d : value){
-                            final String username = (String) d.getData().get("username");
+                            final String username = (String) d.getId();
                             CollectionReference foruser = Db.collection("Users/" + username + "/MyBooks");
                             foruser.addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                                     for(QueryDocumentSnapshot f : value2){
                                         String book_description = (String) f.getData().get("Book Description");
-                                        int count = 0;
-                                        for(int i = 0; i < book_description.length(); i++){
-                                            count = 0;
-                                            for(int j = 0; j < descinput.length(); j++){
-                                                if(book_description.charAt(i) == descinput.charAt(j)){
-                                                    count++;
-                                                }
-                                            }
-                                            if(count == descinput.length()){
+                                        if(book_description != null){
+                                            if(book_description.contains(descinput)){
+                                                System.out.println("Reached If like a boss!!");
                                                 String book_title = f.getId();
                                                 String book_author = (String) f.getData().get("Book Author");
                                                 String book_ISBN = (String) f.getData().get("Book ISBN");
                                                 String book_status = (String) f.getData().get("Book Status");
-                                                //bookDataList.add(new Book(book_title,book_author,book_ISBN,book_status, username));
+                                                bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status, username));
+                                                bookAdapter.notifyDataSetChanged();
                                             }
-                                            bookAdapter.notifyDataSetChanged();
                                         }
                                     }
                                 }
@@ -87,12 +83,14 @@ public class Search_by_descr extends AppCompatActivity {
             }
         });
 
-        bookList.setOnClickListener(new View.OnClickListener() {
+        /*bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                // TODO
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Book temp = bookDataList.get(i);
+                AddBookFragment fragment = AddBookFragment.newInstance(temp, new User("param", "hooda"));
+                fragment.show(getSupportFragmentManager(),"ADD_BOOK");
             }
-        });
+        });*/
     }
 
 }
