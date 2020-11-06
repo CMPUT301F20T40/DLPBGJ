@@ -8,11 +8,11 @@
     tools:context=".MyBooks">
 
 
-
     <ListView
         android:id="@+id/book_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="38dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_book_button"
@@ -23,22 +23,31 @@
         android:focusable="true"
         app:backgroundTint="#FFFFFF"
         app:srcCompat="@drawable/ovobg" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom|left"
+        android:weightSum="2">
+        <CheckBox
+            android:id="@+id/checkAvailable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Available"
+            android:layout_weight="1"
+            />
+        <CheckBox
+            android:id="@+id/checkBorrowed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Borrowed"
+            android:layout_weight="1"
+            />
 
-    <CheckBox
-        android:id="@+id/checkAvailable"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:text="Show Available"
-        />
-    <CheckBox
-        android:id="@+id/checkBorrowed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
-        android:layout_marginBottom="20dp"
-        android:text="Show Borrowed"
-        />
+    </LinearLayout>
+
+
+
 
 
 </FrameLayout>

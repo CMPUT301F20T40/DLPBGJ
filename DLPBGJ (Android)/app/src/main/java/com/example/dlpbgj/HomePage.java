@@ -14,6 +14,10 @@ public class HomePage extends AppCompatActivity {
     public static final String EXTRA_MESSAGE2 = "com.example.dlpbgj.MESSAGE2";
     private User currentUser;
 
+    /**
+     * Activity is launched when a user successfully signs in.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,6 +28,7 @@ public class HomePage extends AppCompatActivity {
         Button myBooksButton=findViewById(R.id.MyBooks);
         Button search = findViewById(R.id.Search);
         Button signOut = findViewById(R.id.SignOut);
+        Button request = findViewById(R.id.RequestABook);
 
 
         final String success = "Signed Out!";
@@ -64,7 +69,13 @@ public class HomePage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        request.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent RIntent = new Intent(getApplicationContext(),RequestBooks.class);
+                startActivity(RIntent);
+            }
+        });
 
     }
 }

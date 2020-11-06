@@ -13,6 +13,13 @@ public class ViewBookDetails extends AppCompatActivity {
     TextView author;
     TextView isbn;
     TextView status;
+
+
+    /**
+     * Created when the user long clicks on a book to view its details
+     * This loads up a new activity that shows the details of the selected book.
+     * @param savedInstanceState
+     */
     TextView description;
     TextView owner;
     @Override
