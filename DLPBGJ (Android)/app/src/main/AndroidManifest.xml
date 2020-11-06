@@ -14,10 +14,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ViewBookDetails"></activity>
+        <activity android:name=".UserProfile"></activity>
+        <activity android:name=".ViewBookDetails" />
         <activity android:name=".barcode_scanner" />
         <activity android:name=".HomePage" />
         <activity android:name=".MyBooks" />
+        <activity android:name=".Search_by_descr" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

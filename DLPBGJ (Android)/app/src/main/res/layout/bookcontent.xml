@@ -43,6 +43,8 @@
             android:textSize="15sp"
             android:layout_below="@+id/textView2"
             android:textColor="#B59C34"/>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -59,6 +61,16 @@
             android:id="@+id/textView4"
             android:layout_below="@+id/textView4"
             android:textColor="#B59C34"/>
+        <TextView
+            android:gravity="center"
+            android:text="TextView5"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/textView5"
+            android:textSize="15sp"
+            android:layout_below="@+id/textView4"
+            android:textColor="#B59C34"/>
+
     </LinearLayout>
 
     </LinearLayout>

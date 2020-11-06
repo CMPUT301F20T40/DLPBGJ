@@ -56,5 +56,14 @@
         android:hint="Enter book's status"
         android:textColor="#B59C34"/>
 
+    <EditText
+        android:id="@+id/book_description_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Enter book's Description"
+        android:textColor="#B59C34"/>
+
 
 </LinearLayout>

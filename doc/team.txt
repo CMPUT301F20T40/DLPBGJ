@@ -1,14 +1,6 @@
 Name: Vaibhav Chugh   CCID: vchugh   Github Username: vaibhavchugh17   
 Name: Harshaan Singh Babra CCID: harshaan Github Username: HarshaanNiles010
-<<<<<<< HEAD
-<<<<<<< HEAD
 Name: Hussain Chitalwala CCID: chitalwa Github Username: HussainChitalwala
-=======
 Name: Loyaljot Singh Bajwa  CCID: loyaljot  Github Username: bajwa10
->>>>>>> c32fb5c97116a0c47e2a4ed16cf37bcd69376518
-=======
-Name: Hussain Chitalwala CCID: chitalwa Username: HussainChitalwala
-Name: Loyaljot Singh Bajwa CCID: loyalot Git Username: bajwa10
->>>>>>> 17804d92f90c007f092b6aab82830ad4ef852862
 Name: Siddhant Rawal 	CCID: srawal  GitHub Username: Siddhant64
 Name: Param Hooda     CCID: phooda  GitHub Username: paramhooda

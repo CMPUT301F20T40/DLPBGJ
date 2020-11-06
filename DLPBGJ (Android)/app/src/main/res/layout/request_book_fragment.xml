@@ -1,0 +1,41 @@
+<LinearLayout
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/book_author"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+    </TextView>
+    <TextView
+        android:id="@+id/book_descr"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+    </TextView>
+    <TextView
+        android:id="@+id/book_ISBN"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+    </TextView>
+    <TextView
+        android:id="@+id/book_status"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+    </TextView>
+    <TextView
+        android:id="@+id/book_owner"
+        android:layout_width="match_parent"
+        android:layout_height="25dp">
+    </TextView>
+
+    <Button
+        android:id="@+id/request_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="Request">
+    </Button>
+
+</LinearLayout>
