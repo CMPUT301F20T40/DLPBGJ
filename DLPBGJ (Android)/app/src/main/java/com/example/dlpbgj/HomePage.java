@@ -17,33 +17,16 @@ public class HomePage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_home_page);
         Intent intent = getIntent();
         currentUser = (User)getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE1);//Catching the user object given by the MainActivity
-        String barcode = (String) getIntent().getSerializableExtra(barcode_scanner.varText);//Retrieving of ISBN code from the barcode_scanner Activity
-
-        setContentView(R.layout.activity_home_page);
+        Button info_button = findViewById(R.id.MyInfo);
         Button myBooksButton=findViewById(R.id.MyBooks);
         Button signOut = findViewById(R.id.SignOut);
 
-        Button scan = findViewById(R.id.scan);
-        TextView isbn = findViewById(R.id.isbn);
-        isbn.setText(barcode); // sets the ISBN in the HomePage Activity
 
         final String success = "Signed Out!";
 
-
-        /**
-         * Clicking the scanISBN button
-         * opens new activity which allows user to scan the barcode
-         */
-        scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(),barcode_scanner.class);
-                startActivity(intent);;
-
-            }
-        });
 
         myBooksButton.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -61,6 +44,15 @@ public class HomePage extends AppCompatActivity {
                 Toast toast = Toast.makeText(view.getContext(), success, Toast.LENGTH_SHORT);
                 toast.show();
                 startActivity(nIntent);
+            }
+        });
+
+       info_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),UserProfile.class);
+                intent.putExtra("User",currentUser);
+                startActivity(intent);
             }
         });
 

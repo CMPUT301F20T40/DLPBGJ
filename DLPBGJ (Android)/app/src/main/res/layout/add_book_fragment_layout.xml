@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Enter book's title" />
+        android:hint="Enter book's title"
+        android:textColor="#B59C34"/>
 
     <EditText
         android:id="@+id/book_author_editText"
@@ -18,15 +19,33 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Enter book's author" />
+        android:hint="Enter book's author"
+        android:textColor="#B59C34"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <EditText
         android:id="@+id/book_ISBN_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Enter book's ISBN code" />
+        android:inputType="number"
+        android:hint="Enter book's ISBN code"
+        android:textColor="#B59C34"/>
+
+     <Button
+         android:id="@+id/scan2"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:padding="10dp"
+         android:text="Scan ISBN"
+         android:background="@drawable/gradient">
+
+     </Button>
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/book_status_editText"
@@ -34,7 +53,17 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Enter book's status" />
+        android:hint="Enter book's status"
+        android:textColor="#B59C34"/>
+
+    <EditText
+        android:id="@+id/book_description_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="Enter book's Description"
+        android:textColor="#B59C34"/>
 
 
 </LinearLayout>

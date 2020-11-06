@@ -42,11 +42,13 @@ public class customBookAdapter extends ArrayAdapter<Book> {
         TextView bookAuthor = view.findViewById(R.id.textView2);
         TextView bookISBN = view.findViewById(R.id.textView3);
         TextView bookStatus = view.findViewById(R.id.textView4);
+        TextView bookOwner = view.findViewById(R.id.textView5);
 
         bookTitle.setText(book.getTitle());
         bookAuthor.setText(book.getAuthor());
         bookISBN.setText(book.getISBN());
         bookStatus.setText(book.getStatus()); //Setting the values of each textView inside the view in ListView
+        bookOwner.setText(book.getOwner());
 
         return view;
 

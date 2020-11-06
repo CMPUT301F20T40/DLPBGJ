@@ -14,7 +14,10 @@
         android:layout_height="90dp"
         android:id="@+id/textView1"
         android:textSize="20sp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:textColor="#B59C34"
+        android:textStyle="bold"
+        />
 
     <LinearLayout
         android:orientation="vertical"
@@ -28,7 +31,8 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:textSize="15sp"
-            android:id="@+id/textView2"/>
+            android:id="@+id/textView2"
+            android:textColor="#B59C34"/>
 
         <TextView
             android:gravity="center"
@@ -37,7 +41,10 @@
             android:layout_height="30dp"
             android:id="@+id/textView3"
             android:textSize="15sp"
-            android:layout_below="@+id/textView2"/>
+            android:layout_below="@+id/textView2"
+            android:textColor="#B59C34"/>
+
+
     </LinearLayout>
 
     <LinearLayout
@@ -52,7 +59,18 @@
             android:layout_height="30dp"
             android:textSize="15sp"
             android:id="@+id/textView4"
-            android:layout_below="@+id/textView4"/>
+            android:layout_below="@+id/textView4"
+            android:textColor="#B59C34"/>
+        <TextView
+            android:gravity="center"
+            android:text="TextView5"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:id="@+id/textView5"
+            android:textSize="15sp"
+            android:layout_below="@+id/textView4"
+            android:textColor="#B59C34"/>
+
     </LinearLayout>
 
     </LinearLayout>
