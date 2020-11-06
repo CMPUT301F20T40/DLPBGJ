@@ -13,6 +13,8 @@ public class ViewBookDetails extends AppCompatActivity {
     TextView author;
     TextView isbn;
     TextView status;
+    TextView description;
+    TextView owner;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,15 +25,20 @@ public class ViewBookDetails extends AppCompatActivity {
         isbn = findViewById(R.id.ISBN);
         status = findViewById(R.id.Status);
         backButton = findViewById(R.id.Back);
+        description = findViewById(R.id.Description);
+        owner = findViewById(R.id.Owner);
         title.setText("Book Title :\n" + book.getTitle());
         author.setText("Book Author :\n" + book.getAuthor());
         isbn.setText("Book ISBN :\n" + book.getISBN());
         status.setText("Book Status :\n" + book.getStatus());
+        description.setText("Book Description :\n"+book.getDescription());
+        owner.setText("Current Owner : "+book.getOwner());
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
     }
 }

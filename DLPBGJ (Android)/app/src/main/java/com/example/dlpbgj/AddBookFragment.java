@@ -25,6 +25,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     private EditText bookAuthor;
     private EditText bookISBN;
     private EditText bookStatus;
+    private EditText bookDescription;
     private OnFragmentInteractionListener listener;
 
     public interface OnFragmentInteractionListener {
@@ -34,9 +35,10 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         void onOkPressed();
     }
 
-    static AddBookFragment newInstance(Book book){
+    static AddBookFragment newInstance(Book book,User user){
         Bundle args = new Bundle();
         args.putSerializable("Book",book);
+        args.putSerializable("User",user);
         AddBookFragment fragment = new AddBookFragment();
         fragment.setArguments(args);
         return fragment;
@@ -64,6 +66,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         bookAuthor = view.findViewById(R.id.book_author_editText);
         bookISBN = view.findViewById(R.id.book_ISBN_editText);
         bookStatus = view.findViewById(R.id.book_status_editText);
+        bookDescription = view.findViewById(R.id.book_description_editText);
         Button scan = view.findViewById(R.id.scan2);
         String title = "Add Book";
         if (getArguments() != null){
@@ -73,6 +76,8 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
             bookAuthor.setText(book.getAuthor());
             bookISBN.setText(book.getISBN());
             bookStatus.setText(book.getStatus());
+            bookDescription.setText(book.getDescription());
+
         }
         /**
          * When scan button is clicked
@@ -111,20 +116,30 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                         String book_author = bookAuthor.getText().toString();
                         String book_ISBN = bookISBN.getText().toString();
                         String book_status = bookStatus.getText().toString();
+                        String book_description = bookDescription.getText().toString();
                         if (bookTitle.getText().toString().equals("")||bookAuthor.getText().toString().equals("")||bookISBN.getText().toString().equals("")||bookStatus.getText().toString().equals("")){
-                                listener.onOkPressed();
+                            System.out.println("!!!IF!!!");
+
+                            listener.onOkPressed();
                         }
                         else if (getArguments()!=null){
+                            System.out.println("ELSE IF");
+
                             Book book = (Book)  getArguments().get("Book");
+                            User user = (User) getArguments().get("User");
+
                             String temp = book.getTitle();
                             book.setAuthor(book_author);
                             book.setISBN(book_ISBN);
                             book.setStatus(book_status);
                             book.setTitle(book_title);
+                            book.setDescription(book_description);
+                            book.setOwner(user.getUsername());
                             listener.onOkPressed(book,temp);
                         }
                         else {
-                            listener.onOkPressed(new Book(book_title, book_author, book_ISBN, book_status)); //Send the inputted book as a parameter to the main function's implementation of this method
+                            System.out.println("ELSE");
+                            listener.onOkPressed(new Book(book_title, book_author, book_ISBN, book_status,book_description)); //Send the inputted book as a parameter to the main function's implementation of this method
                         }
                     }}).create();
     }
