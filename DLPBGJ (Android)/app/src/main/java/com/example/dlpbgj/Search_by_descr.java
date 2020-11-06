@@ -4,10 +4,13 @@ import android.app.AppComponentFactory;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -28,9 +31,13 @@ public class Search_by_descr extends AppCompatActivity {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
+    ArrayList<Book> filteredDataList;
+    ArrayAdapter<Book> filteredBookAdapter;
     FirebaseFirestore db;
     EditText description;
     Button search;
+    CheckBox checkAvail;
+    CheckBox checkBorr;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -38,10 +45,15 @@ public class Search_by_descr extends AppCompatActivity {
         bookList = findViewById(R.id.book_list);
         description = findViewById(R.id.description);
         search = findViewById(R.id.search);
+        checkAvail = findViewById(R.id.check_available);
+        checkBorr = findViewById(R.id.check_borrowed);
 
         bookDataList = new ArrayList<Book>();
+        filteredDataList = new ArrayList<Book>();
         bookAdapter = new customBookAdapter(this,bookDataList);
-        bookList.setAdapter(bookAdapter);
+        filteredBookAdapter = new customBookAdapter(this,filteredDataList);
+
+
 
         db = FirebaseFirestore.getInstance();
         final FirebaseFirestore Db = FirebaseFirestore.getInstance();
@@ -72,6 +84,7 @@ public class Search_by_descr extends AppCompatActivity {
                                                 String book_status = (String) f.getData().get("Book Status");
                                                 bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status, username));
                                                 bookAdapter.notifyDataSetChanged();
+                                                bookList.setAdapter(bookAdapter);
                                             }
                                         }
                                     }
@@ -81,7 +94,97 @@ public class Search_by_descr extends AppCompatActivity {
                     }
                 });
             }
+
         });
+
+        checkAvail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filteredDataList.clear();
+                if (isChecked) {
+                    for (int i = 0; i < bookDataList.size(); i++) {
+                        Book book = bookDataList.get(i);
+                        if (checkBorr.isChecked()){
+                            if(book.getStatus().toLowerCase().equals("available")||book.getStatus().toLowerCase().equals("borrowed"))
+                                filteredDataList.add(book);
+                        }
+                        else{
+                            if(book.getStatus().toLowerCase().equals("available"))
+                                filteredDataList.add(book);
+                        }
+
+
+
+
+                    }
+                    filteredBookAdapter.notifyDataSetChanged();
+                    bookList.setAdapter(filteredBookAdapter);
+
+                }
+                    else{
+                        if(!checkBorr.isChecked())
+                            bookList.setAdapter(bookAdapter);
+                        else{
+                    for (int i = 0; i < bookDataList.size(); i++) {
+                        Book book = bookDataList.get(i);
+                        filteredDataList.add(book);
+                        if (!(book.getStatus().toLowerCase().equals("borrowed"))) {
+                            filteredDataList.remove(book);
+                        }
+
+                    }
+                        filteredBookAdapter.notifyDataSetChanged();
+                        bookList.setAdapter(filteredBookAdapter);
+
+                    }
+
+            }}
+        });
+
+        checkBorr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                filteredDataList.clear();
+                if (isChecked) {
+                    for (int i = 0; i < bookDataList.size(); i++) {
+                        Book book = bookDataList.get(i);
+                        if (checkAvail.isChecked()){
+                            if(book.getStatus().toLowerCase().equals("available")||book.getStatus().toLowerCase().equals("borrowed"))
+                                filteredDataList.add(book);
+                        }
+                        else{
+                            if(book.getStatus().toLowerCase().equals("borrowed"))
+                                filteredDataList.add(book);
+                        }
+
+
+
+
+                    }
+                    filteredBookAdapter.notifyDataSetChanged();
+                    bookList.setAdapter(filteredBookAdapter);
+
+                }
+                else{
+                    if(!checkAvail.isChecked())
+                        bookList.setAdapter(bookAdapter);
+                    else{
+                        for (int i = 0; i < bookDataList.size(); i++) {
+                            Book book = bookDataList.get(i);
+                            filteredDataList.add(book);
+                            if (!(book.getStatus().toLowerCase().equals("available"))) {
+                                filteredDataList.remove(book);
+                            }
+
+                        }
+                        filteredBookAdapter.notifyDataSetChanged();
+                        bookList.setAdapter(filteredBookAdapter);
+
+                    }
+
+                }}
+        });
+
 
         /*bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -91,6 +194,6 @@ public class Search_by_descr extends AppCompatActivity {
                 fragment.show(getSupportFragmentManager(),"ADD_BOOK");
             }
         });*/
-    }
 
-}
+
+    }}
