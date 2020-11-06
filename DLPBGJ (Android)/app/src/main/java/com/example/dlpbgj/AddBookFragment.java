@@ -197,7 +197,6 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                             dialog.dismiss();
                         }
 
-
                     }
                 });
 
