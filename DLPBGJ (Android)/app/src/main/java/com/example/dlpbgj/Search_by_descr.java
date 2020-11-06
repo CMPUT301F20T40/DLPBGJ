@@ -4,7 +4,10 @@ import android.app.AppComponentFactory;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
+
+import android.view.LayoutInflater;
 import android.util.Log;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -196,4 +199,6 @@ public class Search_by_descr extends AppCompatActivity {
         });*/
 
 
+
     }}
+
