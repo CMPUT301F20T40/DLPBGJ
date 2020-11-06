@@ -43,6 +43,24 @@
         android:layout_weight="1"
         android:textColor="#B59C34"
         />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/Owner"
+        android:textSize="20dp"
+        android:layout_weight="1"
+        android:textColor="#B59C34"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/Description"
+        android:textSize="20dp"
+        android:layout_weight="1"
+        android:textColor="#B59C34"
+        />
     <Button
         android:layout_width="100dp"
         android:layout_height="wrap_content"

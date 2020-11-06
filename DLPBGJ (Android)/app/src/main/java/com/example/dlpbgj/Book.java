@@ -7,6 +7,8 @@ public class Book implements Serializable {
     String author;
     String ISBN;
     String status;
+    String description="";
+    String owner;
 
     public Book(String title, String author, String ISBN) {
         this.title = title;
@@ -19,6 +21,23 @@ public class Book implements Serializable {
         this.author = author;
         this.ISBN = ISBN;
         this.status = status;
+
+    }
+
+    public Book(String title, String author, String ISBN, String status, String description) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.status = status;
+        this.description = description;
+    }
+    public Book(String title, String author, String ISBN, String status, String description,String owner) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.status = status;
+        this.description = description;
+        this.owner = owner;
     }
 
 
@@ -52,5 +71,21 @@ public class Book implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
     }
 }
