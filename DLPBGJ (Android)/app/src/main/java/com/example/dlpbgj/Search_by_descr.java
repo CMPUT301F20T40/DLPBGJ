@@ -85,7 +85,24 @@ public class Search_by_descr extends AppCompatActivity {
                                                 String book_author = (String) f.getData().get("Book Author");
                                                 String book_ISBN = (String) f.getData().get("Book ISBN");
                                                 String book_status = (String) f.getData().get("Book Status");
-                                                bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status, username));
+                                                Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, username);
+                                                bookDataList.add(thisBook);
+                                                if(checkAvail.isChecked()&&checkBorr.isChecked()){
+                                                    if(!(book_status.toLowerCase().equals("available")||book_status.toLowerCase().equals("borrowed"))){
+                                                        bookDataList.remove(thisBook);}}
+                                                if(checkBorr.isChecked()&&!checkAvail.isChecked())
+                                                {
+                                                    if(!(book_status.toLowerCase().equals("borrowed"))){
+                                                        bookDataList.remove(thisBook);
+                                                    }
+                                                }
+                                                if(!checkBorr.isChecked()&&checkAvail.isChecked())
+                                                {
+                                                    if(!(book_status.toLowerCase().equals("available"))){
+                                                        bookDataList.remove(thisBook);
+                                                    }
+                                                }
+
                                                 bookAdapter.notifyDataSetChanged();
                                                 bookList.setAdapter(bookAdapter);
                                             }
