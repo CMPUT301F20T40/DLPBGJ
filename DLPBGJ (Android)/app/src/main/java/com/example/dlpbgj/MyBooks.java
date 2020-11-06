@@ -228,14 +228,13 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     @Override
     public void onOkPressed(Book newBook) { //Whenever the user adds a book, this method is called where the added book is sent as a parameter from the fragment
 
-        HashMap<String, Object> data = new HashMap<>();
+        HashMap<String, String> data = new HashMap<>();
         String bookTitle=newBook.getTitle();    //Title of the book will be the ID of the document representing the book inside the sub-collections of MyBooks
         final String bookAuthor=newBook.getAuthor();
         String bookISBN=newBook.getISBN();
         String bookStatus=newBook.getStatus();
         String bookDescription = newBook.getDescription();
         String bookOwner = currentUser.getUsername();
-        newBook.addRequest("hussain");
 
         if (bookTitle.length()>0 && bookAuthor.length()>0 && bookISBN.length()>0 && bookStatus.length()>0) {//Data inside the document will consist of the following
             //Adding data inside the hash map
@@ -244,7 +243,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             data.put("Book Status",bookStatus);
             data.put("Book Description",bookDescription);
             data.put("Owner",bookOwner);
-            data.put("Request List",newBook.getRequests());
         }
 
         userBookCollectionReference
