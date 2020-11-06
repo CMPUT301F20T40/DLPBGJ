@@ -54,52 +54,14 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/statusText"
-        android:layout_width="275dp"
-        android:layout_height="20dp"
-        android:text="Book Status* (Choose only 1)">
-        </TextView>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/book_status_editText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-    <CheckBox
-        android:id="@+id/status_available"
-        android:layout_width="94dp"
-        android:layout_height="wrap_content"
-        android:ems="12"
-        android:textSize="12dp"
+        android:ems="10"
         android:inputType="textPersonName"
-        android:text="Available"
+        android:hint="Enter book's status*"
         android:textColor="#B59C34"/>
-
-        <CheckBox
-            android:id="@+id/status_requested"
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:textSize="8dp"
-            android:text="Requested" />
-
-        <CheckBox
-            android:id="@+id/status_borrowed"
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:textSize="8dp"
-            android:text="Borrowed" />
-        <CheckBox
-            android:id="@+id/status_accepted"
-            android:layout_width="94dp"
-            android:layout_height="wrap_content"
-            android:textSize="8dp"
-            android:text="Accepted" />
-
-
-
-    </LinearLayout>
-
 
     <EditText
         android:id="@+id/book_description_editText"
@@ -109,7 +71,6 @@
         android:inputType="textPersonName"
         android:hint="Enter book's Description"
         android:textColor="#B59C34"/>
-
 
 
 </LinearLayout>
