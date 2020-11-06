@@ -22,6 +22,7 @@ public class HomePage extends AppCompatActivity {
         currentUser = (User)getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE1);//Catching the user object given by the MainActivity
         Button info_button = findViewById(R.id.MyInfo);
         Button myBooksButton=findViewById(R.id.MyBooks);
+        Button search = findViewById(R.id.Search);
         Button signOut = findViewById(R.id.SignOut);
 
 
@@ -56,7 +57,13 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
-
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =  new Intent(getApplicationContext(), Search_by_descr.class);
+                startActivity(intent);
+            }
+        });
 
 
     }
