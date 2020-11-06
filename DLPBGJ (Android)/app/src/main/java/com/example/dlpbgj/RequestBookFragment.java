@@ -60,6 +60,7 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
         if (getArguments() != null){
             book = (Book) getArguments().get("Book");
             user = (User) getArguments().get("User");
+
             book_title.setText(book.getTitle());
             book_author.setText(book.getAuthor());
             book_ISBN.setText(book.getISBN());
@@ -85,7 +86,9 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
                 .setPositiveButton("REQUEST", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
                             listener.onOkPressed(book, user);
+
                     }}).create();
     }
 

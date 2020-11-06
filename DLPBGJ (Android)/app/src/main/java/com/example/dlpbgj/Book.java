@@ -17,7 +17,7 @@ public class Book implements Serializable {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
-        requests = new ArrayList<String>();
+        requests = new ArrayList<>();
     }
 
     public Book(String title, String author, String ISBN, String status) {
@@ -45,6 +45,19 @@ public class Book implements Serializable {
         this.description = description;
         this.owner = owner;
         requests = new ArrayList<>();
+
+    }
+
+    public Book(String title, String author, String ISBN, String status, String description,String owner,ArrayList<String> req) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.status = status;
+        this.description = description;
+        this.owner = owner;
+        this.requests = new ArrayList<>();
+        //for(int i=0;i<req.size();i++)
+          //  this.requests.add(req.get(i));
 
     }
 
@@ -112,4 +125,5 @@ public class Book implements Serializable {
         }
         return -1;
     }
+
 }
