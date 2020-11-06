@@ -40,6 +40,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
+import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
+
 
 //Main activity is the login activity. Yet to add comments (Loyal)
 public class MainActivity extends AppCompatActivity {
@@ -51,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
     Button signUp;
     String TAG = "Sample";
 
+    /**
+     * When app is launched.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,83 +78,101 @@ public class MainActivity extends AppCompatActivity {
 
         final CollectionReference collectionReference = userDb.collection("Users");
         login.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When user chooses to log in
+             * Validates whether user with given credentials exists or not
+             * If exists, it will launch the HomePage activity and pass the user as an argument.
+             * If user does not exist, it prompts the user to sign up.
+             * @param v
+             */
             @Override
             public void onClick(final View v) {
                 final String userName = user.getText().toString();
                 final String userPass = pass.getText().toString();
-                final User newUser = new User(userName,userPass);
+                if (userName.length() != 0 && userPass.length() != 0){
+                    System.out.println("Inside If\n");
+                    final User newUser = new User(userName, userPass);
                 DocumentReference docRef = collectionReference.document(userName); //If username does not exist then prompt for a sign-up
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            if (document.exists()){
-                                Map<String,Object> data = document.getData();
-                                final String temp = (String)data.get("Password");
-                                if (Objects.equals(temp, userPass)){
+                            if (document.exists()) {
+                                Map<String, Object> data = document.getData();
+                                final String temp = (String) data.get("Password");
+                                if (Objects.equals(temp, userPass)) {
 
                                     Toast toast = Toast.makeText(v.getContext(), sucess, Toast.LENGTH_SHORT);
                                     toast.show();
-                                    //TODO Initialize new activity after login Successful and pass user object in it
-                                    Intent intent = new Intent(getApplicationContext(),HomePage.class);
+                                    Intent intent = new Intent(getApplicationContext(), HomePage.class);
                                     intent.putExtra(EXTRA_MESSAGE1, newUser);
                                     startActivity(intent);
 
-                                }
-                                else {
+                                } else {
                                     Toast toast = Toast.makeText(v.getContext(), fail, Toast.LENGTH_SHORT);
                                     toast.show();
-                                     }
-                            }
-                            else{
+                                }
+                            } else {
                                 Toast toast = Toast.makeText(v.getContext(), noExist, Toast.LENGTH_SHORT);
                                 toast.show();
                             }
-                        }
-                        else{
-                            Log.d(TAG,"get failed with ",task.getException());
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
                         }
                     }
                 });
             }
+                else{
+                    Toast toast = Toast.makeText(v.getContext(), "Some details are missing", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
         });
         signUp.setOnClickListener(new View.OnClickListener() {
+            /**
+             * When user chooses to signup
+             * If a user with given credentials already exists, it prompts an error message
+             * Otherwise, it creates a new user with given credentials.
+             * @param v
+             */
             @Override
             public void onClick(final View v) {
                 final String userName = user.getText().toString();
                 final String userPass = pass.getText().toString();
-                final User newUser = new User(userName,userPass);
-                final HashMap<String,Object> data = new HashMap<>();
-                data.put("Password",userPass);
+                if (userName.length() != 0 && userPass.length() != 0){
+                final User newUser = new User(userName, userPass);
+                final HashMap<String, Object> data = new HashMap<>();
+                data.put("Password", userPass);
                 DocumentReference docRef = collectionReference.document(userName);
                 docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            if (document.exists()){
+                            if (document.exists()) {
                                 Toast toast = Toast.makeText(v.getContext(), exist, Toast.LENGTH_SHORT);
                                 toast.show();
-                            }
-                            else {
+                            } else {
                                 collectionReference
                                         .document(userName)
                                         .set(data)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
+                                                /**
+                                                 * If a new user is successfully registered to the database.
+                                                 */
                                                 Log.d(TAG,"Data has been added succesfully");
                                                 Toast toast = Toast.makeText(v.getContext(), signUpS, Toast.LENGTH_SHORT);
                                                 toast.show();
-                                                //TODO Initialize new activity after login Successful and pass user object in it
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Log.d(TAG,"Data has been not been added");
+                                                Log.d(TAG, "Data has been not been added");
 
                                             }
                                         });
@@ -157,6 +181,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
             }
+                else{
+                    Toast toast = Toast.makeText(v.getContext(), "Some details are missing", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+        }
         });
 
         //for realtime database update

@@ -29,6 +29,11 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
         return seeResult;
     }
 
+    /**
+     * When user wants to scan the barcode of a book, this activity is created.
+     * @param savedInstanceState
+     */
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +48,10 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
         Dexter.withActivity(this)
                 .withPermission(Manifest.permission.CAMERA)
                 .withListener(new PermissionListener() {
+                    /**
+                     * If user gets permission from hardware to use camera
+                     * @param response
+                     */
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
                         scanB.setResultHandler(barcode_scanner.this);
@@ -51,6 +60,10 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
 
                     }
 
+                    /**
+                     * If user does not get permission from hardware to use camera
+                     * @param response
+                     */
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
                         Toast.makeText(barcode_scanner.this,"You must accept the permission",Toast.LENGTH_SHORT).show();

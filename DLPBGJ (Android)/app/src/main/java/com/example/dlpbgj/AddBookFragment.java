@@ -19,6 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class AddBookFragment extends DialogFragment implements Serializable  {
     private EditText bookTitle;
@@ -44,7 +45,11 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         return fragment;
     }
 
-
+    /**
+     * context is the host activity. Attaches the fragment to the host activity.
+     * This is because this fragment may be used launched by more than one activities.
+     * @param context
+     */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -56,20 +61,31 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         }
     }
 
+    /**
+     * When a book is selected, the edit fragment opens up
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_book_fragment_layout, null);
-       // final String barcode = (String) getActivity().getIntent().getSerializableExtra(barcode_scanner.varText);
+        // final String barcode = (String) getActivity().getIntent().getSerializableExtra(barcode_scanner.varText);
 
         bookTitle = view.findViewById(R.id.book_title_editText);
         bookAuthor = view.findViewById(R.id.book_author_editText);
         bookISBN = view.findViewById(R.id.book_ISBN_editText);
         bookStatus = view.findViewById(R.id.book_status_editText);
         bookDescription = view.findViewById(R.id.book_description_editText);
+        final ArrayList<String> validStatus = new ArrayList<String>();
+        validStatus.add("Available");
+        validStatus.add("Borrowed");
+        validStatus.add("Accepted");
+        validStatus.add("Requested");
+
         Button scan = view.findViewById(R.id.scan2);
         String title = "Add Book";
-        if (getArguments() != null){
+        if (getArguments() != null) {
             Book book = (Book) getArguments().get("Book");
             title = "Edit Book";
             bookTitle.setText(book.getTitle());
@@ -86,46 +102,95 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),barcode_scanner.class);
-                startActivityForResult(intent,1);
+                Intent intent = new Intent(getActivity(), barcode_scanner.class);
+                startActivityForResult(intent, 1);
 
             }
         });
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
+        final AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setView(view)
                 .setTitle(title)
                 .setNegativeButton("Cancel", null)
-                .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
+
+                .setNeutralButton("delete", null)
+                .setPositiveButton(android.R.string.ok, null)
+                .create();
+
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                Button bOk = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                Button bCancel = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
+                Button bDel = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEUTRAL);
+
+                bDel.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (getArguments()!=null){
+                    public void onClick(View v) {
+                        if (getArguments() != null) {
                             Book book = (Book) getArguments().get("Book");
                             listener.onDeletePressed(book);
-                        }
-                        else{
+                        } else {
                             listener.onOkPressed();
                         }
+                        dialog.dismiss();
+
                     }
-                })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                });
+
+                bOk.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
+                    public void onClick(View v) {
                         String book_title = bookTitle.getText().toString();
                         String book_author = bookAuthor.getText().toString();
                         String book_ISBN = bookISBN.getText().toString();
                         String book_status = bookStatus.getText().toString();
                         String book_description = bookDescription.getText().toString();
-                        if (bookTitle.getText().toString().equals("")||bookAuthor.getText().toString().equals("")||bookISBN.getText().toString().equals("")||bookStatus.getText().toString().equals("")){
-                            System.out.println("!!!IF!!!");
-
-                            listener.onOkPressed();
+                        View focus = null;
+                        boolean wrong_input = false;
+                        System.out.println(book_title);
+                        if (bookTitle.getText().toString().equals("")) { //Mandatory to enter book's title
+                            bookTitle.setError("Please enter the book's title!");
+                            System.out.println("Im here");
+                            wrong_input = true;
+                            focus = bookTitle;
                         }
-                        else if (getArguments()!=null){
+
+                        if (book_status.equals("")) { //Mandatory to enter book's status
+                            //System.out.println("!!!IF!!!");
+                            bookStatus.setError("Please enter the book's status");
+                            wrong_input = true;
+                            focus = bookStatus;
+                        }
+
+                        if (book_description.equals("")) {    //Mandatory to enter book's description
+                            bookDescription.setError("Please enter the book's description");
+                            wrong_input = true;
+                            focus = bookDescription;
+
+                        }
+                        if (!validStatus.contains(book_status)) { //Input validation for the status
+                            bookStatus.setError("Please enter a valid status: Available, Borrowed, Requested, Accepted");
+                            wrong_input = true;
+                            focus = bookStatus;
+
+                        }
+                        if (book_author.equals("")) {
+                            book_author = "Unknown";
+
+                        }
+                        if (book_ISBN.equals("")) {
+                            book_ISBN = "Unknown";
+                        }
+
+                        if (wrong_input) {
+                            focus.requestFocus();
+
+                        } else if (getArguments() != null) {
                             System.out.println("ELSE IF");
 
-                            Book book = (Book)  getArguments().get("Book");
+                            Book book = (Book) getArguments().get("Book");
                             User user = (User) getArguments().get("User");
 
                             String temp = book.getTitle();
@@ -135,13 +200,23 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                             book.setTitle(book_title);
                             book.setDescription(book_description);
                             book.setOwner(user.getUsername());
-                            listener.onOkPressed(book,temp);
-                        }
-                        else {
+                            listener.onOkPressed(book, temp);
+                            dialog.dismiss();
+                        } else {
                             System.out.println("ELSE");
-                            listener.onOkPressed(new Book(book_title, book_author, book_ISBN, book_status,book_description)); //Send the inputted book as a parameter to the main function's implementation of this method
+                            listener.onOkPressed(new Book(book_title, book_author, book_ISBN, book_status, book_description)); //Send the inputted book as a parameter to the main function's implementation of this method
+                            dialog.dismiss();
                         }
-                    }}).create();
+
+                    }
+                });
+
+            }
+        });
+        dialog.show();
+
+
+    return dialog;
     }
 
     /**
@@ -162,3 +237,8 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         }
     }
 }
+
+
+
+
+
