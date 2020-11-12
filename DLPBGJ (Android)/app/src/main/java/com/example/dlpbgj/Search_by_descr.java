@@ -207,17 +207,5 @@ public class Search_by_descr extends AppCompatActivity {
                 }}
         });
 
-
-        /*bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Book temp = bookDataList.get(i);
-                AddBookFragment fragment = AddBookFragment.newInstance(temp, new User("param", "hooda"));
-                fragment.show(getSupportFragmentManager(),"ADD_BOOK");
-            }
-        });*/
-
-
-
     }}
 

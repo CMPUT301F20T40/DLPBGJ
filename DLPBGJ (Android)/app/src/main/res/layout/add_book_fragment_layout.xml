@@ -44,6 +44,7 @@
 
      <Button
          android:id="@+id/scan2"
+         android:foreground="?attr/selectableItemBackgroundBorderless"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:padding="10dp"
@@ -71,6 +72,19 @@
         android:inputType="textPersonName"
         android:hint="Enter book's Description"
         android:textColor="#B59C34"/>
+    <Button
+        android:id="@+id/Picture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UPLOAD PICTURE"
+        android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"/>
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/bookPic"
+        />
+
 
 
 </LinearLayout>

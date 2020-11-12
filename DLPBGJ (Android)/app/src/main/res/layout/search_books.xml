@@ -13,16 +13,19 @@
             android:layout_width="280dp"
             android:layout_height="40dp"
             android:ems="10"
+            android:textColor="#B59C34"
             android:inputType="textPersonName"
             android:hint="Description">
         </EditText>
 
         <Button
             android:id="@+id/search"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_gravity="end"
-            android:text="SEARCH">
+            android:text="SEARCH"
+            android:background="@drawable/gradient">
 
         </Button>
 

@@ -2,22 +2,37 @@ package com.example.dlpbgj;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -28,6 +43,10 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     private EditText bookStatus;
     private EditText bookDescription;
     private OnFragmentInteractionListener listener;
+    private final int REQUEST = 22;
+    private Uri path;
+    private ImageView bookPic;
+    private Book book;
 
     public interface OnFragmentInteractionListener {
         void onOkPressed(Book newBook);
@@ -71,7 +90,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_book_fragment_layout, null);
         // final String barcode = (String) getActivity().getIntent().getSerializableExtra(barcode_scanner.varText);
-
+        bookPic = view.findViewById(R.id.bookPic);
         bookTitle = view.findViewById(R.id.book_title_editText);
         bookAuthor = view.findViewById(R.id.book_author_editText);
         bookISBN = view.findViewById(R.id.book_ISBN_editText);
@@ -84,9 +103,10 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         validStatus.add("Requested");
 
         Button scan = view.findViewById(R.id.scan2);
+        Button picture = view.findViewById(R.id.Picture);
         String title = "Add Book";
         if (getArguments() != null) {
-            Book book = (Book) getArguments().get("Book");
+            book = (Book) getArguments().get("Book");
             title = "Edit Book";
             bookTitle.setText(book.getTitle());
             bookAuthor.setText(book.getAuthor());
@@ -105,6 +125,12 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                 Intent intent = new Intent(getActivity(), barcode_scanner.class);
                 startActivityForResult(intent, 1);
 
+            }
+        });
+        picture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SelectPhoto();
             }
         });
 
@@ -128,7 +154,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                     @Override
                     public void onClick(View v) {
                         if (getArguments() != null) {
-                            Book book = (Book) getArguments().get("Book");
+                            book = (Book) getArguments().get("Book");
                             listener.onDeletePressed(book);
                         } else {
                             listener.onOkPressed();
@@ -235,7 +261,75 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                 bookISBN.setText(code);
             }
         }
+        if (requestCode == REQUEST && resultCode == -1 && data != null && data.getData() != null) {
+            path = data.getData();
+            try {
+                Context applicationContext = MyBooks.getContextOfApplication();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(applicationContext.getContentResolver(), path);
+                bookPic.setImageBitmap(bitmap);
+            }
+
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B59C34"));
+        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B59C34"));
+        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#B59C34"));
+    }
+
+    private void SelectPhoto()
+    {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Image"), REQUEST);
+    }
+
+   /* private void uploadPhoto(Book book)
+    {
+        if (path != null) {
+            final ProgressDialog statusDialog = new ProgressDialog(getContext());
+            statusDialog.setTitle("Uploading");
+            statusDialog.show();
+
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference();
+            StorageReference ref = storageReference.child("images/"+ book.getOwner() + book.getTitle());
+
+            ref.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
+                {
+                    statusDialog.dismiss();
+                    Toast.makeText(getContext(), "Uploaded!!", Toast.LENGTH_SHORT).show();
+                }
+            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e)
+                        {
+                            statusDialog.dismiss();
+                            Toast.makeText(getContext(), "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
+                        {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            statusDialog.setMessage("Uploaded " + (int)progress + "%");
+                        }
+                    });
+        }
+    }*/
+
 }
 
 

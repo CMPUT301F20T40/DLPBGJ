@@ -60,6 +60,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <Button
+            android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:layout_width="190dp"
             android:layout_marginLeft="10dp"
             android:id="@+id/button1"
@@ -67,6 +69,8 @@
             android:layout_height="wrap_content">
         </Button>
         <Button
+            android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:layout_width="190dp"
             android:layout_marginLeft="10dp"
             android:id="@+id/button2"
@@ -82,19 +86,19 @@
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp" />
     <LinearLayout
-        android:layout_width="wrap_content"
-
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="left|bottom"
         android:gravity="bottom"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="2">
 
         <Button
             android:id="@+id/BackButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:text="BACK"
             android:layout_weight="1"/>
         <Button
@@ -102,6 +106,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:text="UPDATE"
             android:layout_weight="1"/>
     </LinearLayout>

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +52,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     int checkCount = 0;
     boolean aUncheck = false;
     boolean bUncheck = false;
+    public static Context contextOfApplication;
 
     /**
      * onCreate Called when MyBooks activity is launched.
@@ -61,7 +63,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
         bookList=findViewById(R.id.book_list);
-
+        contextOfApplication = getApplicationContext();
         Intent intent = getIntent();
         currentUser = (User)getIntent().getSerializableExtra(HomePage.EXTRA_MESSAGE2);  //Catching the object of current user who's logged in
 
@@ -374,6 +376,11 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     @Override
     public void onOkPressed(){
         //Do nothing
+    }
+
+    public static Context getContextOfApplication()
+    {
+        return contextOfApplication;
     }
 
 }
