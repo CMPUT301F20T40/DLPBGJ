@@ -72,6 +72,10 @@
         android:inputType="textPersonName"
         android:hint="Enter book's Description"
         android:textColor="#B59C34"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
     <Button
         android:id="@+id/Picture"
         android:layout_width="wrap_content"
@@ -79,11 +83,13 @@
         android:text="UPLOAD PICTURE"
         android:background="@drawable/gradient"
         android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/bookPic"
         />
+    </LinearLayout>
 
 
 
