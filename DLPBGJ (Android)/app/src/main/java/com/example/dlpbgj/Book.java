@@ -1,6 +1,7 @@
 package com.example.dlpbgj;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Book implements Serializable {
     String title;
@@ -9,6 +10,7 @@ public class Book implements Serializable {
     String status;
     String description="";
     String owner;
+    ArrayList<String> requests;
 
     public Book(String title, String author, String ISBN) {
         this.title = title;
@@ -50,9 +52,16 @@ public class Book implements Serializable {
         this.requests = req;
     }
 
-
     public String getTitle() {
         return title;
+    }
+
+    public ArrayList<String> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(ArrayList<String> requests) {
+        this.requests = requests;
     }
 
     public void setTitle(String title) {
