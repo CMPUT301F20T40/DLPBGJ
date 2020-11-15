@@ -66,14 +66,8 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent =  new Intent(getApplicationContext(), Search_by_descr.class);
+                intent.putExtra("User", currentUser);
                 startActivity(intent);
-            }
-        });
-        request.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent RIntent = new Intent(getApplicationContext(),RequestBooks.class);
-                startActivity(RIntent);
             }
         });
 

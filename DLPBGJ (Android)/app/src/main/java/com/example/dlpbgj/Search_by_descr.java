@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,7 +46,8 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     ArrayList<Book> filteredDataList;
     ArrayAdapter<Book> filteredBookAdapter;
     FirebaseFirestore db;
-    EditText description
+    EditText description;
+    Button search;
     CollectionReference userBookCollectionReference;
     String TAG = "Sample";
     private User currentUser;
@@ -67,8 +69,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
         filteredDataList = new ArrayList<Book>();
         bookAdapter = new customBookAdapter(this,bookDataList);
         filteredBookAdapter = new customBookAdapter(this,filteredDataList);
-
-
+        bookList.setAdapter(bookAdapter);
 
         db = FirebaseFirestore.getInstance();
         final FirebaseFirestore Db = FirebaseFirestore.getInstance();
@@ -96,24 +97,26 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                                 String book_author = (String) f.getData().get("Book Author");
                                                 String book_ISBN = (String) f.getData().get("Book ISBN");
                                                 String book_status = (String) f.getData().get("Book Status");
-                                                Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, username);
+                                                ArrayList<String> req = (ArrayList<String>) f.getData().get("Requests");
+                                                System.out.println("Reached compare\n");
+                                                Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
                                                 bookDataList.add(thisBook);
+                                                bookAdapter.notifyDataSetChanged();
                                                 if(checkAvail.isChecked()&&checkBorr.isChecked()){
                                                     if(!(book_status.toLowerCase().equals(availableConstraint)||book_status.toLowerCase().equals(borrowedConstraint))){
-                                                        bookDataList.remove(thisBook);}}
-                                                if(checkBorr.isChecked()&&!checkAvail.isChecked())
-                                                {
+                                                        bookDataList.remove(thisBook);
+                                                    }
+                                                }
+                                                if(checkBorr.isChecked()&&!checkAvail.isChecked()) {
                                                     if(!(book_status.toLowerCase().equals(borrowedConstraint))){
                                                         bookDataList.remove(thisBook);
                                                     }
                                                 }
-                                                if(!checkBorr.isChecked()&&checkAvail.isChecked())
-                                                {
+                                                if(!checkBorr.isChecked()&&checkAvail.isChecked()) {
                                                     if(!(book_status.toLowerCase().equals(availableConstraint))){
                                                         bookDataList.remove(thisBook);
                                                     }
                                                 }
-
                                                 bookAdapter.notifyDataSetChanged();
                                                 bookList.setAdapter(bookAdapter);
                                             }
@@ -125,11 +128,10 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                     }
                 });
             }
-
         });
+
         Intent intent = getIntent();
-        currentUser = (User)getIntent().getSerializableExtra(HomePage.EXTRA_MESSAGE2);
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        currentUser = (User) getIntent().getSerializableExtra("User");
 
         checkAvail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -146,33 +148,25 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                             if(book.getStatus().toLowerCase().equals(availableConstraint))
                                 filteredDataList.add(book);
                         }
-
-
-
-
                     }
                     filteredBookAdapter.notifyDataSetChanged();
                     bookList.setAdapter(filteredBookAdapter);
-
-                }
-                    else{
-                        if(!checkBorr.isChecked())
-                            bookList.setAdapter(bookAdapter);
-                        else{
-                    for (int i = 0; i < bookDataList.size(); i++) {
-                        Book book = bookDataList.get(i);
-                        filteredDataList.add(book);
-                        if (!(book.getStatus().toLowerCase().equals(borrowedConstraint))) {
-                            filteredDataList.remove(book);
+                } else {
+                    if (!checkBorr.isChecked())
+                        bookList.setAdapter(bookAdapter);
+                    else {
+                        for (int i = 0; i < bookDataList.size(); i++) {
+                            Book book = bookDataList.get(i);
+                            filteredDataList.add(book);
+                            if (!(book.getStatus().toLowerCase().equals(borrowedConstraint))) {
+                                filteredDataList.remove(book);
+                            }
                         }
-
-                    }
                         filteredBookAdapter.notifyDataSetChanged();
                         bookList.setAdapter(filteredBookAdapter);
-
                     }
-
-            }}
+                }
+            }
         });
 
         checkBorr.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -190,14 +184,9 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                             if(book.getStatus().toLowerCase().equals(borrowedConstraint))
                                 filteredDataList.add(book);
                         }
-
-
-
-
                     }
                     filteredBookAdapter.notifyDataSetChanged();
                     bookList.setAdapter(filteredBookAdapter);
-
                 }
                 else{
                     if(!checkAvail.isChecked())
@@ -209,18 +198,15 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                             if (!(book.getStatus().toLowerCase().equals(availableConstraint))) {
                                 filteredDataList.remove(book);
                             }
-
                         }
                         filteredBookAdapter.notifyDataSetChanged();
                         bookList.setAdapter(filteredBookAdapter);
-
                     }
-
-                }}
+                }
+            }
         });
 
-
-        /*bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Book temp = bookDataList.get(i);
@@ -234,82 +220,46 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     @Override
     public void onOkPressed(final Book book, User user) {
         final HashMap<String, Object> data = new HashMap<>();
-        data.put("Book Author", book.getAuthor());
-        data.put("Book ISBN", book.getISBN());
-        data.put("Book Status",book.getStatus());
-        data.put("Book Description",book.getDescription());
-        data.put("Owner",book.getOwner());
-        data.put("Requests", book.getRequests().addRequest(user.getUsername()));
-        userBookCollectionReference = db.collection(book.getOwner());
-
-        DocumentReference docRef = userBookCollectionReference.document(book.getTitle());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-                    //if (document.exists()){
-                    userBookCollectionReference
-                            .document(book.getTitle())
-                            .update(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.d(TAG, "Data has been updated successfully!");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d(TAG, "Data could not be updated!" + e.toString());
-                                }
-                            });
-                    //}
-                    /*else {
+        System.out.println("Pressed OK");
+        ArrayList<String> req = book.getRequests();
+        if (currentUser.getUsername().equals(book.getOwner())) {
+            System.out.println("Own Book!");
+            Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST YOUR OWN BOOK!! :)", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else if (!req.contains(user.getUsername())) {
+            req.add(user.getUsername());
+            data.put("Requests", req);
+            userBookCollectionReference = db.collection("Users/" + book.getOwner() + "/MyBooks");
+            DocumentReference docRef = userBookCollectionReference.document(book.getTitle());
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
                         userBookCollectionReference
-                                .document(oldBookName)
-                                .delete()
+                                .document(book.getTitle())
+                                .update(data)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "user book data has been deleted");
+                                        Log.d(TAG, "Data has been updated successfully!");
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Log.d(TAG,"Failed to delete the user book data");
+                                        Log.d(TAG, "Data could not be updated!" + e.toString());
                                     }
                                 });
-                        bookDataList.remove(newBook);
-                        userBookCollectionReference
-                                .document(newBook.getTitle())
-                                .set(data)
-                                //Debugging methods
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // These are a method which gets executed when the task is succeeded
-                                        Log.d(TAG, "Data has been added successfully!");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // These are a method which gets executed if there’s any problem
-                                        Log.d(TAG, "Data could not be added!" + e.toString());
-                                    }
-                                });
-                    }*/
+                    }
                 }
-            }
-        });
-        bookAdapter.notifyDataSetChanged();
+            });
+            bookAdapter.notifyDataSetChanged();
+        }
+        else {
+            Toast toast = Toast.makeText(Search_by_descr.this, "ALREADY REQUESTED THIS BOOK", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 }
-        });*/
-
-
-
-    }}
-
