@@ -40,6 +40,16 @@ public class Book implements Serializable {
         this.owner = owner;
     }
 
+    public Book(String title, String author, String ISBN, String status, String description, String owner, ArrayList<String> req) {
+        this.title = title;
+        this.author = author;
+        this.ISBN = ISBN;
+        this.status = status;
+        this.description = description;
+        this.owner = owner;
+        this.requests = req;
+    }
+
 
     public String getTitle() {
         return title;
