@@ -2,10 +2,14 @@ package com.example.dlpbgj;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +19,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,10 +35,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //When the user clicks MyBooks button from HomePage, this activity gets invoked
 public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFragmentInteractionListener{
@@ -44,6 +54,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     FirebaseFirestore db;
     private User currentUser;
     CollectionReference userBookCollectionReference;    //This is the sub-collection reference for the user who's logged in pointing to the collection of owned books
+    CollectionReference arrayReference;
     String TAG = "Sample";
     CheckBox checkAvail;
     CheckBox checkBorr;
@@ -228,16 +239,15 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
      */
 
     @Override
-    public void onOkPressed(Book newBook) { //Whenever the user adds a book, this method is called where the added book is sent as a parameter from the fragment
+    public void onOkPressed(final Book newBook) { //Whenever the user adds a book, this method is called where the added book is sent as a parameter from the fragment
 
-        HashMap<String, String> data = new HashMap<>();
-        String bookTitle=newBook.getTitle();    //Title of the book will be the ID of the document representing the book inside the sub-collections of MyBooks
+        final HashMap<String, String> data = new HashMap<>();
+        final String bookTitle=newBook.getTitle();    //Title of the book will be the ID of the document representing the book inside the sub-collections of MyBooks
         final String bookAuthor=newBook.getAuthor();
         String bookISBN=newBook.getISBN();
         String bookStatus=newBook.getStatus();
         String bookDescription = newBook.getDescription();
         String bookOwner = currentUser.getUsername();
-
         if (bookTitle.length()>0 && bookAuthor.length()>0 && bookISBN.length()>0 && bookStatus.length()>0) {//Data inside the document will consist of the following
             //Adding data inside the hash map
             data.put("Book Author", bookAuthor);
@@ -246,25 +256,62 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             data.put("Book Description",bookDescription);
             data.put("Owner",bookOwner);
         }
+        arrayReference = db.collection("GlobalArray");
+        DocumentReference docRef = arrayReference.document("Array"); //If username does not exist then prompt for a sign-up
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()){
+                        Map<String,Object> temp = document.getData();
+                        ArrayList<String> name = (ArrayList<String>) temp.get("Array");
+                        data.put("Uid",Integer.toString(name.size()+1));
+                        name.add(Integer.toString(name.size()+1));
+                        HashMap<String,Object> array = new HashMap<>();
+                        array.put("Array",name);
+                        arrayReference
+                                .document("Array")
+                                .update(array)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG,"Array Size successfully updated");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG,"Failed to update Array Size");
+                                    }
+                                });
+                        userBookCollectionReference
+                                .document(bookTitle)
+                                .set(data)
+                                //Debugging methods
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // These are a method which gets executed when the task is succeeded
+                                        Log.d(TAG, "Data has been added successfully!");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // These are a method which gets executed if there’s any problem
+                                        Log.d(TAG, "Data could not be added!" + e.toString());
+                                    }
+                                });
+                    }
+                }
+                else{
+                    Log.d("Param","get failed with ",task.getException());
+                }
+            }
+        });
 
-        userBookCollectionReference
-                .document(bookTitle)
-                .set(data)
-                //Debugging methods
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                // These are a method which gets executed when the task is succeeded
-                        Log.d(TAG, "Data has been added successfully!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                // These are a method which gets executed if there’s any problem
-                        Log.d(TAG, "Data could not be added!" + e.toString());
-                    }
-                });
+
     }
 
     /**
@@ -280,7 +327,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         data.put("Book Status",newBook.getStatus());
         data.put("Book Description",newBook.getDescription());
         data.put("Owner",newBook.getOwner());
-
+        data.put("Uid",newBook.getUid());
 
         DocumentReference docRef = userBookCollectionReference.document(newBook.getTitle());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -382,6 +429,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     {
         return contextOfApplication;
     }
+
 
 }
 

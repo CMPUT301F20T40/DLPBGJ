@@ -1,3 +1,4 @@
+
 package com.example.dlpbgj;
 
 import android.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +49,8 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     private Uri path;
     private ImageView bookPic;
     private Book book;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     public interface OnFragmentInteractionListener {
         void onOkPressed(Book newBook);
@@ -291,44 +295,6 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         startActivityForResult(Intent.createChooser(intent, "Select Image"), REQUEST);
     }
 
-   /* private void uploadPhoto(Book book)
-    {
-        if (path != null) {
-            final ProgressDialog statusDialog = new ProgressDialog(getContext());
-            statusDialog.setTitle("Uploading");
-            statusDialog.show();
-
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageReference = storage.getReference();
-            StorageReference ref = storageReference.child("images/"+ book.getOwner() + book.getTitle());
-
-            ref.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                {
-                    statusDialog.dismiss();
-                    Toast.makeText(getContext(), "Uploaded!!", Toast.LENGTH_SHORT).show();
-                }
-            })
-
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e)
-                        {
-                            statusDialog.dismiss();
-                            Toast.makeText(getContext(), "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
-                        {
-                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            statusDialog.setMessage("Uploaded " + (int)progress + "%");
-                        }
-                    });
-        }
-    }*/
 
 }
 

@@ -82,11 +82,12 @@
         android:layout_height="wrap_content"
         android:text="UPLOAD PICTURE"
         android:background="@drawable/gradient"
-        android:foreground="?attr/selectableItemBackgroundBorderless"/>
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        />
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:id="@+id/bookPic"
         />
     </LinearLayout>

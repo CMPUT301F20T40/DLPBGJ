@@ -76,6 +76,40 @@ public class MainActivity extends AppCompatActivity {
         //Instance of the User db
         userDb = FirebaseFirestore.getInstance();
 
+        final CollectionReference arrayReference = userDb.collection("GlobalArray");
+        DocumentReference docRef = arrayReference.document("Array"); //If username does not exist then prompt for a sign-up
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (!document.exists()){
+                        HashMap<String,Object> value = new HashMap<>();
+                        ArrayList<String> array = new ArrayList<>();
+                        value.put("Array",array);
+                        arrayReference
+                                .document("Array")
+                                .set(value)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG,"Array Successfullt Added");
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG,"Failed to Add Array");
+                                    }
+                                });
+                    }
+                }
+                else{
+                    Log.d("Param","get failed with ",task.getException());
+                }
+            }
+        });
+
         final CollectionReference collectionReference = userDb.collection("Users");
         login.setOnClickListener(new View.OnClickListener() {
             /**

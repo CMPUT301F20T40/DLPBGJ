@@ -9,6 +9,7 @@ public class Book implements Serializable {
     String status;
     String description="";
     String owner;
+    String uid;
 
     public Book(String title, String author, String ISBN) {
         this.title = title;
@@ -47,6 +48,14 @@ public class Book implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getAuthor() {
