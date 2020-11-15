@@ -63,6 +63,7 @@
         />
     <Button
         android:layout_width="100dp"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:layout_height="wrap_content"
         android:text="Back"
         android:background="@drawable/gradient"

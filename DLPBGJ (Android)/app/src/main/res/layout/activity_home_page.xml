@@ -6,6 +6,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".HomePage">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:textColor="#B59C34"
+            android:layout_weight="4"
+            android:id="@+id/MyName"
+            android:textSize="25sp"
+            />
+        <ImageView
+            android:id="@+id/Profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
 
     <Button
         android:id="@+id/MyBooks"
@@ -13,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="My Books" />
 
 
@@ -23,6 +44,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginTop="5dp"
         android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="My INFO" />
 
     <Button
@@ -32,14 +54,9 @@
         android:layout_gravity="bottom|end"
         android:layout_marginTop="5dp"
         android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="Search" />
 
-    <Button
-        android:id="@+id/RequestABook"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="bottom|end"
-        android:text="Request" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -54,6 +71,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:text="SIGN OUT" />
     </LinearLayout>
 

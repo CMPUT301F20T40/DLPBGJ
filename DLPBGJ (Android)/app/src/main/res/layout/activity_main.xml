@@ -73,6 +73,7 @@
 
         <Button
             android:id="@+id/login_button"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:layout_width="120dp"
             android:layout_height="50dp"
             android:layout_marginLeft="50dp"
@@ -83,6 +84,7 @@
 
         <Button
             android:id="@+id/signup_button"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:layout_width="120dp"
             android:layout_height="50dp"
             android:layout_marginLeft="50dp"
