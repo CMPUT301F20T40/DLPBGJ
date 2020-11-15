@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -26,14 +25,8 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     private EditText bookTitle;
     private EditText bookAuthor;
     private EditText bookISBN;
-    //private EditText bookStatus;
+    private EditText bookStatus;
     private EditText bookDescription;
-    private CheckBox sAvailable;
-    private CheckBox sBorrowed;
-    private CheckBox sRequested;
-    private CheckBox sAccepted;
-    private TextView sText;
-
     private OnFragmentInteractionListener listener;
 
     public interface OnFragmentInteractionListener {
@@ -82,13 +75,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         bookTitle = view.findViewById(R.id.book_title_editText);
         bookAuthor = view.findViewById(R.id.book_author_editText);
         bookISBN = view.findViewById(R.id.book_ISBN_editText);
-        //bookStatus = view.findViewById(R.id.book_status_editText);
-        sAccepted = view.findViewById(R.id.status_accepted);
-        sBorrowed = view.findViewById(R.id.status_borrowed);
-        sRequested = view.findViewById(R.id.status_requested);
-        sAvailable = view.findViewById(R.id.status_available);
-        sText = view.findViewById(R.id.statusText);
-
+        bookStatus = view.findViewById(R.id.book_status_editText);
         bookDescription = view.findViewById(R.id.book_description_editText);
         final ArrayList<String> validStatus = new ArrayList<String>();
         validStatus.add("Available");
@@ -104,18 +91,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
             bookTitle.setText(book.getTitle());
             bookAuthor.setText(book.getAuthor());
             bookISBN.setText(book.getISBN());
-            //bookStatus.setText(book.getStatus());
-            String currentStatus = book.getStatus();
-            if(currentStatus.equals("Available"))
-                sAvailable.setChecked(true);
-            if(currentStatus.equals("Borrowed"))
-                sBorrowed.setChecked(true);
-            if(currentStatus.equals("Requested"))
-                sRequested.setChecked(true);
-            if(currentStatus.equals("Accepted"))
-                sAccepted.setChecked(true);
-
-
+            bookStatus.setText(book.getStatus());
             bookDescription.setText(book.getDescription());
 
         }
@@ -169,25 +145,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                         String book_title = bookTitle.getText().toString();
                         String book_author = bookAuthor.getText().toString();
                         String book_ISBN = bookISBN.getText().toString();
-                        String book_status = "";// = bookStatus.getText().toString();
-                        int checkCount = 0;
-                        if(sAvailable.isChecked()){
-                            book_status = "Available";
-                            checkCount++;
-                        }
-                        if(sBorrowed.isChecked()){
-                            book_status = "Borrowed";
-                            checkCount++;
-                        }
-                        if(sRequested.isChecked()){
-                            book_status = "Requested";
-                            checkCount++;
-                        }
-                        if (sAccepted.isChecked()){
-                            book_status = "Accepted";
-                            checkCount++;
-                        }
-
+                        String book_status = bookStatus.getText().toString();
                         String book_description = bookDescription.getText().toString();
                         View focus = null;
                         boolean wrong_input = false;
@@ -201,35 +159,25 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
 
                         if (book_status.equals("")) { //Mandatory to enter book's status
                             //System.out.println("!!!IF!!!");
-                            sText.setError("Choose Status");
+                            bookStatus.setError("Please enter the book's status");
                             wrong_input = true;
-                            focus = sText;
+                            focus = bookStatus;
                         }
 
-                        if(checkCount>1){
-                            sText.setError("Choose 1");
-                            wrong_input = true;
-                            focus = sText;
-                        }
-
-                        /*if (book_description.equals("")) {    //Mandatory to enter book's description
+                        if (book_description.equals("")) {    //Mandatory to enter book's description
                             bookDescription.setError("Please enter the book's description");
                             wrong_input = true;
                             focus = bookDescription;
 
-                        }*/
-
+                        }
                         if (!validStatus.contains(book_status)) { //Input validation for the status
-                            sText.setError("Please enter a valid status: Available, Borrowed, Requested, Accepted");
+                            bookStatus.setError("Please enter a valid status: Available, Borrowed, Requested, Accepted");
                             wrong_input = true;
-                            focus = sAccepted;
+                            focus = bookStatus;
 
                         }
                         if (book_author.equals("")) {
-                            //book_author = "Unknown";
-                            wrong_input = true;
-                            bookAuthor.setError("Required Field");
-                            focus = bookAuthor;
+                            book_author = "Unknown";
 
                         }
                         if (book_ISBN.equals("")) {
