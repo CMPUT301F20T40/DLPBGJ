@@ -98,6 +98,9 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                                 String book_ISBN = (String) f.getData().get("Book ISBN");
                                                 String book_status = (String) f.getData().get("Book Status");
                                                 ArrayList<String> req = (ArrayList<String>) f.getData().get("Requests");
+                                                if(req == null){
+                                                    req = new ArrayList<String>();
+                                                }
                                                 System.out.println("Reached compare\n");
                                                 Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
                                                 bookDataList.add(thisBook);
@@ -222,7 +225,11 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
         final HashMap<String, Object> data = new HashMap<>();
         System.out.println("Pressed OK");
         ArrayList<String> req = book.getRequests();
-        if (currentUser.getUsername().equals(book.getOwner())) {
+        if(book.getStatus().equals("Borrowed")){
+            Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST A BORROWED BOOK!! ;)", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else if (currentUser.getUsername().equals(book.getOwner())) {
             System.out.println("Own Book!");
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST YOUR OWN BOOK!! :)", Toast.LENGTH_SHORT);
             toast.show();
@@ -230,6 +237,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
         else if (!req.contains(user.getUsername())) {
             req.add(user.getUsername());
             data.put("Requests", req);
+            data.put("Book Status", "Requested");
             userBookCollectionReference = db.collection("Users/" + book.getOwner() + "/MyBooks");
             DocumentReference docRef = userBookCollectionReference.document(book.getTitle());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

@@ -35,6 +35,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -53,6 +54,9 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     ArrayList<Book> filteredDataList;
     FirebaseFirestore db;
     private User currentUser;
+    private Uri path;
+    StorageReference storageReference;
+    FirebaseStorage storage;
     CollectionReference userBookCollectionReference;    //This is the sub-collection reference for the user who's logged in pointing to the collection of owned books
     CollectionReference arrayReference;
     String TAG = "Sample";
@@ -76,6 +80,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         bookList=findViewById(R.id.book_list);
         contextOfApplication = getApplicationContext();
         Intent intent = getIntent();
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         currentUser = (User)getIntent().getSerializableExtra(HomePage.EXTRA_MESSAGE2);  //Catching the object of current user who's logged in
 
         bookDataList=new ArrayList<Book>();
@@ -100,10 +108,8 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                     FirebaseFirestoreException error) { //Manages the state of the sub-collection
-
                 bookDataList.clear();
-                for(QueryDocumentSnapshot doc: queryDocumentSnapshots)
-                {
+                for(QueryDocumentSnapshot doc: queryDocumentSnapshots) {
                     Log.d(TAG, String.valueOf(doc.getData().get("Book Author")));
                     String book_title = doc.getId();
                     String book_author = (String) doc.getData().get("Book Author");
@@ -111,11 +117,12 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                     String book_status = (String) doc.getData().get("Book Status");
                     String book_description = (String) doc.getData().get("Book Description");
                     String book_owner = (String) doc.getData().get("Owner");
-
-                    bookDataList.add(new Book(book_title,book_author,book_ISBN,book_status,book_description,book_owner)); // Adding the cities and provinces from FireStore
+                    String book_uid = (String) doc.getData().get("Uid");
+                    Book temp = new Book(book_title,book_author,book_ISBN,book_status,book_description,book_owner);
+                    temp.setUid(book_uid);
+                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
                 }
                 bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
-
             }
 
         });
@@ -138,14 +145,9 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                             if(book.getStatus().toLowerCase().equals(availableConstraint))
                                 filteredDataList.add(book);
                         }
-
-
-
-
                     }
                     filteredBookAdapter.notifyDataSetChanged();
                     bookList.setAdapter(filteredBookAdapter);
-
                 }
                 else{
                     if(!checkBorr.isChecked())
@@ -161,9 +163,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                         }
                         filteredBookAdapter.notifyDataSetChanged();
                         bookList.setAdapter(filteredBookAdapter);
-
                     }
-
                 }}
         });
 
@@ -310,8 +310,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 }
             }
         });
-
-
+        //uploadPhoto(newBook);
     }
 
     /**
@@ -391,8 +390,11 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 }
             }
         });
+       // uploadPhoto(newBook);
         bookAdapter.notifyDataSetChanged();
     }
+
+
 
     /**
      * When a user wants to delete the selected book. This function will delete it from the database as well.

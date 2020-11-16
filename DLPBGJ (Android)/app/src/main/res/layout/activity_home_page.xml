@@ -78,6 +78,16 @@
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="My Requests" />
 
+    <Button
+        android:id="@+id/Borrowed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:text="Borrowed Books" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="512dp"

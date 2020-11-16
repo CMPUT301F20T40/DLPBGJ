@@ -22,6 +22,7 @@
         <activity android:name=".MyBooks" />
         <activity android:name=".Search_by_descr" />
         <activity android:name=".View_Requests" />
+        <activity android:name=".View_Borrowed" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

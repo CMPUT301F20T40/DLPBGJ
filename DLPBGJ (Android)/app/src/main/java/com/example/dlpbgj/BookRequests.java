@@ -88,7 +88,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         book.setStatus("Borrowed");
         book.emptyRequests();
         map.put("Requests",book.getRequests());
-        map.put("Status",book.getStatus());
+        map.put("Book Status",book.getStatus());
         userBookCollectionReference
                 .document(book.getTitle())
                 .update(map)
