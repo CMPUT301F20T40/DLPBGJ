@@ -12,6 +12,7 @@ public class Book implements Serializable {
     String owner;
     ArrayList<String> requests;
     String uid;
+    String borrower;
 
     public Book(String title, String author, String ISBN) {
         this.title = title;
@@ -65,6 +66,14 @@ public class Book implements Serializable {
         this.requests = requests;
     }
 
+    public void removeRequest(String request){
+        this.requests.remove(request);
+    }
+
+    public void emptyRequests(){
+        this.requests.clear();
+    }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -115,5 +124,13 @@ public class Book implements Serializable {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public String getBorrower() {
+        return borrower;
+    }
+
+    public void setBorrower(String borrower) {
+        this.borrower = borrower;
     }
 }
