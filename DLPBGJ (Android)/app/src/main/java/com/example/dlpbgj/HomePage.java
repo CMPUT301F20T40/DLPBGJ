@@ -54,6 +54,7 @@ public class HomePage extends AppCompatActivity implements ImageFragement.OnFrag
         Button signOut = findViewById(R.id.SignOut);
         Button bookRequests = findViewById(R.id.BookRequests);
         Button returnBook = findViewById(R.id.Return);
+        Button acceptBook = findViewById(R.id.Accept);
         final ImageView profile = findViewById(R.id.Profile);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         final StorageReference storageReference = storage.getReference();
@@ -181,7 +182,14 @@ public class HomePage extends AppCompatActivity implements ImageFragement.OnFrag
             }
         });
 
-
+        acceptBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),AcceptBook.class);
+                intent.putExtra("User",currentUser);
+                startActivity(intent);
+            }
+        });
     }
     @Override
     public void onBackPressed(){

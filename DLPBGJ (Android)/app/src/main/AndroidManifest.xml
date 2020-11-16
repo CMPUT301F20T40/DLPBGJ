@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ReturnBook"></activity>
+        <activity android:name=".ReturnBook"/>
+        <activity android:name=".AcceptBook"/>
         <activity android:name=".BookRequests" />
         <activity android:name=".UserProfile" />
         <activity android:name=".ViewBookDetails" />

@@ -87,6 +87,16 @@
         android:background="@drawable/gradient"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="Return a Book" />
+
+    <Button
+        android:id="@+id/Accept"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:text="Accept a Book" />
   
       <Button
         android:id="@+id/Borrowed"
