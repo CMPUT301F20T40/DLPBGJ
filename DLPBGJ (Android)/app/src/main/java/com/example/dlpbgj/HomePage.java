@@ -49,6 +49,7 @@ public class HomePage extends AppCompatActivity implements ImageFragement.OnFrag
         Button info_button = findViewById(R.id.MyInfo);
         Button myBooksButton=findViewById(R.id.MyBooks);
         Button search = findViewById(R.id.Search);
+        Button requests = findViewById(R.id.Requests);
         Button signOut = findViewById(R.id.SignOut);
         Button bookRequests = findViewById(R.id.BookRequests);
         final ImageView profile = findViewById(R.id.Profile);
@@ -129,6 +130,15 @@ public class HomePage extends AppCompatActivity implements ImageFragement.OnFrag
             @Override
             public void onClick(View v) {
                 Intent intent =  new Intent(getApplicationContext(), Search_by_descr.class);
+                intent.putExtra("User", currentUser);
+                startActivity(intent);
+            }
+        });
+
+        requests.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent =  new Intent(getApplicationContext(), View_Requests.class);
                 intent.putExtra("User", currentUser);
                 startActivity(intent);
             }
