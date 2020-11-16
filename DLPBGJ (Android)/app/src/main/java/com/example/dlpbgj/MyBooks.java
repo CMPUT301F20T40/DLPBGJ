@@ -111,8 +111,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                     String book_status = (String) doc.getData().get("Book Status");
                     String book_description = (String) doc.getData().get("Book Description");
                     String book_owner = (String) doc.getData().get("Owner");
-
-                    bookDataList.add(new Book(book_title,book_author,book_ISBN,book_status,book_description,book_owner)); // Adding the cities and provinces from FireStore
+                    String book_uid = (String) doc.getData().get("Uid");
+                    Book temp = new Book(book_title,book_author,book_ISBN,book_status,book_description,book_owner);
+                    temp.setUid(book_uid);
+                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
                 }
                 bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
 

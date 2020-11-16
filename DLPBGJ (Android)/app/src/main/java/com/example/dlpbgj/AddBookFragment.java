@@ -117,7 +117,6 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
             bookISBN.setText(book.getISBN());
             bookStatus.setText(book.getStatus());
             bookDescription.setText(book.getDescription());
-
         }
         /**
          * When scan button is clicked
