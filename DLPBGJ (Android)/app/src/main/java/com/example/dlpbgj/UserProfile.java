@@ -185,8 +185,7 @@ public class UserProfile extends AppCompatActivity {
         });
     }
 
-    private void SelectPhoto()
-    {
+    private void SelectPhoto() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -194,32 +193,26 @@ public class UserProfile extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-
         if (requestCode == REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             path = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
                 imageView.setImageBitmap(bitmap);
             }
-
             catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
-    private void uploadPhoto(User user)
-    {
+
+    private void uploadPhoto(User user) {
         if (path != null) {
             final ProgressDialog statusDialog = new ProgressDialog(this);
             statusDialog.setTitle("Uploading");
             statusDialog.show();
-
             StorageReference ref = storageReference.child("images/" + user.getUsername());
-
             ref.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
@@ -228,7 +221,6 @@ public class UserProfile extends AppCompatActivity {
                                     Toast.makeText(UserProfile.this, "Uploaded!!", Toast.LENGTH_SHORT).show();
                                 }
                             })
-
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e)

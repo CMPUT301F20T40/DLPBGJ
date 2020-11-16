@@ -7,6 +7,7 @@ import android.widget.ListView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -16,7 +17,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class View_Requests extends AppCompatActivity {
+public class View_Borrowed extends AppCompatActivity {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
@@ -35,6 +36,7 @@ public class View_Requests extends AppCompatActivity {
         cr.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                bookDataList.clear();
                 for(QueryDocumentSnapshot d : value){
                     final String username = (String) d.getId();
                     CollectionReference foruser = Db.collection("Users/" + username + "/MyBooks");
@@ -42,14 +44,16 @@ public class View_Requests extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                             for(QueryDocumentSnapshot f : value2){
-                                ArrayList<String> book_requests = (ArrayList<String>) f.getData().get("Requests");
-                                if(book_requests != null){
-                                    if(book_requests.contains(currentUser.getUsername())){
+                                String borrower = (String) f.getData().get("Borrower");
+                                if(borrower != null){
+                                    if(borrower.equals(currentUser.getUsername())){
                                         String book_title = f.getId();
                                         String book_author = (String) f.getData().get("Book Author");
                                         String book_ISBN = (String) f.getData().get("Book ISBN");
                                         String book_status = (String) f.getData().get("Book Status");
                                         String book_description = (String) f.getData().get("Book Description");
+                                        ArrayList<String> book_requests = (ArrayList<String>) f.getData().get("Requests");
+                                        System.out.println("Reached compare\n");
                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, book_requests);
                                         bookDataList.add(thisBook);
                                         bookAdapter.notifyDataSetChanged();
