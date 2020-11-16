@@ -14,6 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".BookRequests"></activity>
         <activity android:name=".UserProfile" />
         <activity android:name=".ViewBookDetails" />
         <activity android:name=".barcode_scanner" />
