@@ -79,6 +79,16 @@
         android:text="My Requests" />
 
     <Button
+        android:id="@+id/Return"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:text="Return a Book" />
+  
+      <Button
         android:id="@+id/Borrowed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
