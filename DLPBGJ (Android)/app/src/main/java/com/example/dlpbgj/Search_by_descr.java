@@ -98,9 +98,6 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                                 String book_ISBN = (String) f.getData().get("Book ISBN");
                                                 String book_status = (String) f.getData().get("Book Status");
                                                 ArrayList<String> req = (ArrayList<String>) f.getData().get("Requests");
-                                                if(req == null){
-                                                    req = new ArrayList<String>();
-                                                }
                                                 System.out.println("Reached compare\n");
                                                 Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
                                                 bookDataList.add(thisBook);

@@ -30,7 +30,6 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
     FirebaseFirestore db;
     private User currentUser;
     CollectionReference userBookCollectionReference;    //This is the sub-collection reference for the user who's logged in pointing to the collection of owned books
-    CollectionReference arrayReference;
     String TAG = "Sample";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -100,7 +100,6 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
         i.putExtra("ISBN",isbnCode.getText());
         setResult(-1,i);
         finish();
-
     }
 
 
