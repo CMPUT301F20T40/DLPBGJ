@@ -24,11 +24,30 @@
             android:id="@+id/ISBN_book"
             android:textSize="20sp"
             android:textColor="#B59C34"
+            android:hint="ISBN CODE"
             />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:textSize="20sp"
+        android:text="Book will be returned to :"
+        android:layout_weight="1"
+        />
+    <Spinner
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:id="@+id/returnList"/>
+    </LinearLayout>
     <Button
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"

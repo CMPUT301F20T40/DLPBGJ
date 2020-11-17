@@ -50,7 +50,12 @@ public class Book implements Serializable {
         this.status = status;
         this.description = description;
         this.owner = owner;
-        this.requests = req;
+        if (req == null){
+            this.requests = new ArrayList<>();
+        }
+        else{
+            this.requests = req;
+        }
     }
 
     public String getTitle() {

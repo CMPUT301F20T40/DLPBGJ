@@ -69,13 +69,6 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
             book_owner.setText(book.getOwner());
 
         }
-        /*scan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(),barcode_scanner.class);
-                startActivityForResult(intent,1);
-            }
-        });*/
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
