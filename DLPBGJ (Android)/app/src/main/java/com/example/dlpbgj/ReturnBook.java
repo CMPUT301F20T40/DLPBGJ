@@ -49,6 +49,7 @@ public class ReturnBook extends AppCompatActivity {
         spinner =  findViewById(R.id.returnList);
         users = new ArrayList<>();
         bookNames = new ArrayList<>();
+        returnBook.setText("Return Book");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
