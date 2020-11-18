@@ -98,8 +98,20 @@
     <ImageView
         android:layout_width="300dp"
         android:layout_height="244dp"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp"
         android:id="@+id/bookPic"/>
+    <Button
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:text="Delete Photo"
+        android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:id="@+id/delete_photo"
+        />
+
 
 </LinearLayout>

@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -26,7 +27,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -112,6 +116,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         Button scan = view.findViewById(R.id.scan2);
         Button picture = view.findViewById(R.id.Picture);
         Button picture2 = view.findViewById(R.id.Picture1);
+        Button deletePhoto = view.findViewById(R.id.delete_photo);
         String title = "Add Book";
         if (getArguments() != null) {
             book = (Book) getArguments().get("Book");
@@ -121,6 +126,21 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
             bookISBN.setText(book.getISBN());
             bookStatus.setText(book.getStatus());
             bookDescription.setText(book.getDescription());
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            final StorageReference storageReference = storage.getReference();
+            StorageReference imagesRef = storageReference.child("images/"+book.getUid());
+            imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
+            {
+                @Override
+                public void onSuccess(Uri downloadUrl)
+                {
+                    Glide
+                            .with(getContext())
+                            .load(downloadUrl.toString())
+                            .centerCrop()
+                            .into(bookPic);
+                }
+            });
         }
         /**
          * When scan button is clicked
@@ -147,7 +167,32 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
 
             }
         });
+        deletePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StorageReference ref = storageReference.child("images/" + book.getUid());
+                ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast toast = Toast.makeText(getContext(), "Book Photo Successfully deleted!", Toast.LENGTH_SHORT);
+                        toast.show();
+                        Fragment currentFragment = getFragmentManager().findFragmentByTag("ADD_BOOK");
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.detach(currentFragment);
+                        fragmentTransaction.attach(currentFragment);
+                        fragmentTransaction.commit();
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast toast = Toast.makeText(getContext(), "Failed to delete book photo!", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                        });
+            }
 
+        });
         final AlertDialog dialog = new AlertDialog.Builder(getContext())
                 .setView(view)
                 .setTitle(title)
