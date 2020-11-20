@@ -75,6 +75,50 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         askLocationPermision();
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                try {
+                    List<Address> addressList = geocoder.getFromLocation(latLng.latitude,latLng.longitude,1);
+                    if(addressList.size() > 0){
+                        Address tempAddress = addressList.get(0);
+                        String tempAddressString = tempAddress.getAddressLine(0);
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(tempAddressString)
+                                .draggable(true)
+                        );
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) { }
+            @Override
+            public void onMarkerDrag(Marker marker) { }
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+            LatLng templatlng = marker.getPosition();
+                try {
+                    List<Address> addressList = geocoder.getFromLocation(templatlng.latitude,templatlng.longitude,1);
+                    if(addressList.size() > 0){
+                        Address tempAddress = addressList.get(0);
+                        String tempAddressString = tempAddress.getAddressLine(0);
+                        marker.setTitle(tempAddressString);
+                        /*mMap.addMarker(new MarkerOptions()
+                                .position(templatlng)
+                                .title(tempAddressString)
+                                .draggable(true)
+                        );*/
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void askLocationPermision() {
@@ -97,15 +141,15 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLoc, 16));
                         }
                     }
-                    //else {
-                    //    LocM.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LocL);
-                    //    Location UserLastLocation = LocM.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    //    UserLongLat = new LatLng(UserLastLocation.getLatitude(), UserLastLocation.getLongitude());
-                    //    mMap.clear();
-                    //    mMap.addMarker(new MarkerOptions().position(UserLongLat).title("Your Location"));
-                    //    mMap.moveCamera(CameraUpdateFactory.newLatLng(UserLongLat));
-                    //    SupportMapFragment NewLocation = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-                    //}
+                    else {
+                        LocM.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, LocL);
+                        Location UserLastLocation = LocM.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                        UserLongLat = new LatLng(UserLastLocation.getLatitude(), UserLastLocation.getLongitude());
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(UserLongLat).title("Your Location"));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(UserLongLat));
+                        SupportMapFragment NewLocation = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
