@@ -19,5 +19,5 @@
         android:id="@+id/LookUP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="HOOK UP" />
+        android:text="Search Location" />
 </LinearLayout>
