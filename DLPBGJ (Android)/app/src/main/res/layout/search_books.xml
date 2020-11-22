@@ -8,24 +8,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <EditText
             android:id="@+id/description"
             android:layout_width="280dp"
             android:layout_height="40dp"
             android:ems="10"
-            android:textColor="#B59C34"
+            android:hint="Description"
             android:inputType="textPersonName"
-            android:hint="Description">
-        </EditText>
+            android:textColor="#B59C34"></EditText>
 
         <Button
             android:id="@+id/search"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
             android:layout_width="120dp"
             android:layout_height="40dp"
             android:layout_gravity="end"
-            android:text="SEARCH"
-            android:background="@drawable/gradient">
+            android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:text="SEARCH">
 
         </Button>
 
@@ -38,33 +38,34 @@
 
         <CheckBox
             android:id="@+id/check_available"
-            android:text="Show Available"
-            android:layout_marginTop="40dp"
             android:layout_width="150dp"
             android:layout_height="20dp"
+            android:layout_marginTop="40dp"
             android:ems="10"
-            android:hint="Description">
+            android:hint="Description"
+            android:text="Show Available">
 
         </CheckBox>
 
 
         <CheckBox
             android:id="@+id/check_borrowed"
-            android:text="Show Borrowed"
-            android:layout_marginTop="40dp"
             android:layout_width="150dp"
             android:layout_height="20dp"
             android:layout_marginLeft="110dp"
+            android:layout_marginTop="40dp"
             android:ems="10"
-            android:hint="Description">
+            android:hint="Description"
+            android:text="Show Borrowed">
 
         </CheckBox>
 
     </LinearLayout>
+
     <ListView
         android:id="@+id/book_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"/>
+        android:layout_marginTop="80dp" />
 
 </FrameLayout>

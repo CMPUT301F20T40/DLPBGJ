@@ -1,9 +1,5 @@
 package com.example.dlpbgj;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +11,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.internal.Objects;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -39,6 +38,7 @@ public class ReturnBook extends AppCompatActivity {
     String book;
     Button scan;
     Button returnBook;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +46,7 @@ public class ReturnBook extends AppCompatActivity {
         scan = findViewById(R.id.scanisbn);
         returnBook = findViewById(R.id.returnBook);
         ISBN = findViewById(R.id.ISBN_book);
-        spinner =  findViewById(R.id.returnList);
+        spinner = findViewById(R.id.returnList);
         users = new ArrayList<>();
         bookNames = new ArrayList<>();
         returnBook.setText("Return Book");
@@ -62,37 +62,33 @@ public class ReturnBook extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (users.size() == 0){
-                    if (bookISBN == null){
+                if (users.size() == 0) {
+                    if (bookISBN == null) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Please scan an ISBN code to return the book!", Toast.LENGTH_SHORT);
                         toast.show();
-                    }
-                    else{
+                    } else {
                         user = null;
                         book = null;
                         bookISBN = null;
                         Toast toast = Toast.makeText(getApplicationContext(), "Scanned ISBN code does not match any book!\nPlease scan again.", Toast.LENGTH_SHORT);
                         toast.show();
                     }
-                }
-                else if (user == null){
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user to return the book to", Toast.LENGTH_SHORT);
+                } else if (user == null) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user to return the book to!", Toast.LENGTH_SHORT);
                     toast.show();
-                }
-
-                else{
+                } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference collectionReference = db.collection("Users/" + user + "/MyBooks");
-                    HashMap<String,Object> map = new HashMap<>();
-                    map.put("Borrower",null);
-                    map.put("Book Status","Available");
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("Borrower", null);
+                    map.put("Book Status", "Available");
                     collectionReference
                             .document(book)
                             .update(map)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("Return","Book values successfully updated!");
+                                    Log.d("ReturnBook", "Book values successfully updated!");
                                     Toast toast = Toast.makeText(getApplicationContext(), "Book Successfully returned to " + user, Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
@@ -100,7 +96,7 @@ public class ReturnBook extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d("Return","Book values failed to update!");
+                                    Log.d("ReturnBook", "Book values failed to update!");
                                     Toast toast = Toast.makeText(getApplicationContext(), "There was an error returning book to " + user, Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
@@ -127,6 +123,7 @@ public class ReturnBook extends AppCompatActivity {
 
 
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -140,28 +137,28 @@ public class ReturnBook extends AppCompatActivity {
         }
     }
 
-    public void checkFunc(final String isbn){
+    public void checkFunc(final String isbn) {
         users.clear();
         bookNames.clear();
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("Users");
-        currentUser = (User)getIntent().getSerializableExtra("User");
+        currentUser = (User) getIntent().getSerializableExtra("User");
         userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                for(QueryDocumentSnapshot d : value){
+                for (QueryDocumentSnapshot d : value) {
                     final String username = d.getId();
-                    final CollectionReference foruser = db.collection("Users/" + username + "/MyBooks");
-                    foruser.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    final CollectionReference eachUser = db.collection("Users/" + username + "/MyBooks");
+                    eachUser.addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
-                            for(QueryDocumentSnapshot f : value2){
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, users);
+                            for (QueryDocumentSnapshot f : value2) {
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, users);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(adapter);
-                                if(f.getData().get("Book ISBN").equals(isbn)){
-                                    if(currentUser.getUsername().equals((String) f.getData().get("Borrower"))){
-                                        final String temp = (String)f.getData().get("Owner");
+                                if (f.getData().get("Book ISBN").equals(isbn)) {
+                                    if (currentUser.getUsername().equals(f.getData().get("Borrower"))) {
+                                        final String temp = (String) f.getData().get("Owner");
                                         users.add(temp);
                                         bookNames.add(f.getId());
                                         setSpinner();
@@ -175,8 +172,8 @@ public class ReturnBook extends AppCompatActivity {
         });
     }
 
-    public void setSpinner(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, users);
+    public void setSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, users);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }

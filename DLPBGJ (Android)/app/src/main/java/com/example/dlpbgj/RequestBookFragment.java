@@ -8,13 +8,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 
 import java.io.Serializable;
 
@@ -23,11 +20,7 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
     private Book book;
     private User user;
 
-    public interface OnFragmentInteractionListener {
-        void onOkPressed(Book book, User user);
-    }
-
-    static RequestBookFragment newInstance(Book book, User user){
+    static RequestBookFragment newInstance(Book book, User user) {
         Bundle args = new Bundle();
         args.putSerializable("Book", book);
         args.putSerializable("User", user);
@@ -39,7 +32,7 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof RequestBookFragment.OnFragmentInteractionListener){
+        if (context instanceof RequestBookFragment.OnFragmentInteractionListener) {
             listener = (RequestBookFragment.OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -57,7 +50,7 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
         final TextView book_status = view.findViewById(R.id.book_status);
         final TextView book_owner = view.findViewById(R.id.book_owner);
         String title = "REQUEST BOOK";
-        if (getArguments() != null){
+        if (getArguments() != null) {
             book = (Book) getArguments().get("Book");
             user = (User) getArguments().get("User");
 
@@ -79,11 +72,16 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         listener.onOkPressed(book, user);
-                    }}).create();
+                    }
+                }).create();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        System.out.println("TODO");
+        //Do something
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onOkPressed(Book book, User user);
     }
 }

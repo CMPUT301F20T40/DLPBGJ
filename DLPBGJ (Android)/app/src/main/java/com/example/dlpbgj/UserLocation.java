@@ -1,13 +1,10 @@
 //UserLovcation
 package com.example.dlpbgj;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -15,9 +12,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -41,11 +36,9 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     LocationManager LocM;
     LocationListener LocL;
     LatLng UserLongLat;
-    GoogleMap.OnMapClickListener Dropoffpt;
     private GoogleMap mMap;
     private Geocoder geocoder;
     String temp;
-    //System.out.print(temp);
 
 
     @Override
@@ -58,7 +51,6 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this);
         temp = (String)getIntent().getSerializableExtra("Address");
-        System.out.print(temp);
     }
 
     /**
@@ -74,7 +66,7 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        askLocationPermision();
+        askLocationPermission();
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
@@ -101,18 +93,13 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
             public void onMarkerDrag(Marker marker) { }
             @Override
             public void onMarkerDragEnd(Marker marker) {
-            LatLng templatlng = marker.getPosition();
+            LatLng markerPosition = marker.getPosition();
                 try {
-                    List<Address> addressList = geocoder.getFromLocation(templatlng.latitude,templatlng.longitude,1);
+                    List<Address> addressList = geocoder.getFromLocation(markerPosition.latitude,markerPosition.longitude,1);
                     if(addressList.size() > 0){
                         Address tempAddress = addressList.get(0);
                         String tempAddressString = tempAddress.getAddressLine(0);
                         marker.setTitle(tempAddressString);
-                        /*mMap.addMarker(new MarkerOptions()
-                                .position(templatlng)
-                                .title(tempAddressString)
-                                .draggable(true)
-                        );*/
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -121,7 +108,7 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void askLocationPermision() {
+    private void askLocationPermission() {
         Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
             @Override
             public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
@@ -129,10 +116,10 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
                     return;
                 }
                 try {
-                    if(temp!=NULL) {
-                        List<Address> geoaddress = geocoder.getFromLocationName(temp, 1);
-                        if (geoaddress.size() > 0) {
-                            Address address = geoaddress.get(0);
+                    if(!temp.equals(NULL)) {
+                        List<Address> geoAddress = geocoder.getFromLocationName(temp, 1);
+                        if (geoAddress.size() > 0) {
+                            Address address = geoAddress.get(0);
                             LatLng newLoc = new LatLng(address.getLatitude(), address.getLongitude());
                             MarkerOptions markerOptions = new MarkerOptions()
                                     .position(new LatLng(address.getLatitude(), address.getLongitude()))
@@ -148,7 +135,6 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
                         mMap.clear();
                         mMap.addMarker(new MarkerOptions().position(UserLongLat).title("Your Location"));
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(UserLongLat));
-                        SupportMapFragment NewLocation = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

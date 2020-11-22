@@ -1,12 +1,11 @@
 package com.example.dlpbgj;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,9 +13,15 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,7 +38,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
-
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +50,14 @@ import java.util.Map;
 
 public class UserProfile extends AppCompatActivity {
 
-    private Button PhotoSelect;
-    private  Button PhotoUpload;
-    private ImageView imageView;
-    private Uri path;
     private final int REQUEST = 22;
     FirebaseStorage storage;
     StorageReference storageReference;
+    private ImageView imageView;
+    private Uri path;
+    DatePickerDialog.OnDateSetListener listener;
+    String DOB;
+    TextView UserBirthDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,67 +66,82 @@ public class UserProfile extends AppCompatActivity {
         final User user = (User) getIntent().getSerializableExtra("User");
         Button update;
         Button back;
-        final FirebaseFirestore Userdb;
-        final EditText UserFirstName = (EditText) findViewById(R.id.UserFirstName);
-        final EditText UserLastName = (EditText) findViewById(R.id.UserLastName);
-        final EditText UserBirthDate = (EditText) findViewById(R.id.UserBirthDate);
-        final EditText UserPrefrence = (EditText) findViewById(R.id.UserFav);
-        final EditText UserName = (EditText) findViewById(R.id.UserName);
-        final EditText UserContact = (EditText) findViewById(R.id.ContactInfo);
-        Userdb = FirebaseFirestore.getInstance();
+        final FirebaseFirestore userDb;
+        final EditText UserFirstName = findViewById(R.id.UserFirstName);
+        final EditText UserLastName = findViewById(R.id.UserLastName);
+        UserBirthDate = findViewById(R.id.UserBirthDate);
+        final EditText UserName = findViewById(R.id.UserName);
+        final EditText UserContact = findViewById(R.id.ContactInfo);
+        userDb = FirebaseFirestore.getInstance();
         back = findViewById(R.id.BackButton);
         update = findViewById(R.id.Update);
 
-        PhotoSelect = findViewById(R.id.button1);
-        PhotoUpload = findViewById(R.id.button2);
+        Button dateSelect = findViewById(R.id.select_date);
+        Button photoSelect = findViewById(R.id.button1);
+        Button photoUpload = findViewById(R.id.button2);
         imageView = findViewById(R.id.imgView);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        PhotoSelect.setOnClickListener(new View.OnClickListener() {
+        photoSelect.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 SelectPhoto();
             }
         });
 
-        PhotoUpload.setOnClickListener(new View.OnClickListener() {
+        photoUpload.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 uploadPhoto(user);
             }
         });
 
-        final CollectionReference userBookCollectionReference = Userdb.collection("Users");
-        DocumentReference docRef = userBookCollectionReference.document(user.getUsername()); //If username does not exist then prompt for a sign-up
+        dateSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                int date = calendar.get(Calendar.DATE);
+                int month = calendar.get(Calendar.MONTH);
+                int year = calendar.get(Calendar.YEAR);
+                DatePickerDialog dialog = new DatePickerDialog(UserProfile.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth,listener,year,month,date);
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        listener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+                       DOB = i2 + "/" + i1 + "/" + i ;
+                        UserBirthDate.setText(DOB);
+            }
+        };
+        final CollectionReference userBookCollectionReference = userDb.collection("Users");
+        DocumentReference docRef = userBookCollectionReference.document(user.getUsername());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @RequiresApi(api = Build.VERSION_CODES.KITKAT)
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()){
+                if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document.exists()){
-                        Map<String,Object> data = document.getData();
-                        final String temp = (String)data.get("Password");
-                        user.setFirst_name((String)data.get("First Name"));
-                        user.setLast_name((String)data.get("Last Name"));
-                        user.setDOB((String)data.get("Date of Birth"));
-                        user.setContact((String)data.get("Email"));
+                    if (document.exists()) {
+                        Map<String, Object> data = document.getData();
+                        user.setFirst_name((String) data.get("First Name"));
+                        user.setLast_name((String) data.get("Last Name"));
+                        user.setDOB((String) data.get("Date of Birth"));
+                        user.setContact((String) data.get("Email"));
                         UserFirstName.setText(user.getFirst_name());
                         UserLastName.setText(user.getLast_name());
                         UserBirthDate.setText(user.getDOB());
                         UserName.setText(user.getUsername());
                         UserContact.setText(user.getContact());
 
-                        StorageReference imagesRef = storageReference.child("images/"+user.getUsername());
-                        imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-                        {
+                        StorageReference imagesRef = storageReference.child("images/" + user.getUsername());
+                        imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
-                            public void onSuccess(Uri downloadUrl)
-                            {
+                            public void onSuccess(Uri downloadUrl) {
                                 Glide
                                         .with(getApplicationContext())
                                         .load(downloadUrl.toString())
@@ -129,9 +150,8 @@ public class UserProfile extends AppCompatActivity {
                             }
                         });
                     }
-                }
-                else{
-                    Log.d("Param","get failed with ",task.getException());
+                } else {
+                    Log.d("Param", "get failed with ", task.getException());
                 }
             }
         });
@@ -141,8 +161,6 @@ public class UserProfile extends AppCompatActivity {
                 String FirstName = UserFirstName.getText().toString();
                 String LastName = UserLastName.getText().toString();
                 String BirthDate = UserBirthDate.getText().toString();
-                String Prefrence = UserPrefrence.getText().toString();
-                String User_name = UserName.getText().toString();
                 String ContactInfo = UserContact.getText().toString();
                 User user1 = (User) getIntent().getSerializableExtra("User");
                 user1.setFirst_name(FirstName);
@@ -158,27 +176,28 @@ public class UserProfile extends AppCompatActivity {
                 final String FirstName = UserFirstName.getText().toString();
                 final String LastName = UserLastName.getText().toString();
                 final String BirthDate = UserBirthDate.getText().toString();
-                final String Prefrence = UserPrefrence.getText().toString();
-                final String User_name = UserName.getText().toString();
                 final String ContactInfo = UserContact.getText().toString();
-                HashMap<String,Object> data = new HashMap<>();
-                data.put("First Name",FirstName);
-                data.put("Last Name",LastName);
+                HashMap<String, Object> data = new HashMap<>();
+                data.put("First Name", FirstName);
+                data.put("Last Name", LastName);
                 data.put("Date of Birth", BirthDate);
-                data.put("Email",ContactInfo);
+                data.put("Email", ContactInfo);
                 userBookCollectionReference
                         .document(user.getUsername())
                         .update(data)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d("Sample", "Data has been updated successfully!");
+                                Log.d("UserProfile", "Data has been updated successfully!");
+                                Toast toast = Toast.makeText(getApplicationContext(), "Profile Successfully Updated!", Toast.LENGTH_SHORT);
+                                toast.show();
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d("Sample", "Failed to update the values!");
+                                Log.d("UserProfile", "Failed to update the values!");
+                                Toast toast = Toast.makeText(getApplicationContext(), "Failed to Update the profile!", Toast.LENGTH_SHORT);
                             }
                         });
             }
@@ -200,8 +219,7 @@ public class UserProfile extends AppCompatActivity {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), path);
                 imageView.setImageBitmap(bitmap);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -214,29 +232,26 @@ public class UserProfile extends AppCompatActivity {
             statusDialog.show();
             StorageReference ref = storageReference.child("images/" + user.getUsername());
             ref.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                                {
-                                    statusDialog.dismiss();
-                                    Toast.makeText(UserProfile.this, "Uploaded!!", Toast.LENGTH_SHORT).show();
-                                }
-                            })
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    statusDialog.dismiss();
+                    Toast.makeText(UserProfile.this, "Uploaded!!", Toast.LENGTH_SHORT).show();
+                }
+            })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception e)
-                        {
+                        public void onFailure(@NonNull Exception e) {
                             statusDialog.dismiss();
                             Toast.makeText(UserProfile.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
-                                {
-                                    double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                                    statusDialog.setMessage("Uploaded " + (int)progress + "%");
-                                }
-                            });
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            statusDialog.setMessage("Uploaded " + (int) progress + "%");
+                        }
+                    });
         }
     }
 }
