@@ -167,7 +167,9 @@ public class UserProfile extends AppCompatActivity {
                 user1.setLast_name(LastName);
                 user1.setContact(ContactInfo);
                 user1.setDOB(BirthDate);
-                finish();
+                Intent intent = new Intent(view.getContext(),HomePage.class);
+                intent.putExtra(MainActivity.EXTRA_MESSAGE1,user1);
+                startActivity(intent);
             }
         });
         update.setOnClickListener(new View.OnClickListener() {
