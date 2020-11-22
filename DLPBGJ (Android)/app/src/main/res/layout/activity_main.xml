@@ -4,12 +4,14 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginLeft="140dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:scaleType="centerInside"
+        android:gravity="center"
+        android:layout_marginStart="125dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="60dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ovobg" />
+        android:src="@drawable/book" />
 
     <TextView
         android:layout_width="match_parent"
@@ -21,19 +23,18 @@
         android:textStyle="bold"
         android:typeface="monospace" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:text="© 2020 OVO TORONTO, All rights reserved."
-        android:textColor="#B59C34"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        android:typeface="monospace" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="0dp"
         android:orientation="vertical"
         android:paddingTop="100dp"
         android:paddingBottom="50dp">
@@ -42,30 +43,32 @@
         <EditText
             android:id="@+id/editUserName"
             android:layout_width="250dp"
-            android:layout_height="0dp"
+            android:layout_height="3dp"
             android:layout_gravity="center"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="100dp"
-            android:layout_weight="3"
-            android:background="#00000000"
+            android:layout_marginTop="150dp"
+            android:layout_marginBottom="50dp"
+            android:layout_weight="1"
+            android:background="?attr/colorButtonNormal"
             android:ems="10"
-            android:hint="User Name"
+            android:gravity="center"
+            android:hint="Username"
             android:inputType="textPersonName"
-            android:textColor="#B59C34" />
+            android:textColor="#100F0D" />
 
         <EditText
             android:id="@+id/editUserPassword"
             android:layout_width="250dp"
-            android:layout_height="0dp"
+            android:layout_height="3dp"
             android:layout_gravity="center"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="15dp"
             android:layout_marginBottom="100dp"
-            android:layout_weight="3"
-            android:background="#00000000"
+            android:layout_weight="1"
+            android:background="?attr/colorButtonNormal"
             android:ems="10"
+            android:gravity="center"
             android:hint="Password"
             android:inputType="textPassword"
-            android:textColor="#B59C34" />
+            android:textColor="#13120E" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -73,27 +76,28 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/login_button"
-                android:layout_width="120dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="100dp"
-                android:background="@drawable/gradient"
-                android:foreground="?attr/selectableItemBackgroundBorderless"
-                android:onClick="displayToastMessage"
-                android:text="LOGIN" />
 
             <Button
                 android:id="@+id/signup_button"
                 android:layout_width="120dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="50dp"
-                android:layout_marginTop="100dp"
-                android:background="@drawable/gradient"
+                android:layout_marginTop="8dp"
+                android:background="#BA3263C5"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:onClick="displayToastMessage"
                 android:text="SIGN UP" />
+
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="8dp"
+                android:background="#BA3263C5"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:onClick="displayToastMessage"
+                android:text="LOGIN" />
 
         </LinearLayout>
     </LinearLayout>
