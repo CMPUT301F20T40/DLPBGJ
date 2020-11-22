@@ -10,23 +10,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 public class customBookAdapter extends ArrayAdapter<Book> {
 
-    private ArrayList<Book> books;
-    private Context context;
+    private final ArrayList<Book> books;
+    private final Context context;
 
-    public customBookAdapter(Context context, ArrayList<Book> books){
-        super(context,0, books);
+    public customBookAdapter(Context context, ArrayList<Book> books) {
+        super(context, 0, books);
         this.books = books;
         this.context = context;
     }
 
     /**
      * Function to use our custom array adapter to show the books of a user.
+     *
      * @param position
      * @param convertView
      * @param parent
@@ -35,11 +34,10 @@ public class customBookAdapter extends ArrayAdapter<Book> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        //return super.getView(position, convertView, parent);
         View view = convertView;
 
-        if(view == null){
-            view = LayoutInflater.from(context).inflate(R.layout.bookcontent, parent,false); //Attaches layout from bookcontent to each item inside the ListView
+        if (view == null) {
+            view = LayoutInflater.from(context).inflate(R.layout.bookcontent, parent, false); //Attaches layout from bookcontent to each item inside the ListView
         }
 
         Book book = books.get(position);

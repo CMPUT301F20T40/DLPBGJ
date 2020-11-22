@@ -1,11 +1,11 @@
 package com.example.dlpbgj;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ViewBookDetails extends AppCompatActivity {
     Button backButton;
@@ -18,10 +18,12 @@ public class ViewBookDetails extends AppCompatActivity {
     /**
      * Created when the user long clicks on a book to view its details
      * This loads up a new activity that shows the details of the selected book.
+     *
      * @param savedInstanceState
      */
     TextView description;
     TextView owner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,8 +40,8 @@ public class ViewBookDetails extends AppCompatActivity {
         author.setText("Book Author :\n" + book.getAuthor());
         isbn.setText("Book ISBN :\n" + book.getISBN());
         status.setText("Book Status :\n" + book.getStatus());
-        description.setText("Book Description :\n"+book.getDescription());
-        owner.setText("Current Owner : "+book.getOwner());
+        description.setText("Book Description :\n" + book.getDescription());
+        owner.setText("Current Owner : " + book.getOwner());
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

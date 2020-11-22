@@ -1,5 +1,6 @@
 package com.example.dlpbgj;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -36,15 +37,18 @@ public class AcceptBook extends AppCompatActivity {
     ArrayList<String> bookNames;
     String user;
     String book;
+    Button scan;
+    Button returnBook;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_return_book);
-        Button scan = findViewById(R.id.scanisbn);
-        Button returnBook = findViewById(R.id.returnBook);
+        scan = findViewById(R.id.scanisbn);
+        returnBook = findViewById(R.id.returnBook);
         ISBN = findViewById(R.id.ISBN_book);
-        spinner =  findViewById(R.id.returnList);
+        spinner = findViewById(R.id.returnList);
         users = new ArrayList<>();
         bookNames = new ArrayList<>();
         returnBook.setText("Get Book Back");
@@ -60,45 +64,45 @@ public class AcceptBook extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (users.size() == 0){
-                    if (bookISBN == null){
-                        Toast toast = Toast.makeText(getApplicationContext(), "Please scan an ISBN code to get the book back!", Toast.LENGTH_SHORT);
+                if (users.size() == 0) {
+                    if (bookISBN == null) {
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Please scan an ISBN code to get the book back!",
+                                Toast.LENGTH_SHORT);
                         toast.show();
-                    }
-                    else{
+                    } else {
                         user = null;
                         book = null;
                         bookISBN = null;
-                        Toast toast = Toast.makeText(getApplicationContext(), "Scanned ISBN code does not match any book!\nPlease scan again.", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "Scanned ISBN code does not match any book!\nPlease scan again.", Toast.LENGTH_SHORT);
                         toast.show();
                     }
-                }
-                else if (user == null){
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user to get the book from ", Toast.LENGTH_SHORT);
+                } else if (user == null) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user to get the book from!", Toast.LENGTH_SHORT);
                     toast.show();
-                }
-                else{
+                } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference collectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
-                    HashMap<String,Object> map = new HashMap<>();
-                    map.put("Borrower",null);
-                    map.put("Book Status","Available");
+                    HashMap<String, Object> data = new HashMap<>();
+                    data.put("Borrower", null);
+                    data.put("Book Status", "Available");
                     collectionReference
                             .document(book)
-                            .update(map)
+                            .update(data)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("Accept","Book values successfully updated!");
+                                    Log.d("Get Book Back", "Book values successfully updated!");
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d("Accept","Book values failed to update!");
+                                    Log.d("Get Book Back", "Book values failed to update!");
                                 }
                             });
-                    Toast toast = Toast.makeText(getApplicationContext(), "Book successfully retrieved from" + user, Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Book successfully retrieved from" + user + " !", Toast.LENGTH_SHORT);
                     toast.show();
                     finish();
                     startActivity(getIntent());
@@ -122,6 +126,8 @@ public class AcceptBook extends AppCompatActivity {
         });
 
     }
+
+    @SuppressLint("SetTextI18n")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -135,23 +141,23 @@ public class AcceptBook extends AppCompatActivity {
         }
     }
 
-    public void checkFunc(final String isbn){
+    public void checkFunc(final String isbn) {
         users.clear();
         bookNames.clear();
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
-        currentUser = (User)getIntent().getSerializableExtra("User");
-        final CollectionReference foruser = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
-        foruser.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        currentUser = (User) getIntent().getSerializableExtra("User");
+        final CollectionReference userCollection = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
+        userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                for(QueryDocumentSnapshot f : value){
-                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, users);
+                for (QueryDocumentSnapshot newBook : value) {
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, users);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
-                    if((isbn.equals((String) f.getData().get("Book ISBN")))){
-                        if (f.getData().get("Borrower") != null){
-                            users.add((String)f.getData().get("Borrower"));
-                            bookNames.add(f.getId());
+                    if ((isbn.equals(newBook.getData().get("Book ISBN")))) {
+                        if (newBook.getData().get("Borrower") != null) {
+                            users.add((String) newBook.getData().get("Borrower"));
+                            bookNames.add(newBook.getId());
                             setSpinner();
                         }
                     }
@@ -160,8 +166,8 @@ public class AcceptBook extends AppCompatActivity {
         });
     }
 
-    public void setSpinner(){
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, users);
+    public void setSpinner() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, users);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }

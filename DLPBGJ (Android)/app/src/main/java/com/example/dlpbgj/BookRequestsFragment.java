@@ -5,14 +5,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,17 +20,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class BookRequestsFragment extends DialogFragment implements Serializable {
+    ArrayList<String> req;
     private BookRequestsFragment.OnFragmentInteractionListener listener;
     private Book book;
-    ArrayList<String> req;
     private String selection;
 
-    public interface OnFragmentInteractionListener {
-        void onAcceptPressed(Book book);
-        void onDeclinePressed(Book book);
-    }
-
-    static BookRequestsFragment newInstance(Book book){
+    static BookRequestsFragment newInstance(Book book) {
         Bundle args = new Bundle();
         args.putSerializable("Book", book);
         BookRequestsFragment fragment = new BookRequestsFragment();
@@ -44,26 +36,23 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof BookRequestsFragment.OnFragmentInteractionListener){
+        if (context instanceof BookRequestsFragment.OnFragmentInteractionListener) {
             listener = (BookRequestsFragment.OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
         }
     }
 
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.book_requests_fragment, null);
         final Spinner spinner = view.findViewById(R.id.dropDown);
-        final ImageView profile = view.findViewById(R.id.ProfilePic);
         String title = "Accept / Decline Requests";
-        if (getArguments() != null){
+        if (getArguments() != null) {
             book = (Book) getArguments().get("Book");
             req = book.getRequests();
             System.out.println("Look Here");
             System.out.println(req.get(0));
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                    android.R.layout.simple_spinner_item, req);
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, req);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
         }
@@ -76,7 +65,7 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                //Do Nothing
+                selection = null;
             }
         });
 
@@ -88,7 +77,7 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         book.setBorrower(selection);
-                        Toast toast = Toast.makeText(getContext(), selection+"'s request accepted!", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getContext(), selection + "'s request accepted!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onAcceptPressed(book);
                     }
@@ -97,20 +86,27 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         book.removeRequest(selection);
-                        Toast toast = Toast.makeText(getContext(), selection+"'s request declined!", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getContext(), selection + "'s request declined!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onDeclinePressed(book);
                     }
                 })
-                .setNeutralButton("Cancel",null)
+                .setNeutralButton("Cancel", null)
                 .create();
     }
+
     @Override
     public void onStart() {
         super.onStart();
         ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B59C34"));
         ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B59C34"));
         ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#B59C34"));
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onAcceptPressed(Book book);
+
+        void onDeclinePressed(Book book);
     }
 
 

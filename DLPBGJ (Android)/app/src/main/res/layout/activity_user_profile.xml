@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,71 +11,86 @@
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:hint="User Name"
-        android:textColor="#B59C34"
-         />
+        android:textColor="#B59C34" />
 
     <EditText
         android:id="@+id/UserFirstName"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:hint="Enter your First name"
-        android:textColor="#B59C34"
-        />
+        android:textColor="#B59C34" />
 
     <EditText
         android:id="@+id/UserLastName"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:hint="Enter your last name"
-        android:textColor="#B59C34"
-         />
+        android:textColor="#B59C34" />
 
-    <EditText
-        android:id="@+id/UserBirthDate"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:hint="Enter birth Date (DD/MM/YYYY)"
-        android:textColor="#B59C34"
-         />
+
+    <LinearLayout
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/select_date"
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:text="SElect Date"/>
+
+        <TextView
+            android:id="@+id/UserBirthDate"
+            android:textSize="20sp"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:inputType="date"
+            android:hint="Birth Date (DD/MM/YYYY)"
+            android:textColor="#B59C34" />
+
+    </LinearLayout>
 
     <EditText
         android:id="@+id/ContactInfo"
         android:layout_width="match_parent"
         android:layout_height="46dp"
-        android:hint="Enter your email or phone"
-        android:textColor="#B59C34"
-         />
+        android:hint="Enter your email"
+        android:textColor="#B59C34" />
 
     <EditText
         android:id="@+id/UserFav"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:hint="Enter your prefered genres"
-        android:textColor="#B59C34"
-         />
+        android:textColor="#B59C34" />
+
     <LinearLayout
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
-            android:background="@drawable/gradient"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:layout_width="190dp"
-            android:layout_marginLeft="10dp"
             android:id="@+id/button1"
-            android:text="Choose"
-            android:layout_height="wrap_content">
-        </Button>
-        <Button
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/gradient"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:layout_width="190dp"
-            android:layout_marginLeft="10dp"
+            android:text="Choose"/>
+
+        <Button
             android:id="@+id/button2"
-            android:text="UPLOAD"
-            android:layout_height="wrap_content">
-        </Button>
+            android:layout_width="190dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:text="UPLOAD"/>
     </LinearLayout>
 
     <ImageView
@@ -85,30 +99,32 @@
         android:layout_height="244dp"
         android:layout_marginLeft="50dp"
         android:layout_marginTop="20dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="left|bottom"
+        android:layout_weight="2"
         android:gravity="bottom"
-        android:orientation="horizontal"
-        android:layout_weight="2">
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/BackButton"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/gradient"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:text="BACK"
-            android:layout_weight="1"/>
+            android:text="BACK" />
+
         <Button
             android:id="@+id/Update"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/gradient"
             android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:text="UPDATE"
-            android:layout_weight="1"/>
+            android:text="UPDATE" />
     </LinearLayout>
 
 

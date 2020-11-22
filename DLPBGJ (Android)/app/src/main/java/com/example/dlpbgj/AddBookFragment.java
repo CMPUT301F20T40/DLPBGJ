@@ -10,18 +10,13 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Binder;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,7 +37,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class AddBookFragment extends DialogFragment implements Serializable  {
+public class AddBookFragment extends DialogFragment implements Serializable {
     private EditText bookTitle;
     private EditText bookAuthor;
     private EditText bookISBN;
@@ -58,15 +53,18 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
 
     public interface OnFragmentInteractionListener {
         void onOkPressed(Book newBook);
-        void onOkPressed(Book book,String oldBookName);
+
+        void onOkPressed(Book book, String oldBookName);
+
         void onDeletePressed(Book book);
+
         void onOkPressed();
     }
 
-    static AddBookFragment newInstance(Book book,User user){
+    static AddBookFragment newInstance(Book book, User user) {
         Bundle args = new Bundle();
-        args.putSerializable("Book",book);
-        args.putSerializable("User",user);
+        args.putSerializable("Book", book);
+        args.putSerializable("User", user);
         AddBookFragment fragment = new AddBookFragment();
         fragment.setArguments(args);
         return fragment;
@@ -75,12 +73,13 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     /**
      * context is the host activity. Attaches the fragment to the host activity.
      * This is because this fragment may be used launched by more than one activities.
+     *
      * @param context
      */
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener){
+        if (context instanceof OnFragmentInteractionListener) {
             listener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
@@ -90,6 +89,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
 
     /**
      * When a book is selected, the edit fragment opens up
+     *
      * @param savedInstanceState
      * @return
      */
@@ -97,7 +97,6 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.add_book_fragment_layout, null);
-        // final String barcode = (String) getActivity().getIntent().getSerializableExtra(barcode_scanner.varText);
         bookPic = view.findViewById(R.id.bookPic);
         bookTitle = view.findViewById(R.id.book_title_editText);
         bookAuthor = view.findViewById(R.id.book_author_editText);
@@ -128,19 +127,20 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
             bookDescription.setText(book.getDescription());
             FirebaseStorage storage = FirebaseStorage.getInstance();
             final StorageReference storageReference = storage.getReference();
-            StorageReference imagesRef = storageReference.child("images/"+book.getUid());
-            imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
-            {
-                @Override
-                public void onSuccess(Uri downloadUrl)
-                {
-                    Glide
-                            .with(getContext())
-                            .load(downloadUrl.toString())
-                            .centerCrop()
-                            .into(bookPic);
-                }
-            });
+            if (book.getUid()!=null){
+                StorageReference imagesRef = storageReference.child("images/" + book.getUid());
+                imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri downloadUrl) {
+                        Glide
+                                .with(getContext())
+                                .load(downloadUrl.toString())
+                                .centerCrop()
+                                .into(bookPic);
+                    }
+                });
+            }
+
         }
         /**
          * When scan button is clicked
@@ -170,26 +170,33 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         deletePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StorageReference ref = storageReference.child("images/" + book.getUid());
-                ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast toast = Toast.makeText(getContext(), "Book Photo Successfully deleted!", Toast.LENGTH_SHORT);
-                        toast.show();
-                        Fragment currentFragment = getFragmentManager().findFragmentByTag("ADD_BOOK");
-                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.detach(currentFragment);
-                        fragmentTransaction.attach(currentFragment);
-                        fragmentTransaction.commit();
-                    }
-                })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast toast = Toast.makeText(getContext(), "Failed to delete book photo!", Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                        });
+                if (book.getUid() != null){
+                    StorageReference ref = storageReference.child("images/" + book.getUid());
+                    ref.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast toast = Toast.makeText(getContext(), "Book Photo Successfully deleted!", Toast.LENGTH_SHORT);
+                            toast.show();
+                            Fragment currentFragment = getFragmentManager().findFragmentByTag("ADD_BOOK");
+                            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                            fragmentTransaction.detach(currentFragment);
+                            fragmentTransaction.attach(currentFragment);
+                            fragmentTransaction.commit();
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast toast = Toast.makeText(getContext(), "Failed to delete book photo!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                }
+                            });
+                }
+                else{
+                    Toast toast = Toast.makeText(getContext(), "Please upload a book photo first :)", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+
             }
 
         });
@@ -197,8 +204,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                 .setView(view)
                 .setTitle(title)
                 .setNegativeButton("Cancel", null)
-
-                .setNeutralButton("delete", null)
+                .setNeutralButton("Delete", null)
                 .setPositiveButton(android.R.string.ok, null)
                 .create();
 
@@ -206,7 +212,6 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
             @Override
             public void onShow(final DialogInterface dialog) {
                 Button bOk = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                Button bCancel = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEGATIVE);
                 Button bDel = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_NEUTRAL);
 
                 bDel.setOnClickListener(new View.OnClickListener() {
@@ -234,16 +239,13 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                         String book_description = bookDescription.getText().toString();
                         View focus = null;
                         boolean wrong_input = false;
-                        System.out.println(book_title);
                         if (bookTitle.getText().toString().equals("")) { //Mandatory to enter book's title
                             bookTitle.setError("Please enter the book's title!");
-                            System.out.println("Im here");
                             wrong_input = true;
                             focus = bookTitle;
                         }
 
                         if (book_status.equals("")) { //Mandatory to enter book's status
-                            //System.out.println("!!!IF!!!");
                             bookStatus.setError("Please enter the book's status");
                             wrong_input = true;
                             focus = bookStatus;
@@ -273,7 +275,6 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                             focus.requestFocus();
 
                         } else if (getArguments() != null) {
-                            System.out.println("ELSE IF");
 
                             Book book = (Book) getArguments().get("Book");
                             User user = (User) getArguments().get("User");
@@ -288,7 +289,6 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                             listener.onOkPressed(book, temp);
                             dialog.dismiss();
                         } else {
-                            System.out.println("ELSE");
                             listener.onOkPressed(new Book(book_title, book_author, book_ISBN, book_status, book_description)); //Send the inputted book as a parameter to the main function's implementation of this method
                             dialog.dismiss();
                         }
@@ -301,12 +301,13 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         dialog.show();
 
 
-    return dialog;
+        return dialog;
     }
 
     /**
      * gets the result from barcode_scanner class
      * Sets the desired result inside the fragment
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -314,8 +315,8 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==1){
-            if (resultCode == -1){
+        if (requestCode == 1) {
+            if (resultCode == -1) {
                 String code = data.getStringExtra("ISBN");
                 bookISBN.setText(code);
             }
@@ -326,9 +327,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
                 Context applicationContext = MyBooks.getContextOfApplication();
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(applicationContext.getContentResolver(), path);
                 bookPic.setImageBitmap(bitmap);
-            }
-
-            catch (IOException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -342,8 +341,7 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
         ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#B59C34"));
     }
 
-    private void SelectPhoto()
-    {
+    private void SelectPhoto() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -355,30 +353,24 @@ public class AddBookFragment extends DialogFragment implements Serializable  {
             final ProgressDialog statusDialog = new ProgressDialog(this.getContext());
             statusDialog.setTitle("Uploading");
             statusDialog.show();
-            System.out.println("siddhu chutiya");
             StorageReference ref = storageReference.child("images/" + book.getUid());
             ref.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot)
-                {
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     statusDialog.dismiss();
-                    //Toast.makeText(AddBookFragment.this, "Uploaded!!", Toast.LENGTH_SHORT).show();
                 }
             })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception e)
-                        {
+                        public void onFailure(@NonNull Exception e) {
                             statusDialog.dismiss();
-                            //Toast.makeText(MyBooks.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot)
-                        {
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
-                            statusDialog.setMessage("Uploaded " + (int)progress + "%");
+                            statusDialog.setMessage("Uploaded " + (int) progress + "%");
                         }
                     });
         }

@@ -8,7 +8,7 @@ public class Book implements Serializable {
     String author;
     String ISBN;
     String status;
-    String description="";
+    String description = "";
     String owner;
     ArrayList<String> requests;
     String uid;
@@ -34,7 +34,8 @@ public class Book implements Serializable {
         this.status = status;
         this.description = description;
     }
-    public Book(String title, String author, String ISBN, String status, String description,String owner) {
+
+    public Book(String title, String author, String ISBN, String status, String description, String owner) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
@@ -50,16 +51,19 @@ public class Book implements Serializable {
         this.status = status;
         this.description = description;
         this.owner = owner;
-        if (req == null){
+        if (req == null) {
             this.requests = new ArrayList<>();
-        }
-        else{
+        } else {
             this.requests = req;
         }
     }
 
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public ArrayList<String> getRequests() {
@@ -70,16 +74,12 @@ public class Book implements Serializable {
         this.requests = requests;
     }
 
-    public void removeRequest(String request){
+    public void removeRequest(String request) {
         this.requests.remove(request);
     }
 
-    public void emptyRequests(){
+    public void emptyRequests() {
         this.requests.clear();
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getUid() {

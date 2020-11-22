@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -13,15 +15,14 @@ import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
+
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 /**
- *  https://www.youtube.com/watch?v=MegowI4T_L8
+ * https://www.youtube.com/watch?v=MegowI4T_L8
  */
 
 public class barcode_scanner extends AppCompatActivity implements ZXingScannerView.ResultHandler {
-    public static final String varText = "com.example.dlpbgj.MESSAGE2";
-    public String getSeeResult;
     private ZXingScannerView scanB;
     private TextView seeResult;
 
@@ -31,6 +32,7 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
 
     /**
      * When user wants to scan the barcode of a book, this activity is created.
+     *
      * @param savedInstanceState
      */
 
@@ -66,7 +68,7 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
                      */
                     @Override
                     public void onPermissionDenied(PermissionDeniedResponse response) {
-                        Toast.makeText(barcode_scanner.this,"You must accept the permission",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(barcode_scanner.this, "You must accept the permission", Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -91,14 +93,15 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
      * gets and sets the ISBN
      * calls the AddBookFragment
      * shows the ISBN inside the fragment
+     *
      * @param isbnCode
      */
     @Override
     public void handleResult(Result isbnCode) {
         getSeeResult().setText(isbnCode.getText());
         Intent i = new Intent();
-        i.putExtra("ISBN",isbnCode.getText());
-        setResult(-1,i);
+        i.putExtra("ISBN", isbnCode.getText());
+        setResult(-1, i);
         finish();
     }
 
