@@ -1,14 +1,7 @@
 package com.example.dlpbgj;
 
-import android.app.AppComponentFactory;
-import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-
-import android.view.LayoutInflater;
 import android.util.Log;
-
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,7 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Search_by_descr extends AppCompatActivity implements RequestBookFragment.OnFragmentInteractionListener{
+public class Search_by_descr extends AppCompatActivity implements RequestBookFragment.OnFragmentInteractionListener {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
@@ -49,14 +42,14 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     EditText description;
     Button search;
     CollectionReference userBookCollectionReference;
-    String TAG = "Sample";
-    private User currentUser;
+    String TAG = "BookSearch";
     CheckBox checkAvail;
     CheckBox checkBorr;
     String availableConstraint = "available";
     String borrowedConstraint = "borrowed";
+    private User currentUser;
 
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_books);
         bookList = findViewById(R.id.book_list);
@@ -65,10 +58,10 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
         checkAvail = findViewById(R.id.check_available);
         checkBorr = findViewById(R.id.check_borrowed);
 
-        bookDataList = new ArrayList<Book>();
-        filteredDataList = new ArrayList<Book>();
-        bookAdapter = new customBookAdapter(this,bookDataList);
-        filteredBookAdapter = new customBookAdapter(this,filteredDataList);
+        bookDataList = new ArrayList<>();
+        filteredDataList = new ArrayList<>();
+        bookAdapter = new customBookAdapter(this, bookDataList);
+        filteredBookAdapter = new customBookAdapter(this, filteredDataList);
         bookList.setAdapter(bookAdapter);
 
         db = FirebaseFirestore.getInstance();
@@ -82,41 +75,37 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         bookDataList.clear();
-                        final String descinput = description.getText().toString();
-                        for(QueryDocumentSnapshot d : value){
-                            final String username = (String) d.getId();
-                            CollectionReference foruser = Db.collection("Users/" + username + "/MyBooks");
-                            foruser.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        final String descrInput = description.getText().toString();
+                        for (QueryDocumentSnapshot d : value) {
+                            final String username = d.getId();
+                            CollectionReference eachUser = Db.collection("Users/" + username + "/MyBooks");
+                            eachUser.addSnapshotListener(new EventListener<QuerySnapshot>() {
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
-                                    for(QueryDocumentSnapshot f : value2){
-                                        String book_description = (String) f.getData().get("Book Description");
-                                        if(book_description != null){
-                                            if(book_description.contains(descinput)){
-                                                String book_title = f.getId();
-                                                String book_author = (String) f.getData().get("Book Author");
-                                                String book_ISBN = (String) f.getData().get("Book ISBN");
-                                                String book_status = (String) f.getData().get("Book Status");
-                                                ArrayList<String> req = (ArrayList<String>) f.getData().get("Requests");
-                                                if(req == null){
-                                                    req = new ArrayList<String>();
-                                                }
-                                                System.out.println("Reached compare\n");
+                                    for (QueryDocumentSnapshot newBook : value2) {
+                                        String book_description = (String) newBook.getData().get("Book Description");
+                                        if (book_description != null) {
+                                            if (book_description.contains(descrInput)) {
+                                                String book_title = newBook.getId();
+                                                String book_author = (String) newBook.getData().get("Book Author");
+                                                String book_ISBN = (String) newBook.getData().get("Book ISBN");
+                                                String book_status = (String) newBook.getData().get("Book Status");
+                                                ArrayList<String> req = (ArrayList<String>) newBook.getData().get("Requests");
                                                 Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
                                                 bookDataList.add(thisBook);
                                                 bookAdapter.notifyDataSetChanged();
-                                                if(checkAvail.isChecked()&&checkBorr.isChecked()){
-                                                    if(!(book_status.toLowerCase().equals(availableConstraint)||book_status.toLowerCase().equals(borrowedConstraint))){
+                                                if (checkAvail.isChecked() && checkBorr.isChecked()) {
+                                                    if (!(book_status.toLowerCase().equals(availableConstraint) || book_status.toLowerCase().equals(borrowedConstraint))) {
                                                         bookDataList.remove(thisBook);
                                                     }
                                                 }
-                                                if(checkBorr.isChecked()&&!checkAvail.isChecked()) {
-                                                    if(!(book_status.toLowerCase().equals(borrowedConstraint))){
+                                                if (checkBorr.isChecked() && !checkAvail.isChecked()) {
+                                                    if (!(book_status.toLowerCase().equals(borrowedConstraint))) {
                                                         bookDataList.remove(thisBook);
                                                     }
                                                 }
-                                                if(!checkBorr.isChecked()&&checkAvail.isChecked()) {
-                                                    if(!(book_status.toLowerCase().equals(availableConstraint))){
+                                                if (!checkBorr.isChecked() && checkAvail.isChecked()) {
+                                                    if (!(book_status.toLowerCase().equals(availableConstraint))) {
                                                         bookDataList.remove(thisBook);
                                                     }
                                                 }
@@ -133,7 +122,6 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             }
         });
 
-        Intent intent = getIntent();
         currentUser = (User) getIntent().getSerializableExtra("User");
 
         checkAvail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -143,12 +131,11 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                 if (isChecked) {
                     for (int i = 0; i < bookDataList.size(); i++) {
                         Book book = bookDataList.get(i);
-                        if (checkBorr.isChecked()){
-                            if(book.getStatus().toLowerCase().equals(availableConstraint)||book.getStatus().toLowerCase().equals(borrowedConstraint))
+                        if (checkBorr.isChecked()) {
+                            if (book.getStatus().toLowerCase().equals(availableConstraint) || book.getStatus().toLowerCase().equals(borrowedConstraint))
                                 filteredDataList.add(book);
-                        }
-                        else{
-                            if(book.getStatus().toLowerCase().equals(availableConstraint))
+                        } else {
+                            if (book.getStatus().toLowerCase().equals(availableConstraint))
                                 filteredDataList.add(book);
                         }
                     }
@@ -179,22 +166,20 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                 if (isChecked) {
                     for (int i = 0; i < bookDataList.size(); i++) {
                         Book book = bookDataList.get(i);
-                        if (checkAvail.isChecked()){
-                            if(book.getStatus().toLowerCase().equals(availableConstraint)||book.getStatus().toLowerCase().equals(borrowedConstraint))
+                        if (checkAvail.isChecked()) {
+                            if (book.getStatus().toLowerCase().equals(availableConstraint) || book.getStatus().toLowerCase().equals(borrowedConstraint))
                                 filteredDataList.add(book);
-                        }
-                        else{
-                            if(book.getStatus().toLowerCase().equals(borrowedConstraint))
+                        } else {
+                            if (book.getStatus().toLowerCase().equals(borrowedConstraint))
                                 filteredDataList.add(book);
                         }
                     }
                     filteredBookAdapter.notifyDataSetChanged();
                     bookList.setAdapter(filteredBookAdapter);
-                }
-                else{
-                    if(!checkAvail.isChecked())
+                } else {
+                    if (!checkAvail.isChecked())
                         bookList.setAdapter(bookAdapter);
-                    else{
+                    else {
                         for (int i = 0; i < bookDataList.size(); i++) {
                             Book book = bookDataList.get(i);
                             filteredDataList.add(book);
@@ -213,7 +198,6 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Book temp = bookDataList.get(i);
-                System.out.println("Reached fragment creator");
                 RequestBookFragment r = RequestBookFragment.newInstance(temp, currentUser);
                 r.show(getSupportFragmentManager(), "REQUEST_BOOK");
             }
@@ -223,18 +207,14 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     @Override
     public void onOkPressed(final Book book, User user) {
         final HashMap<String, Object> data = new HashMap<>();
-        System.out.println("Pressed OK");
         ArrayList<String> req = book.getRequests();
-        if(book.getStatus().equals("Borrowed")){
+        if (book.getStatus().equals("Borrowed")) {
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST A BORROWED BOOK!! ;)", Toast.LENGTH_SHORT);
             toast.show();
-        }
-        else if (currentUser.getUsername().equals(book.getOwner())) {
-            System.out.println("Own Book!");
+        } else if (currentUser.getUsername().equals(book.getOwner())) {
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST YOUR OWN BOOK!! :)", Toast.LENGTH_SHORT);
             toast.show();
-        }
-        else if (!req.contains(user.getUsername())) {
+        } else if (!req.contains(user.getUsername())) {
             req.add(user.getUsername());
             data.put("Requests", req);
             data.put("Book Status", "Requested");
@@ -244,7 +224,6 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
                         userBookCollectionReference
                                 .document(book.getTitle())
                                 .update(data)
@@ -264,8 +243,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                 }
             });
             bookAdapter.notifyDataSetChanged();
-        }
-        else {
+        } else {
             Toast toast = Toast.makeText(Search_by_descr.this, "ALREADY REQUESTED THIS BOOK", Toast.LENGTH_SHORT);
             toast.show();
         }

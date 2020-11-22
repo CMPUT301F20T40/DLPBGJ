@@ -7,51 +7,51 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Required Fields*"
         android:ems="10"
-        />
+        android:text="Required Fields*" />
 
     <EditText
         android:id="@+id/book_title_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Enter book's title*"
-        android:textColor="#B59C34"/>
+        android:inputType="textPersonName"
+        android:textColor="#B59C34" />
 
     <EditText
         android:id="@+id/book_author_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Enter book's author*"
-        android:textColor="#B59C34"/>
+        android:inputType="textPersonName"
+        android:textColor="#B59C34" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <EditText
-        android:id="@+id/book_ISBN_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="Enter book's ISBN code"
-        android:textColor="#B59C34"/>
 
-     <Button
-         android:id="@+id/scan2"
-         android:foreground="?attr/selectableItemBackgroundBorderless"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:padding="10dp"
-         android:text="Scan ISBN"
-         android:background="@drawable/gradient">
+        <EditText
+            android:id="@+id/book_ISBN_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Enter book's ISBN code"
+            android:inputType="number"
+            android:textColor="#B59C34" />
 
-     </Button>
+        <Button
+            android:id="@+id/scan2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gradient"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="10dp"
+            android:text="Scan ISBN">
+
+        </Button>
 
     </LinearLayout>
 
@@ -60,30 +60,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPersonName"
         android:hint="Enter book's status*"
-        android:textColor="#B59C34"/>
+        android:inputType="textPersonName"
+        android:textColor="#B59C34" />
 
     <EditText
         android:id="@+id/book_description_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
+
+        android:hint="Enter book's Description"
         android:inputType="textPersonName"
-        android:hint="Enter book's Description*"
-        android:textColor="#B59C34"/>
+        android:textColor="#B59C34" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/Picture"
             android:layout_width="180dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:text="CHOOSE PICTURE"
             android:background="@drawable/gradient"
-            android:foreground="?attr/selectableItemBackgroundBorderless" />
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:text="CHOOSE PICTURE" />
 
         <Button
             android:id="@+id/Picture1"
@@ -96,10 +99,22 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/bookPic"
         android:layout_width="300dp"
         android:layout_height="244dp"
+        android:layout_gravity="center_vertical"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:id="@+id/bookPic"/>
+        android:layout_marginTop="20dp" />
+
+    <Button
+        android:id="@+id/delete_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/gradient"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:text="Delete Photo" />
+
 
 </LinearLayout>

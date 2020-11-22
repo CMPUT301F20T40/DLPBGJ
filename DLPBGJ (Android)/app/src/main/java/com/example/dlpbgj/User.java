@@ -11,6 +11,11 @@ public class User implements Serializable {
     private String first_name;
     private String last_name;
 
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public String getDOB() {
         return DOB;
     }
@@ -41,11 +46,6 @@ public class User implements Serializable {
 
     public void setLast_name(String last_name) {
         this.last_name = last_name;
-    }
-
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
     }
 
     public String getUsername() {
