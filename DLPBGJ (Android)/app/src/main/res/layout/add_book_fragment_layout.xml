@@ -70,7 +70,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Enter book's Description"
+        android:hint="Enter book's Description*"
         android:textColor="#B59C34"/>
     <LinearLayout
         android:layout_width="wrap_content"

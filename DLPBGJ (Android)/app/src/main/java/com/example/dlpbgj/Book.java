@@ -66,7 +66,13 @@ public class Book implements Serializable {
     }
 
     public void removeRequest(String request){
-        this.requests.remove(request);
+        
+        if(!this.requests.contains(request)){
+            throw new IllegalArgumentException();
+        }
+        else {
+            this.requests.remove(request);
+        }
     }
 
     public void emptyRequests(){

@@ -44,7 +44,7 @@ public class HomePage extends AppCompatActivity implements ImageFragement.OnFrag
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        Intent intent = getIntent();
+        //Intent intent = getIntent();
         currentUser = (User)getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE1);//Catching the user object given by the MainActivity
         Button info_button = findViewById(R.id.MyInfo);
         Button myBooksButton=findViewById(R.id.MyBooks);
@@ -74,9 +74,28 @@ public class HomePage extends AppCompatActivity implements ImageFragement.OnFrag
                 if (task.isSuccessful()){
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()){
+                        String name="";
                         Map<String,Object> data = document.getData();
-                        String name = (String)data.get("First Name");
-                        name += " " + (String)data.get("Last Name") + "'s Library";
+                        String firstName = (String) data.get("First Name");
+                        String lastName = (String) data.get("Last Name");
+                        if(firstName==null || lastName==null){
+                            name="Unknown";
+                        }
+                        else {
+                            if (firstName.equals("")) {
+                                if (lastName.equals("")) {
+                                    name = "Unknown";
+                                } else {
+                                    name = lastName;
+                                }
+                            } else {
+                                if (lastName.equals("")) {
+                                    name = firstName;
+                                }
+                                name = firstName + " " + lastName;
+                            }
+                        }
+                        name += "'s Library";
                         userName.setText(name);
                         StorageReference imagesRef = storageReference.child("images/"+currentUser.getUsername());
                         imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>()
