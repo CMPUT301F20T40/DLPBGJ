@@ -14,9 +14,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,20 +40,23 @@ import com.google.firebase.storage.UploadTask;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddBookFragment extends DialogFragment implements Serializable {
     private EditText bookTitle;
     private EditText bookAuthor;
     private EditText bookISBN;
-    private EditText bookStatus;
+    private TextView bookStatus;
     private EditText bookDescription;
     private OnFragmentInteractionListener listener;
     private final int REQUEST = 22;
     private Uri path;
     private ImageView bookPic;
     private Book book;
+    private final String statusStr = "Book Status -";
     FirebaseStorage storage;
     StorageReference storageReference;
+
 
     public interface OnFragmentInteractionListener {
         void onOkPressed(Book newBook);
@@ -111,11 +118,20 @@ public class AddBookFragment extends DialogFragment implements Serializable {
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-
         Button scan = view.findViewById(R.id.scan2);
         Button picture = view.findViewById(R.id.Picture);
         Button picture2 = view.findViewById(R.id.Picture1);
         Button deletePhoto = view.findViewById(R.id.delete_photo);
+        Spinner spinner = view.findViewById(R.id.book_status);
+        final ArrayList<String> Statuses = new ArrayList<>();
+        Statuses.add("Please Select a Status from the drop down");
+        Statuses.add("Available");
+        Statuses.add("Borrowed");
+        Statuses.add("Requested");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_layout, Statuses);
+        adapter.setDropDownViewResource(R.layout.spinner_layout);
+        spinner.setAdapter(adapter);
+
         String title = "Add Book";
         if (getArguments() != null) {
             book = (Book) getArguments().get("Book");
@@ -152,6 +168,24 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                 Intent intent = new Intent(getActivity(), barcode_scanner.class);
                 startActivityForResult(intent, 1);
 
+            }
+        });
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0){
+                    bookStatus.setText(statusStr);
+                }
+                else{
+                    bookStatus.setText("Book Status - " + Statuses.get(i));
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                bookStatus.setText(statusStr);
             }
         });
         picture.setOnClickListener(new View.OnClickListener() {
@@ -245,8 +279,8 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                             focus = bookTitle;
                         }
 
-                        if (book_status.equals("")) { //Mandatory to enter book's status
-                            bookStatus.setError("Please enter the book's status");
+                        if (book_status.equals(statusStr)) { //Mandatory to enter book's status
+                            bookStatus.setError("Please select the book's status");
                             wrong_input = true;
                             focus = bookStatus;
                         }
@@ -257,12 +291,12 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                             focus = bookDescription;
 
                         }
-                        if (!validStatus.contains(book_status)) { //Input validation for the status
+                     /*   if (!validStatus.contains(book_status)) { //Input validation for the status
                             bookStatus.setError("Please enter a valid status: Available, Borrowed, Requested, Accepted");
                             wrong_input = true;
                             focus = bookStatus;
 
-                        }
+                        }*/
                         if (book_author.equals("")) {
                             book_author = "Unknown";
 
@@ -282,7 +316,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                             String temp = book.getTitle();
                             book.setAuthor(book_author);
                             book.setISBN(book_ISBN);
-                            book.setStatus(book_status);
+                            book.setStatus(book_status.replace(statusStr,""));
                             book.setTitle(book_title);
                             book.setDescription(book_description);
                             book.setOwner(user.getUsername());
