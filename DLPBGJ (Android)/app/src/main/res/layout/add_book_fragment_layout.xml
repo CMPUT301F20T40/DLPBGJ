@@ -8,7 +8,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:text="Required Fields*" />
+        android:text="Required Fields*"
+        android:layout_weight="1"/>
 
     <EditText
         android:id="@+id/book_title_editText"
@@ -17,7 +18,8 @@
         android:ems="10"
         android:hint="Enter book's title*"
         android:inputType="textPersonName"
-        android:textColor="#B59C34" />
+        android:textColor="#B59C34"
+        android:layout_weight="1"/>
 
     <EditText
         android:id="@+id/book_author_editText"
@@ -26,12 +28,14 @@
         android:ems="10"
         android:hint="Enter book's author*"
         android:inputType="textPersonName"
-        android:textColor="#B59C34" />
+        android:textColor="#B59C34"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
         <EditText
             android:id="@+id/book_ISBN_editText"
@@ -55,14 +59,24 @@
 
     </LinearLayout>
 
-    <EditText
+    <Spinner
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:id="@+id/book_status"
+        android:layout_weight="1"
+        />
+
+    <TextView
         android:id="@+id/book_status_editText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Enter book's status*"
+        android:textSize="18sp"
+        android:hint="Book's status*"
         android:inputType="textPersonName"
-        android:textColor="#B59C34" />
+        android:textColor="#B59C34"
+        android:layout_weight="1"/>
 
     <EditText
         android:id="@+id/book_description_editText"
@@ -71,12 +85,14 @@
         android:ems="10"
         android:hint="Enter book's Description"
         android:inputType="textPersonName"
-        android:textColor="#B59C34" />
+        android:textColor="#B59C34"
+        android:layout_weight="1"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_weight="1">
 
         <Button
             android:id="@+id/Picture"
@@ -103,15 +119,17 @@
         android:layout_height="244dp"
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="20dp"
+        android:layout_weight="2"/>
 
     <Button
         android:id="@+id/delete_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center|bottom"
+        android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:background="@drawable/gradient"
+        android:layout_weight="1"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="Delete Photo" />
 

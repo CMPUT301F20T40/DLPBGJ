@@ -115,7 +115,7 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
                        DOB = i2 + "/" + i1 + "/" + i ;
-                        UserBirthDate.setText(DOB);
+                       UserBirthDate.setText(DOB);
             }
         };
         final CollectionReference userBookCollectionReference = userDb.collection("Users");
@@ -151,7 +151,7 @@ public class UserProfile extends AppCompatActivity {
                         });
                     }
                 } else {
-                    Log.d("Param", "get failed with ", task.getException());
+                    Log.d("UserProfile", "get failed with ", task.getException());
                 }
             }
         });
