@@ -69,7 +69,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
         returnBook = findViewById(R.id.Return);
         acceptBook = findViewById(R.id.Accept);
         getLocation = findViewById(R.id.getLocation);
-        viewNotifications = findViewById(R.id.viewNotifications);
+       //viewNotifications = findViewById(R.id.viewNotifications);
         final ImageView profile = findViewById(R.id.Profile);
         storage = FirebaseStorage.getInstance();
         final StorageReference storageReference = storage.getReference();
