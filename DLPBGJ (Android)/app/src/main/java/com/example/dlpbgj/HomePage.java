@@ -41,6 +41,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
     Button returnBook;
     Button acceptBook;
     Button getLocation;
+    Button viewNotifications;
     FirebaseStorage storage;
     FirebaseFirestore Userdb;
     private User currentUser;
@@ -65,6 +66,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
         returnBook = findViewById(R.id.Return);
         acceptBook = findViewById(R.id.Accept);
         getLocation = findViewById(R.id.getLocation);
+        viewNotifications = findViewById(R.id.viewNotifications);
         final ImageView profile = findViewById(R.id.Profile);
         storage = FirebaseStorage.getInstance();
         final StorageReference storageReference = storage.getReference();
@@ -198,6 +200,15 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LocationDetails.class);
+                startActivity(intent);
+            }
+        });
+
+        viewNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ViewNotifications.class);
+                intent.putExtra("User", currentUser);
                 startActivity(intent);
             }
         });

@@ -75,6 +75,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                         bookDataList.clear();
+                        bookAdapter.notifyDataSetChanged();
                         final String descrInput = description.getText().toString();
                         for (QueryDocumentSnapshot d : value) {
                             final String username = d.getId();
@@ -97,20 +98,25 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                                 if (checkAvail.isChecked() && checkBorr.isChecked()) {
                                                     if (!(book_status.toLowerCase().equals(availableConstraint) || book_status.toLowerCase().equals(borrowedConstraint))) {
                                                         bookDataList.remove(thisBook);
+                                                        //bookList.setAdapter(bookAdapter);
+                                                        bookAdapter.notifyDataSetChanged();
                                                     }
                                                 }
                                                 if (checkBorr.isChecked() && !checkAvail.isChecked()) {
                                                     if (!(book_status.toLowerCase().equals(borrowedConstraint))) {
                                                         bookDataList.remove(thisBook);
+                                                        bookAdapter.notifyDataSetChanged();
+                                                        //bookList.setAdapter(bookAdapter);
                                                     }
                                                 }
                                                 if (!checkBorr.isChecked() && checkAvail.isChecked()) {
                                                     if (!(book_status.toLowerCase().equals(availableConstraint))) {
                                                         bookDataList.remove(thisBook);
+                                                        bookAdapter.notifyDataSetChanged();
+                                                        //bookList.setAdapter(bookAdapter);
                                                     }
                                                 }
-                                                bookAdapter.notifyDataSetChanged();
-                                                bookList.setAdapter(bookAdapter);
+
                                             }
                                         }
                                     }
@@ -194,6 +200,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             }
         });
 
+
         bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -208,6 +215,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     public void onOkPressed(final Book book, User user) {
         final HashMap<String, Object> data = new HashMap<>();
         ArrayList<String> req = book.getRequests();
+        //HashMap<String,Integer> notifications = book.getNotifications();
         if (book.getStatus().equals("Borrowed")) {
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST A BORROWED BOOK!! ;)", Toast.LENGTH_SHORT);
             toast.show();
@@ -216,6 +224,8 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             toast.show();
         } else if (!req.contains(user.getUsername())) {
             req.add(user.getUsername());
+            book.addNotification(user.getUsername());
+            data.put("Notifications",book.getNotifications());
             data.put("Requests", req);
             data.put("Book Status", "Requested");
             userBookCollectionReference = db.collection("Users/" + book.getOwner() + "/MyBooks");
@@ -243,6 +253,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                 }
             });
             bookAdapter.notifyDataSetChanged();
+            filteredBookAdapter.notifyDataSetChanged();
         } else {
             Toast toast = Toast.makeText(Search_by_descr.this, "ALREADY REQUESTED THIS BOOK", Toast.LENGTH_SHORT);
             toast.show();
