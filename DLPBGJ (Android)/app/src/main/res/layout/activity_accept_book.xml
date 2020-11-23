@@ -10,18 +10,23 @@
 
         <Button
             android:id="@+id/scanisbn"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="@drawable/gradient"
-            android:foreground="?attr/selectableItemBackgroundBorderless"
-            android:text="Scan" />
+            android:background="#BA3263C5"
+            android:text="Scan ISBN" />
 
         <TextView
             android:id="@+id/ISBN_book"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:textColor="#B59C34"
             android:textSize="20sp" />
 
@@ -32,8 +37,10 @@
         android:id="@+id/acceptBook"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/gradient"
+        android:background="#BA3263C5"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="accept" />
 

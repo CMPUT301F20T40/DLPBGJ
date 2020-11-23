@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,17 +32,18 @@ import java.util.Map;
 //As soon as the user successfully logs in, this activity gets invoked. This is the home page of the user.
 public class HomePage extends AppCompatActivity implements ImageFragment.OnFragmentInteractionListener {
     public static final String EXTRA_MESSAGE2 = "com.example.dlpbgj.MESSAGE2";
-    Button info_button;
-    Button myBooksButton;
-    Button search;
-    Button requests;
-    Button borrowed;
-    Button signOut;
-    Button bookRequests;
-    Button returnBook;
-    Button acceptBook;
-    Button getLocation;
+
     Button viewNotifications;
+    ImageButton info_button;
+    ImageButton myBooksButton;
+    ImageButton search;
+    ImageButton requests;
+    ImageButton borrowed;
+    ImageButton signOut;
+    ImageButton bookRequests;
+    ImageButton returnBook;
+    ImageButton acceptBook;
+    ImageButton getLocation;
     FirebaseStorage storage;
     FirebaseFirestore Userdb;
     private User currentUser;
@@ -55,6 +57,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
+
         currentUser = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE1);//Catching the user object given by the MainActivity
         info_button = findViewById(R.id.MyInfo);
         myBooksButton = findViewById(R.id.MyBooks);
@@ -83,10 +86,30 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Map<String, Object> data = document.getData();
-                        String name = (String) data.get("First Name");
-                        name += " " + data.get("Last Name") + "'s Library";
+                    if (document.exists()){
+                        String name="";
+                        Map<String,Object> data = document.getData();
+                        String firstName = (String) data.get("First Name");
+                        String lastName = (String) data.get("Last Name");
+                        if(firstName==null || lastName==null){
+                            name="Unknown";
+                        }
+                        else {
+                            if (firstName.equals("")) {
+                                if (lastName.equals("")) {
+                                    name = "Unknown";
+                                } else {
+                                    name = lastName;
+                                }
+                            } else {
+                                if (lastName.equals("")) {
+                                    name = firstName;
+                                }
+                                name = firstName + " " + lastName;
+                            }
+                        }
+                        name += "'s Library";
+
                         userName.setText(name);
                         StorageReference imagesRef = storageReference.child("images/" + currentUser.getUsername());
                         imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

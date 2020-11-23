@@ -20,9 +20,13 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:clickable="true"
-        android:focusable="true"
-        app:backgroundTint="#FFFFFF"
-        app:srcCompat="@drawable/ovobg" />
+        android:focusable="auto"
+        android:focusableInTouchMode="false"
+        android:visibility="visible"
+        app:backgroundTint="#0B6ACF"
+        app:elevation="9dp"
+        app:fabSize="auto"
+        app:srcCompat="@drawable/fragment" />
 
     <LinearLayout
         android:layout_width="wrap_content"
