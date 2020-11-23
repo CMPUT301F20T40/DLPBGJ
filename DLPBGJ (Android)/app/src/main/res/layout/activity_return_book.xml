@@ -16,7 +16,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#BA3263C5"
+            android:background="@drawable/custom_button"
             android:text="Scan" />
 
         <TextView
@@ -26,7 +26,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="#BA3263C5"
+            android:textSize="20sp"
+            android:background=""
             android:layout_weight="1"
             android:text="ISBN code" />
 
@@ -57,8 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/gradient"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/custom_button"
         android:text="return" />
 
 

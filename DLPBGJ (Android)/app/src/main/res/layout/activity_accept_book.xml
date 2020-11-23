@@ -16,7 +16,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_weight="1"
-            android:background="#BA3263C5"
+            android:background="@drawable/custom_button"
             android:text="Scan ISBN" />
 
         <TextView
@@ -40,7 +40,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:background="#BA3263C5"
+        android:background="@drawable/custom_button"
         android:foreground="?attr/selectableItemBackgroundBorderless"
         android:text="accept" />
 
