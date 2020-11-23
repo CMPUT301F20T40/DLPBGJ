@@ -53,7 +53,6 @@ public class RequestBookFragment extends DialogFragment implements Serializable 
         if (getArguments() != null) {
             book = (Book) getArguments().get("Book");
             user = (User) getArguments().get("User");
-
             book_title.setText(book.getTitle());
             book_author.setText(book.getAuthor());
             book_ISBN.setText(book.getISBN());

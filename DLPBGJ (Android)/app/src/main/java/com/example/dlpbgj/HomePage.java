@@ -32,6 +32,8 @@ import java.util.Map;
 //As soon as the user successfully logs in, this activity gets invoked. This is the home page of the user.
 public class HomePage extends AppCompatActivity implements ImageFragment.OnFragmentInteractionListener {
     public static final String EXTRA_MESSAGE2 = "com.example.dlpbgj.MESSAGE2";
+
+    Button viewNotifications;
     ImageButton info_button;
     ImageButton myBooksButton;
     ImageButton search;
@@ -67,6 +69,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
         returnBook = findViewById(R.id.Return);
         acceptBook = findViewById(R.id.Accept);
         getLocation = findViewById(R.id.getLocation);
+        viewNotifications = findViewById(R.id.viewNotifications);
         final ImageView profile = findViewById(R.id.Profile);
         storage = FirebaseStorage.getInstance();
         final StorageReference storageReference = storage.getReference();
@@ -220,6 +223,15 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), LocationDetails.class);
+                startActivity(intent);
+            }
+        });
+
+        viewNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ViewNotifications.class);
+                intent.putExtra("User", currentUser);
                 startActivity(intent);
             }
         });

@@ -2,6 +2,7 @@ package com.example.dlpbgj;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Book implements Serializable {
     String title;
@@ -11,6 +12,7 @@ public class Book implements Serializable {
     String description = "";
     String owner;
     ArrayList<String> requests;
+    HashMap<String,Integer> notifications;
     String uid;
     String borrower;
 
@@ -56,6 +58,7 @@ public class Book implements Serializable {
         } else {
             this.requests = req;
         }
+        this.notifications = new HashMap<>();
     }
 
     public String getTitle() {
@@ -142,5 +145,23 @@ public class Book implements Serializable {
 
     public void setBorrower(String borrower) {
         this.borrower = borrower;
+    }
+
+    public HashMap<String, Integer> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(HashMap<String, Integer> notifications) {
+        if (notifications!=null){
+            this.notifications = notifications;
+        }
+    }
+
+    public void addNotification(String user){
+        notifications.put(user,0);
+    }
+
+    public void updateNotification(String user){
+        notifications.put(user,1);
     }
 }
