@@ -10,6 +10,8 @@
         android:id="@+id/AddressChanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:ems="10"
         android:hint="Enter Address"
         android:inputType="textPersonName" />
@@ -18,5 +20,8 @@
         android:id="@+id/LookUP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/custom_button"
         android:text="Search Location" />
 </LinearLayout>

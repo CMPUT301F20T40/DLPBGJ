@@ -83,7 +83,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="8dp"
-                android:background="#BA3263C5"
+                android:background="@drawable/custom_button"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:onClick="displayToastMessage"
                 android:text="SIGN UP" />
@@ -94,7 +94,7 @@
                 android:layout_height="50dp"
                 android:layout_marginLeft="50dp"
                 android:layout_marginTop="8dp"
-                android:background="#BA3263C5"
+                android:background="@drawable/custom_button"
                 android:foreground="?attr/selectableItemBackgroundBorderless"
                 android:onClick="displayToastMessage"
                 android:text="LOGIN" />
