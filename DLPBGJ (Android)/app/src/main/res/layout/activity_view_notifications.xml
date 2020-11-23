@@ -4,15 +4,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:text="Unread Notifications"></TextView>
+
     <ListView
         android:id="@+id/notification_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="350dp"
+        android:layout_marginTop="25dp"/>
 
-    <Button
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:id="@+id/backButton"></Button>
+        android:layout_marginTop="375dp"
+        android:text="Read Notifications"></TextView>
+
+    <ListView
+        android:id="@+id/readNotification_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"/>
 
 </FrameLayout>
