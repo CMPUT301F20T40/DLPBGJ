@@ -33,7 +33,7 @@ import java.util.Map;
 public class HomePage extends AppCompatActivity implements ImageFragment.OnFragmentInteractionListener {
     public static final String EXTRA_MESSAGE2 = "com.example.dlpbgj.MESSAGE2";
 
-    Button viewNotifications;
+    ImageButton viewNotifications;
     ImageButton info_button;
     ImageButton myBooksButton;
     ImageButton search;
@@ -69,7 +69,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
         returnBook = findViewById(R.id.Return);
         acceptBook = findViewById(R.id.Accept);
         getLocation = findViewById(R.id.getLocation);
-       //viewNotifications = findViewById(R.id.viewNotifications);
+        viewNotifications = findViewById(R.id.viewNotifications);
         final ImageView profile = findViewById(R.id.Profile);
         storage = FirebaseStorage.getInstance();
         final StorageReference storageReference = storage.getReference();
