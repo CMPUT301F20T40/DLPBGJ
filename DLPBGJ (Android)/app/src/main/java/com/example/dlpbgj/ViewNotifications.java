@@ -118,7 +118,7 @@ public class ViewNotifications extends AppCompatActivity {
         notificationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(getApplicationContext(), View_Requests.class);
+                Intent intent = new Intent(getApplicationContext(), BookRequests.class);
                 intent.putExtra("User", currentUser);
                 startActivity(intent);
             }
