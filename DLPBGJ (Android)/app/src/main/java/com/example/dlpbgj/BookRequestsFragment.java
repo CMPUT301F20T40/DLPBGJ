@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,9 +19,11 @@ import androidx.fragment.app.DialogFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BookRequestsFragment extends DialogFragment implements Serializable {
-    ArrayList<String> req;
+    HashMap<String,String> req;
+    ArrayList<String> users;
     private BookRequestsFragment.OnFragmentInteractionListener listener;
     private Book book;
     private String selection;
@@ -48,11 +51,12 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
         final Spinner spinner = view.findViewById(R.id.dropDown);
         String title = "Accept / Decline Requests";
         if (getArguments() != null) {
+            users = new ArrayList<>();
             book = (Book) getArguments().get("Book");
             req = book.getRequests();
-            System.out.println("Look Here");
-            System.out.println(req.get(0));
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, req);
+            Log.d("BookRequestFragment",String.valueOf(req));
+            users.addAll(req.keySet());
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, users);
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
         }
@@ -60,7 +64,7 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                selection = req.get(i);
+                selection = users.get(i);
             }
 
             @Override
@@ -77,6 +81,7 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         book.setBorrower(selection);
+                        book.addRequest(selection,"Borrowed");
                         Toast toast = Toast.makeText(getContext(), selection + "'s request accepted!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onAcceptPressed(book);
@@ -85,7 +90,8 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                 .setNegativeButton("Decline", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        book.removeRequest(selection);
+                        //book.removeRequest(selection);
+                        book.addRequest(selection,"Declined");
                         Toast toast = Toast.makeText(getContext(), selection + "'s request declined!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onDeclinePressed(book);

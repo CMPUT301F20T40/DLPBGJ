@@ -15,6 +15,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class View_Borrowed extends AppCompatActivity {
     ListView bookList;
@@ -46,12 +47,12 @@ public class View_Borrowed extends AppCompatActivity {
                                 String borrower = (String) newBook.getData().get("Borrower");
                                 if (borrower != null) {
                                     if (borrower.equals(currentUser.getUsername())) {
+                                        HashMap<String,String> book_requests = (HashMap<String, String>) newBook.getData().get("Requests");
                                         String book_title = newBook.getId();
                                         String book_author = (String) newBook.getData().get("Book Author");
                                         String book_ISBN = (String) newBook.getData().get("Book ISBN");
-                                        String book_status = (String) newBook.getData().get("Book Status");
+                                        String book_status = book_requests.get(currentUser.getUsername());
                                         String book_description = (String) newBook.getData().get("Book Description");
-                                        ArrayList<String> book_requests = (ArrayList<String>) newBook.getData().get("Requests");
                                         System.out.println("Reached compare\n");
                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, book_requests);
                                         bookDataList.add(thisBook);

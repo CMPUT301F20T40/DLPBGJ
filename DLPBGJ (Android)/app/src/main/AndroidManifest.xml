@@ -44,7 +44,7 @@
         <activity android:name=".ViewBookDetails" />
         <activity android:name=".barcode_scanner" />
         <activity android:name=".HomePage" />
-        <activity android:name=".MyBooks" />
+        <activity android:name=".MyBooks"  />
         <activity android:name=".Search_by_descr" />
         <activity android:name=".View_Requests" />
         <activity android:name=".View_Borrowed" />

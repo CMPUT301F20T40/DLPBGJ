@@ -11,7 +11,7 @@ public class Book implements Serializable {
     String status;
     String description = "";
     String owner;
-    ArrayList<String> requests;
+    HashMap<String,String> requests;
     HashMap<String,Integer> notifications;
     String uid;
     String borrower;
@@ -46,7 +46,7 @@ public class Book implements Serializable {
         this.owner = owner;
     }
 
-    public Book(String title, String author, String ISBN, String status, String description, String owner, ArrayList<String> req) {
+    public Book(String title, String author, String ISBN, String status, String description, String owner, HashMap<String,String> req) {
         this.title = title;
         this.author = author;
         this.ISBN = ISBN;
@@ -54,7 +54,7 @@ public class Book implements Serializable {
         this.description = description;
         this.owner = owner;
         if (req == null) {
-            this.requests = new ArrayList<>();
+            this.requests = new HashMap<>();
         } else {
             this.requests = req;
         }
@@ -69,22 +69,27 @@ public class Book implements Serializable {
         this.title = title;
     }
 
-    public ArrayList<String> getRequests() {
+    public HashMap<String, String> getRequests() {
         return requests;
     }
 
-    public void setRequests(ArrayList<String> requests) {
+    public void setRequests(HashMap<String,String> requests) {
         this.requests = requests;
     }
 
     public void removeRequest(String request){
-        
-        if(!this.requests.contains(request)){
+
+        if(!this.requests.containsKey(request)){
             throw new IllegalArgumentException();
         }
         else {
             this.requests.remove(request);
         }
+
+    }
+
+    public void addRequest(String user, String status){
+        this.requests.put(user,status);
     }
 
     public void emptyRequests() {

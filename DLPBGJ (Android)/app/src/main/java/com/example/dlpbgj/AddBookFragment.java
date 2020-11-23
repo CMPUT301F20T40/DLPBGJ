@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -175,7 +176,12 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0){
-                    bookStatus.setText(statusStr);
+                    if (getArguments() != null){
+                        bookStatus.setText(statusStr + book.getStatus());
+                    }
+                    else{
+                        bookStatus.setText(statusStr);
+                    }
                 }
                 else{
                     bookStatus.setText("Book Status - " + Statuses.get(i));
@@ -185,7 +191,12 @@ public class AddBookFragment extends DialogFragment implements Serializable {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                bookStatus.setText(statusStr);
+                if (getArguments() != null){
+                    bookStatus.setText(statusStr + book.getStatus());
+                }
+                else{
+                    bookStatus.setText(statusStr);
+                }
             }
         });
         picture.setOnClickListener(new View.OnClickListener() {
@@ -270,6 +281,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                         String book_author = bookAuthor.getText().toString();
                         String book_ISBN = bookISBN.getText().toString();
                         String book_status = bookStatus.getText().toString();
+                        book_status = book_status.replace(statusStr,"");
                         String book_description = bookDescription.getText().toString();
                         View focus = null;
                         boolean wrong_input = false;
