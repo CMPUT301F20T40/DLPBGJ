@@ -1,11 +1,13 @@
 package com.example.dlpbgj;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,7 +53,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
 
                 bookDataList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    ArrayList<String> req = (ArrayList<String>) doc.getData().get("Requests");
+                    HashMap<String,String> req = (HashMap<String, String>) doc.getData().get("Requests");
                     if (req != null && req.size() > 0) {
                         Log.d(TAG, String.valueOf(doc.getData().get("Requests")));
                         String book_title = doc.getId();
@@ -84,8 +86,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         HashMap<String, Object> map = new HashMap<>();
         map.put("Borrower", book.getBorrower());
-        book.setStatus("Borrowed");
-        book.emptyRequests();
+        book.setStatus("Accepted");
+        //book.emptyRequests();
         map.put("Requests", book.getRequests());
         map.put("Book Status", book.getStatus());
         userBookCollectionReference
@@ -103,6 +105,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                         Log.d(TAG, "Book Data failed to update");
                     }
                 });
+        Toast toast = Toast.makeText(getApplicationContext(), "Please Select a Pickup Location!", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     @Override

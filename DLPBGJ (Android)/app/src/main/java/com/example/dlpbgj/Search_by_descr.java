@@ -90,7 +90,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                                 String book_author = (String) newBook.getData().get("Book Author");
                                                 String book_ISBN = (String) newBook.getData().get("Book ISBN");
                                                 String book_status = (String) newBook.getData().get("Book Status");
-                                                ArrayList<String> req = (ArrayList<String>) newBook.getData().get("Requests");
+                                                HashMap<String,String> req = (HashMap<String, String>) newBook.getData().get("Requests");
                                                 Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
                                                 bookDataList.add(thisBook);
                                                 bookAdapter.notifyDataSetChanged();
@@ -207,15 +207,15 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     @Override
     public void onOkPressed(final Book book, User user) {
         final HashMap<String, Object> data = new HashMap<>();
-        ArrayList<String> req = book.getRequests();
-        if (book.getStatus().equals("Borrowed")) {
+        HashMap<String,String> req = book.getRequests();
+        if (book.getStatus().equals("Accepted")) {
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST A BORROWED BOOK!! ;)", Toast.LENGTH_SHORT);
             toast.show();
         } else if (currentUser.getUsername().equals(book.getOwner())) {
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST YOUR OWN BOOK!! :)", Toast.LENGTH_SHORT);
             toast.show();
-        } else if (!req.contains(user.getUsername())) {
-            req.add(user.getUsername());
+        } else if (!req.containsKey(user.getUsername())) {
+            req.put(user.getUsername(),"Requested");
             data.put("Requests", req);
             data.put("Book Status", "Requested");
             userBookCollectionReference = db.collection("Users/" + book.getOwner() + "/MyBooks");

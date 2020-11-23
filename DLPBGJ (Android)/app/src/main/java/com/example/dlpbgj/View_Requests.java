@@ -15,6 +15,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class View_Requests extends AppCompatActivity {
     ListView bookList;
@@ -42,13 +43,13 @@ public class View_Requests extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                             for (QueryDocumentSnapshot newBook : value2) {
-                                ArrayList<String> book_requests = (ArrayList<String>) newBook.getData().get("Requests");
+                                HashMap<String,String> book_requests = (HashMap<String, String>) newBook.getData().get("Requests");
                                 if (book_requests != null) {
-                                    if (book_requests.contains(currentUser.getUsername())) {
+                                    if (book_requests.containsKey(currentUser.getUsername())) {
                                         String book_title = newBook.getId();
                                         String book_author = (String) newBook.getData().get("Book Author");
                                         String book_ISBN = (String) newBook.getData().get("Book ISBN");
-                                        String book_status = (String) newBook.getData().get("Book Status");
+                                        String book_status = book_requests.get(currentUser.getUsername());
                                         String book_description = (String) newBook.getData().get("Book Description");
                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, book_requests);
                                         bookDataList.add(thisBook);
