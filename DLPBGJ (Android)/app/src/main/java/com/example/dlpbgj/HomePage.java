@@ -222,7 +222,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
         getLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LocationDetails.class);
+                Intent intent = new Intent(getApplicationContext(), UserLocation.class);
                 startActivity(intent);
             }
         });

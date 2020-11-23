@@ -36,7 +36,6 @@
         <activity
             android:name=".UserLocation"
             android:label="@string/title_activity_user_location"></activity>
-        <activity android:name=".LocationDetails" />
         <activity android:name=".ReturnBook" />
         <activity android:name=".AcceptBook" />
         <activity android:name=".BookRequests" />
