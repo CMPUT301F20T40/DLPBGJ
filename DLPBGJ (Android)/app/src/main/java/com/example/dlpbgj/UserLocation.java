@@ -56,7 +56,6 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     int LOCATIONRC = 10001;
     FusedLocationProviderClient FPC;
     String returnAddress;
-    //MarkerOptions marker;
     Marker marker;
 
 
