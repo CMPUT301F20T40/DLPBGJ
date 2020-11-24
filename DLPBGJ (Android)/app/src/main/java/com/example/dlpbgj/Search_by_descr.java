@@ -201,14 +201,27 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
         });
 
 
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Book temp = bookDataList.get(i);
-                RequestBookFragment r = RequestBookFragment.newInstance(temp, currentUser);
-                r.show(getSupportFragmentManager(), "REQUEST_BOOK");
-            }
-        });
+        if(checkAvail.isChecked() || checkBorr.isChecked()){
+            bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Book temp = filteredDataList.get(i);
+                    RequestBookFragment r = RequestBookFragment.newInstance(temp, currentUser);
+                    r.show(getSupportFragmentManager(), "REQUEST_BOOK");
+                }
+            });
+        }
+        else {
+            bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    Book temp = bookDataList.get(i);
+                    RequestBookFragment r = RequestBookFragment.newInstance(temp, currentUser);
+                    r.show(getSupportFragmentManager(), "REQUEST_BOOK");
+                }
+            });
+        }
+
     }
 
     @Override
