@@ -1,5 +1,6 @@
 package com.example.dlpbgj;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -258,5 +259,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             toast.show();
         }
     }
+
+
 }
 

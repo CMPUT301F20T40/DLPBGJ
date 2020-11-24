@@ -33,6 +33,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
     CollectionReference userBookCollectionReference;    //This is the sub-collection reference for the user who's logged in pointing to the collection of owned books
     String TAG = "BookRequests";
     private User currentUser;
+    String Location = "";
+    Book book;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,32 +83,13 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
     }
 
     @Override
-    public void onAcceptPressed(Book book) {
-        db = FirebaseFirestore.getInstance();
-        userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("Borrower", book.getBorrower());
-        book.setStatus("Accepted");
-        //book.emptyRequests();
-        map.put("Requests", book.getRequests());
-        map.put("Book Status", book.getStatus());
-        userBookCollectionReference
-                .document(book.getTitle())
-                .update(map)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Book data successfully updated");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Book Data failed to update");
-                    }
-                });
+    public void onAcceptPressed(Book newBook) {
+        book = newBook;
         Toast toast = Toast.makeText(getApplicationContext(), "Please Select a Pickup Location!", Toast.LENGTH_SHORT);
         toast.show();
+        Intent intent = new Intent(getApplicationContext(), UserLocation.class);
+        startActivityForResult(intent,1);
+
     }
 
     @Override
@@ -130,6 +113,40 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                         Log.d(TAG, "Book Data failed to update");
                     }
                 });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == -1) {
+                Location = data.getStringExtra("Location");
+                db = FirebaseFirestore.getInstance();
+                userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("Borrower", book.getBorrower());
+                book.setStatus("Accepted");
+                map.put("Requests", book.getRequests());
+                map.put("Book Status", book.getStatus());
+                map.put("Pickup Location",Location);
+                book.setLocation(Location);
+                userBookCollectionReference
+                        .document(book.getTitle())
+                        .update(map)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Book data successfully updated");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Book Data failed to update");
+                            }
+                        });
+            }
+        }
     }
 
 }

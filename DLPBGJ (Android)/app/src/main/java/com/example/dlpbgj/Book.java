@@ -15,6 +15,7 @@ public class Book implements Serializable {
     HashMap<String,Integer> notifications;
     String uid;
     String borrower;
+    String location;
 
     public Book(String title, String author, String ISBN) {
         this.title = title;
@@ -168,5 +169,13 @@ public class Book implements Serializable {
 
     public void updateNotification(String user){
         notifications.put(user,1);
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }

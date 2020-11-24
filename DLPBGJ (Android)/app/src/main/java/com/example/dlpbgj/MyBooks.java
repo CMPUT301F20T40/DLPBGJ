@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -96,8 +97,8 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         });
 
         db = FirebaseFirestore.getInstance();
-        userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");//Creating/pointing to a sub-collection of the books that user owns
-        userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+        userBookCollectionReference = db.collection("Users");//Creating/pointing to a sub-collection of the books that user owns
+        /*userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
                     FirebaseFirestoreException error) { //Manages the state of the sub-collection
@@ -117,6 +118,50 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
             }
 
+        });*/
+        userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                bookDataList.clear();
+                bookAdapter.notifyDataSetChanged();
+                for (QueryDocumentSnapshot d : value) {
+                    final String username = d.getId();
+                    CollectionReference eachUser = db.collection("Users/" + username + "/MyBooks");
+                    eachUser.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
+                            for (QueryDocumentSnapshot newBook : value2) {
+                                String owner = (String)newBook.getData().get("Owner");
+                                String borrower = (String)newBook.getData().get("Borrower");
+                                if (borrower == null){
+                                    borrower = "";
+                                }
+                                String current = currentUser.getUsername();
+                                if (owner.equals(current) || borrower.equals(current)) {
+                                    Log.d("MyBooks","Inside the if stat");
+                                    String book_title = newBook.getId();
+                                    String book_author = (String) newBook.getData().get("Book Author");
+                                    String book_ISBN = (String) newBook.getData().get("Book ISBN");
+                                    String book_status;
+                                   if(borrower.equals(current)){
+                                         book_status = "Borrowed";
+                                    }
+                                    else{
+                                        book_status = (String) newBook.getData().get("Book Status");
+                                    }
+                                    String book_description = (String) newBook.getData().get("Book Description");
+                                    String book_owner = (String) newBook.getData().get("Owner");
+                                    String book_uid = (String) newBook.getData().get("Uid");
+                                    Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
+                                    temp.setUid(book_uid);
+                                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
+                                    bookAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
+                }
+            }
         });
 
         checkAvail = findViewById(R.id.checkAvailable);
@@ -214,8 +259,14 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Book temp = bookDataList.get(i);
-                AddBookFragment fragment = AddBookFragment.newInstance(temp, currentUser);
-                fragment.show(getSupportFragmentManager(), "ADD_BOOK");
+                if (temp.getOwner().equals(currentUser.getUsername())){
+                    AddBookFragment fragment = AddBookFragment.newInstance(temp, currentUser);
+                    fragment.show(getSupportFragmentManager(), "ADD_BOOK");
+                }
+                else{
+                    Toast toast = Toast.makeText(adapterView.getContext(), "Cannot Edit/Delete a Borrowed book :)", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 

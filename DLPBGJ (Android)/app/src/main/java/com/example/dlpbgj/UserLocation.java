@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -14,6 +15,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
@@ -36,6 +41,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
@@ -44,23 +50,39 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     LocationManager LocM;
     LocationListener LocL;
     LatLng UserLongLat;
+    Button select;
     private GoogleMap mMap;
     private Geocoder geocoder;
     int LOCATIONRC = 10001;
     FusedLocationProviderClient FPC;
+    String returnAddress;
+    //MarkerOptions marker;
+    Marker marker;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_location);
+        select = findViewById(R.id.getLocation);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this);
         FPC = LocationServices.getFusedLocationProviderClient(this);
-        //temp = (String)getIntent().getSerializableExtra("Address");
+
+        select.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast toast = Toast.makeText(view.getContext(),"The selected location is " + returnAddress, Toast.LENGTH_SHORT);
+                toast.show();
+                Intent intent = new Intent();
+                intent.putExtra("Location", returnAddress);
+                setResult(-1, intent);
+                finish();
+            }
+        });
     }
 
     /**
@@ -76,26 +98,24 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        //askLocationPermission();
-        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapLongClick(LatLng latLng) {
+            public void onMapClick(LatLng latLng) {
                 try {
                     List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     if (addressList.size() > 0) {
                         Address tempAddress = addressList.get(0);
                         String tempAddressString = tempAddress.getAddressLine(0);
-                        mMap.addMarker(new MarkerOptions()
-                                .position(latLng)
-                                .title(tempAddressString)
-                                .draggable(true)
-                        );
+                        returnAddress = tempAddressString;
+                        marker.setPosition(latLng);
+                        marker.setTitle(tempAddressString);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         });
+
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -113,6 +133,7 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
                     if (addressList.size() > 0) {
                         Address tempAddress = addressList.get(0);
                         String tempAddressString = tempAddress.getAddressLine(0);
+                        returnAddress = tempAddressString;
                         marker.setTitle(tempAddressString);
                     }
                 } catch (IOException e) {
@@ -148,17 +169,21 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onSuccess(Location location) {
                 if(location != null){
-                    MarkerOptions markerOptions = new MarkerOptions()
+                    marker = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(location.getLatitude(),location.getLongitude()))
-                            .title("Your Location");
-                    mMap.addMarker(markerOptions);
+                            .title("Current Location")
+                            .draggable(true));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
-                    /*mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                        @Override
-                        public void onMapClick(LatLng latLng) {
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                        if (addresses.size() > 0) {
+                            Address tempAddress = addresses.get(0);
+                            String tempAddressString = tempAddress.getAddressLine(0);
+                            returnAddress = tempAddressString;
                         }
-                    });*/
-                }else{
+                    } catch (IOException e) {
+                        Log.d("UserLocation", e.getMessage());
+                    }
 
                 }
             }
@@ -185,35 +210,7 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         if(requestCode == LOCATIONRC){
             if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 getLastLocation();
-            }else{
-
             }
         }
     }
-     /*  private void askLocationPermission() {
-        Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION).withListener(new PermissionListener() {
-            @Override
-            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                if (ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getBaseContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                if(!temp.equals(NULL)) {
-                    List<Address> geoAddress = geocoder.getFromLocationName(temp, 1);
-                    if (geoAddress.size() > 0) {
-                        Address address = geoAddress.get(0);
-                        LatLng newLoc = new LatLng(address.getLatitude(), address.getLongitude());
-                        MarkerOptions markerOptions = new MarkerOptions()
-                                .position(new LatLng(address.getLatitude(), address.getLongitude()))
-                                .title(address.getLocality());
-                        mMap.addMarker(markerOptions);
-                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLoc, 16));
-                    }
-                }
-
-            }
-            @Override
-            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) { }
-            @Override
-            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) { }
-        }).check();*/
 }
