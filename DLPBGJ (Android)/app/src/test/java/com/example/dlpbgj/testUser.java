@@ -22,8 +22,8 @@ public class testUser {
         assertEquals("testPass1",testUser.getPassword());
 
         //Testing contact
-        testUser.setContact("testContact");
-        assertEquals("testContact", testUser.getContact());
+        testUser.setEmail("testContact");
+        assertEquals("testContact", testUser.getEmail());
 
         //Testing first name
         testUser.setFirst_name("testFN");

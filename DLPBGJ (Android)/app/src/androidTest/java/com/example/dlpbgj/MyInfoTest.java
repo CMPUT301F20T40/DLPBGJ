@@ -1,9 +1,7 @@
 package com.example.dlpbgj;
 
 import android.app.Activity;
-import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.robotium.solo.Solo;
@@ -12,7 +10,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.rule.ActivityTestRule;
 
 import org.junit.*;
-import static org.junit.Assert.*;
 
 public class MyInfoTest {
     private Solo solo;
@@ -49,7 +46,7 @@ public class MyInfoTest {
         solo.enterText((EditText) solo.getView(R.id.UserFirstName),"testFN");
         solo.enterText((EditText) solo.getView(R.id.UserLastName),"testLN");
         solo.enterText((EditText) solo.getView(R.id.UserBirthDate),"testBDay");
-        solo.enterText((EditText) solo.getView(R.id.ContactInfo),"testEmail");
+        solo.enterText((EditText) solo.getView(R.id.emailAddress),"testEmail");
         solo.enterText((EditText) solo.getView(R.id.UserFav),"testFavGenre");
 
         solo.clickOnButton("UPDATE");
@@ -65,7 +62,7 @@ public class MyInfoTest {
         EditText firstName = solo.getCurrentActivity().findViewById(R.id.UserFirstName);
         EditText lastName = solo.getCurrentActivity().findViewById(R.id.UserLastName);
         EditText bDay = solo.getCurrentActivity().findViewById(R.id.UserBirthDate);
-        EditText contactInfo = solo.getCurrentActivity().findViewById(R.id.ContactInfo);
+        EditText contactInfo = solo.getCurrentActivity().findViewById(R.id.emailAddress);
         EditText favGenre = solo.getCurrentActivity().findViewById(R.id.UserFav);
         System.out.println(firstName.getText().toString());
         System.out.println(lastName.getText().toString());

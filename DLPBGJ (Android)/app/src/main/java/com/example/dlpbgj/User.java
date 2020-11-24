@@ -7,9 +7,11 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String DOB;
-    private String contact;
+    private String email;
+    private String phone;
     private String first_name;
     private String last_name;
+    private String genre;
 
     public User(String username, String password) {
         this.username = username;
@@ -24,12 +26,12 @@ public class User implements Serializable {
         this.DOB = DOB;
     }
 
-    public String getContact() {
-        return contact;
+    public String getEmail() {
+        return email;
     }
 
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getFirst_name() {
@@ -62,5 +64,21 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }
