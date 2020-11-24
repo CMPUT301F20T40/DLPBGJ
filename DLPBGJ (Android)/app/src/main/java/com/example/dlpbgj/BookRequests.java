@@ -54,7 +54,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                 bookDataList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     HashMap<String,String> req = (HashMap<String, String>) doc.getData().get("Requests");
-                    if (req != null && req.size() > 0) {
+                    if (req != null && !req.containsValue("Borrowed")) {
                         Log.d(TAG, String.valueOf(doc.getData().get("Requests")));
                         String book_title = doc.getId();
                         String book_author = (String) doc.getData().get("Book Author");
