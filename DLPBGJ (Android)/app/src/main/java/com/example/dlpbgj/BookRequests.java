@@ -90,6 +90,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         //book.emptyRequests();
         map.put("Requests", book.getRequests());
         map.put("Book Status", book.getStatus());
+        book.addAcceptNotification(currentUser.getUsername());
+        map.put("AcceptNotifications",book.getAcceptNotifications());
         userBookCollectionReference
                 .document(book.getTitle())
                 .update(map)
@@ -115,6 +117,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         HashMap<String, Object> map = new HashMap<>();
         map.put("Requests", book.getRequests());
+        book.addDeclineNotification(currentUser.getUsername());
+        map.put("DeclineNotifications",book.getDeclineNotifications());
         userBookCollectionReference
                 .document(book.getTitle())
                 .update(map)
