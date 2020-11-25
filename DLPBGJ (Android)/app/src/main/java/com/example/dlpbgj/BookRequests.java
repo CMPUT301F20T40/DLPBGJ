@@ -89,7 +89,6 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         toast.show();
         Intent intent = new Intent(getApplicationContext(), UserLocation.class);
         startActivityForResult(intent,1);
-
     }
 
     @Override
