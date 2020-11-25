@@ -55,10 +55,18 @@
     </LinearLayout>
 
     <EditText
-        android:id="@+id/ContactInfo"
+        android:id="@+id/emailAddress"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:hint="Enter your email"
+        android:textColor="#B59C34" />
+
+    <EditText
+        android:id="@+id/phoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:hint="Enter your phone number"
+        android:inputType="phone"
         android:textColor="#B59C34" />
 
     <EditText

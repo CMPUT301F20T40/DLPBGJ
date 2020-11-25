@@ -71,7 +71,9 @@ public class UserProfile extends AppCompatActivity {
         final EditText UserLastName = findViewById(R.id.UserLastName);
         UserBirthDate = findViewById(R.id.UserBirthDate);
         final EditText UserName = findViewById(R.id.UserName);
-        final EditText UserContact = findViewById(R.id.ContactInfo);
+        final EditText UserEmail = findViewById(R.id.emailAddress);
+        final EditText UserPhone = findViewById(R.id.phoneNumber);
+        final EditText UserGenre = findViewById(R.id.UserFav);
         userDb = FirebaseFirestore.getInstance();
         back = findViewById(R.id.BackButton);
         update = findViewById(R.id.Update);
@@ -131,12 +133,16 @@ public class UserProfile extends AppCompatActivity {
                         user.setFirst_name((String) data.get("First Name"));
                         user.setLast_name((String) data.get("Last Name"));
                         user.setDOB((String) data.get("Date of Birth"));
-                        user.setContact((String) data.get("Email"));
+                        user.setEmail((String) data.get("Email"));
+                        user.setPhone((String) data.get("Phone"));
+                        user.setGenre((String) data.get("Genre"));
                         UserFirstName.setText(user.getFirst_name());
                         UserLastName.setText(user.getLast_name());
                         UserBirthDate.setText(user.getDOB());
                         UserName.setText(user.getUsername());
-                        UserContact.setText(user.getContact());
+                        UserEmail.setText(user.getEmail());
+                        UserPhone.setText(user.getPhone());
+                        UserGenre.setText(user.getGenre());
 
                         StorageReference imagesRef = storageReference.child("images/" + user.getUsername());
                         imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -158,17 +164,8 @@ public class UserProfile extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String FirstName = UserFirstName.getText().toString();
-                String LastName = UserLastName.getText().toString();
-                String BirthDate = UserBirthDate.getText().toString();
-                String ContactInfo = UserContact.getText().toString();
-                User user1 = (User) getIntent().getSerializableExtra("User");
-                user1.setFirst_name(FirstName);
-                user1.setLast_name(LastName);
-                user1.setContact(ContactInfo);
-                user1.setDOB(BirthDate);
                 Intent intent = new Intent(view.getContext(),HomePage.class);
-                intent.putExtra(MainActivity.EXTRA_MESSAGE1,user1);
+                intent.putExtra(MainActivity.EXTRA_MESSAGE1,user);
                 startActivity(intent);
             }
         });
@@ -178,12 +175,22 @@ public class UserProfile extends AppCompatActivity {
                 final String FirstName = UserFirstName.getText().toString();
                 final String LastName = UserLastName.getText().toString();
                 final String BirthDate = UserBirthDate.getText().toString();
-                final String ContactInfo = UserContact.getText().toString();
+                final String Email = UserEmail.getText().toString();
+                final String Phone = UserPhone.getText().toString();
+                final String Genre = UserGenre.getText().toString();
+                user.setFirst_name(FirstName);
+                user.setLast_name(LastName);
+                user.setEmail(Email);
+                user.setDOB(BirthDate);
+                user.setPhone(Phone);
+                user.setGenre(Genre);
                 HashMap<String, Object> data = new HashMap<>();
                 data.put("First Name", FirstName);
                 data.put("Last Name", LastName);
                 data.put("Date of Birth", BirthDate);
-                data.put("Email", ContactInfo);
+                data.put("Email", Email);
+                data.put("Phone",Phone);
+                data.put("Genre",Genre);
                 userBookCollectionReference
                         .document(user.getUsername())
                         .update(data)
