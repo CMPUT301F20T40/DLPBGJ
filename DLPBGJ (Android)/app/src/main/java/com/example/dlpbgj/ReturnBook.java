@@ -32,9 +32,11 @@ public class ReturnBook extends AppCompatActivity {
     User currentUser;
     TextView ISBN;
     Spinner spinner;
-    ArrayList<String> users;
+    ArrayList<String> owners;
     ArrayList<String> bookNames;
-    String user;
+    ArrayList<HashMap<String,String>> maps;
+    HashMap<String,String> finalMap;
+    String owner;
     String book;
     Button scan;
     Button returnBook;
@@ -47,7 +49,7 @@ public class ReturnBook extends AppCompatActivity {
         returnBook = findViewById(R.id.returnBook);
         ISBN = findViewById(R.id.ISBN_book);
         spinner = findViewById(R.id.returnList);
-        users = new ArrayList<>();
+        owners = new ArrayList<>();
         bookNames = new ArrayList<>();
         returnBook.setText("Return Book");
         scan.setOnClickListener(new View.OnClickListener() {
@@ -62,26 +64,28 @@ public class ReturnBook extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if (users.size() == 0) {
+                if (owners.size() == 0) {
                     if (bookISBN == null) {
                         Toast toast = Toast.makeText(getApplicationContext(), "Please scan an ISBN code to return the book!", Toast.LENGTH_SHORT);
                         toast.show();
                     } else {
-                        user = null;
+                        owner = null;
                         book = null;
                         bookISBN = null;
-                        Toast toast = Toast.makeText(getApplicationContext(), "Scanned ISBN code does not match any book!\nPlease scan again.", Toast.LENGTH_SHORT);
+                        finalMap = null;
+                        Toast toast = Toast.makeText(getApplicationContext(), "Scanned ISBN code does not match any borrowed book!\nPlease scan again.", Toast.LENGTH_SHORT);
                         toast.show();
                     }
-                } else if (user == null) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user to return the book to!", Toast.LENGTH_SHORT);
+                } else if (owner == null) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user/owner to return the book to!", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    CollectionReference collectionReference = db.collection("Users/" + user + "/MyBooks");
+                    CollectionReference collectionReference = db.collection("Users/" + owner + "/MyBooks");
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("Borrower", null);
-                    map.put("Book Status", "Available");
+                    finalMap.put(currentUser.getUsername(),"Returned");
+                    //map.put("Borrower", null);
+                    map.put("Book Status", "Returned");
                     collectionReference
                             .document(book)
                             .update(map)
@@ -89,7 +93,7 @@ public class ReturnBook extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.d("ReturnBook", "Book values successfully updated!");
-                                    Toast toast = Toast.makeText(getApplicationContext(), "Book Successfully returned to " + user, Toast.LENGTH_SHORT);
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Book Successfully returned to " + owner, Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
                             })
@@ -97,7 +101,7 @@ public class ReturnBook extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d("ReturnBook", "Book values failed to update!");
-                                    Toast toast = Toast.makeText(getApplicationContext(), "There was an error returning book to " + user, Toast.LENGTH_SHORT);
+                                    Toast toast = Toast.makeText(getApplicationContext(), "There was an error returning book to " + owner, Toast.LENGTH_SHORT);
                                     toast.show();
                                 }
                             });
@@ -110,14 +114,16 @@ public class ReturnBook extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                user = users.get(i);
+                owner = owners.get(i);
                 book = bookNames.get(i);
+                finalMap = maps.get(i);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                user = null;
+                owner = null;
                 book = null;
+                finalMap = null;
             }
         });
 
@@ -138,7 +144,7 @@ public class ReturnBook extends AppCompatActivity {
     }
 
     public void checkFunc(final String isbn) {
-        users.clear();
+        owners.clear();
         bookNames.clear();
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("Users");
@@ -153,14 +159,16 @@ public class ReturnBook extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                             for (QueryDocumentSnapshot f : value2) {
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, users);
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, owners);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(adapter);
                                 if (f.getData().get("Book ISBN").equals(isbn)) {
                                     if (currentUser.getUsername().equals(f.getData().get("Borrower"))) {
                                         final String temp = (String) f.getData().get("Owner");
-                                        users.add(temp);
+                                        HashMap<String,String> map = (HashMap<String, String>)f.getData().get("Requests");
+                                        owners.add(temp);
                                         bookNames.add(f.getId());
+                                        maps.add(map);
                                         setSpinner();
                                     }
                                 }
@@ -173,7 +181,7 @@ public class ReturnBook extends AppCompatActivity {
     }
 
     public void setSpinner() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, users);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, owners);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }

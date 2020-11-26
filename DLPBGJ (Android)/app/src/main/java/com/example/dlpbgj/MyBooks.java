@@ -132,13 +132,17 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                             for (QueryDocumentSnapshot newBook : value2) {
                                 String owner = (String)newBook.getData().get("Owner");
-                                String borrower = (String)newBook.getData().get("Borrower");
-                                if (borrower == null){
-                                    borrower = "";
+                                HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get("Requests");
+                                String borrower = "";
+                                if (map != null){
+                                    for (String key : map.keySet()){
+                                        if (("Borrowed").equals(map.get(key))){
+                                            borrower = key;
+                                        }
+                                    }
                                 }
                                 String current = currentUser.getUsername();
                                 if (owner.equals(current) || borrower.equals(current)) {
-                                    Log.d("MyBooks","Inside the if stat");
                                     String book_title = newBook.getId();
                                     String book_author = (String) newBook.getData().get("Book Author");
                                     String book_ISBN = (String) newBook.getData().get("Book ISBN");

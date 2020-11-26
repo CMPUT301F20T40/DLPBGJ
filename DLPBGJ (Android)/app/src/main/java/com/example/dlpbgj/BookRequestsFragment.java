@@ -80,8 +80,16 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                 .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        book.setBorrower(selection);
-                        book.addRequest(selection,"Borrowed");
+                        //book.setBorrower(selection);
+                        //book.addRequest(selection,"Accepted");
+                        for (String key : book.getRequests().keySet()){
+                            if (key.equals(selection)){
+                                book.addRequest(selection,"Accepted");
+                            }
+                            else{
+                                book.addRequest(key,"Declined");
+                            }
+                        }
                         Toast toast = Toast.makeText(getContext(), selection + "'s request accepted!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onAcceptPressed(book);

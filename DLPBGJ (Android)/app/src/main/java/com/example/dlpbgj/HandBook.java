@@ -1,6 +1,5 @@
 package com.example.dlpbgj;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,32 +27,30 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AcceptBook extends AppCompatActivity {
+public class HandBook extends AppCompatActivity {
     String bookISBN;
     User currentUser;
     TextView ISBN;
     Spinner spinner;
     ArrayList<String> borrowers;
     ArrayList<String> bookNames;
-    ArrayList<HashMap<String,String>> maps;
     String borrower;
     String book;
-    HashMap<String,String> finalMap;
     Button scan;
     Button returnBook;
 
-    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_return_book);
+        currentUser = (User) getIntent().getSerializableExtra("User");
         scan = findViewById(R.id.scanisbn);
         returnBook = findViewById(R.id.returnBook);
         ISBN = findViewById(R.id.ISBN_book);
         spinner = findViewById(R.id.returnList);
         borrowers = new ArrayList<>();
         bookNames = new ArrayList<>();
-        returnBook.setText("Get Book Back");
+        returnBook.setText("Hand Over a Book");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,50 +65,46 @@ public class AcceptBook extends AppCompatActivity {
 
                 if (borrowers.size() == 0) {
                     if (bookISBN == null) {
-                        Toast toast = Toast.makeText(getApplicationContext(),
-                                "Please scan an ISBN code to confirm book returned!",
-                                Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Please scan an ISBN code to hand over the book!", Toast.LENGTH_SHORT);
                         toast.show();
                     } else {
                         borrower = null;
                         book = null;
                         bookISBN = null;
-                        Toast toast = Toast.makeText(getApplicationContext(),
-                                "Scanned ISBN code does not match any book that is currently borrowed or returned by the borrower!\nPlease scan again.", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Scanned ISBN code either does not match any book or you haven't accepted a request for this book.!\nPlease scan again.", Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 } else if (borrower == null) {
-                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user to get the book from!", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Please select a user/borrower to hand over the book to!", Toast.LENGTH_SHORT);
                     toast.show();
                 } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference collectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
-                    HashMap<String, Object> data = new HashMap<>();
-                    finalMap.put(borrower,null);
-                    data.put("Borrower", null);
-                    data.put("Book Status", "Available");
-                    data.put("Requests",finalMap);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("Borrower", borrower);
+                    map.put("Book Status", "Borrowed");
                     collectionReference
                             .document(book)
-                            .update(data)
+                            .update(map)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("Get Book Back", "Book values successfully updated!");
+                                    Log.d("ReturnBook", "Book values successfully updated!");
+                                    Toast toast = Toast.makeText(getApplicationContext(), "Book " + book +" Successfully handed over to " + borrower, Toast.LENGTH_SHORT);
+                                    toast.show();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d("Get Book Back", "Book values failed to update!");
+                                    Log.d("ReturnBook", "Book values failed to update!");
+                                    Toast toast = Toast.makeText(getApplicationContext(), "There was an error handing over the book to " + borrower, Toast.LENGTH_SHORT);
+                                    toast.show();
                                 }
                             });
-                    Toast toast = Toast.makeText(getApplicationContext(), "Book successfully retrieved from" + borrower + " !", Toast.LENGTH_SHORT);
-                    toast.show();
                     finish();
                     startActivity(getIntent());
                 }
-
             }
         });
 
@@ -120,20 +113,18 @@ public class AcceptBook extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 borrower = borrowers.get(i);
                 book = bookNames.get(i);
-                finalMap = maps.get(i);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 borrower = null;
                 book = null;
-                finalMap = null;
             }
         });
 
+
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -141,8 +132,8 @@ public class AcceptBook extends AppCompatActivity {
             if (resultCode == -1) {
                 bookISBN = data.getStringExtra("ISBN");
                 ISBN.setText("ISBN - " + bookISBN);
-                String temp = bookISBN;
-                checkFunc(temp);
+                System.out.println("The Book ISBN is :" + bookISBN + "\n");
+                checkFunc(bookISBN);
             }
         }
     }
@@ -152,29 +143,32 @@ public class AcceptBook extends AppCompatActivity {
         bookNames.clear();
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         currentUser = (User) getIntent().getSerializableExtra("User");
-        final CollectionReference userCollection = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
+        CollectionReference userCollection = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                for (QueryDocumentSnapshot newBook : value) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) { //Manages the state of the sub-collection
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, borrowers);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
-                    if ((isbn.equals(newBook.getData().get("Book ISBN")))) {
-                        if (newBook.getData().get("Borrower") != null) {
-                            String temp = (String) newBook.getData().get("Borrower");
-                            HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get("Requests");
-                            if (("Returned").equals(map.get(temp))){
-                                borrowers.add(temp);
-                                bookNames.add(newBook.getId());
-                                maps.add(map);
-                                setSpinner();
+                    if (isbn.equals(doc.getData().get("Book ISBN"))){
+                        if (("Accepted").equals(doc.getData().get("Book Status"))){
+                            HashMap<String,String> temp = (HashMap<String, String>)doc.getData().get("Requests");
+                            for (String key : temp.keySet()){
+                                if (("Accepted").equals(temp.get(key))){
+                                    borrowers.add(key);
+                                    bookNames.add(doc.getId());
+                                    setSpinner();
+                                }
                             }
                         }
                     }
                 }
             }
+
         });
+
     }
 
     public void setSpinner() {
@@ -182,4 +176,5 @@ public class AcceptBook extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
     }
+
 }
