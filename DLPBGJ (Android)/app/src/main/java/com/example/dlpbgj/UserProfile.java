@@ -74,6 +74,7 @@ public class UserProfile extends AppCompatActivity {
         final EditText UserEmail = findViewById(R.id.emailAddress);
         final EditText UserPhone = findViewById(R.id.phoneNumber);
         final EditText UserGenre = findViewById(R.id.UserFav);
+
         userDb = FirebaseFirestore.getInstance();
         back = findViewById(R.id.BackButton);
         update = findViewById(R.id.Update);
