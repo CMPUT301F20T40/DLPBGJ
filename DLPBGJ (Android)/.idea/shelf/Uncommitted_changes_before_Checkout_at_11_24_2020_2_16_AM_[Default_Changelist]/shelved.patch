@@ -1,0 +1,27 @@
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n    <ImageView\r\n        android:layout_width=\"100dp\"\r\n        android:layout_height=\"100dp\"\r\n        android:layout_marginLeft=\"140dp\"\r\n        android:layout_marginTop=\"60dp\"\r\n        android:scaleType=\"centerCrop\"\r\n        android:src=\"@drawable/ovobg\" />\r\n\r\n    <TextView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"100dp\"\r\n        android:layout_marginLeft=\"50dp\"\r\n        android:layout_marginRight=\"50dp\"\r\n        android:textColor=\"#B59C34\"\r\n        android:textSize=\"19sp\"\r\n        android:textStyle=\"bold\"\r\n        android:typeface=\"monospace\" />\r\n\r\n    <TextView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"50dp\"\r\n        android:layout_alignParentBottom=\"true\"\r\n        android:text=\"© 2020 OVO TORONTO, All rights reserved.\"\r\n        android:textColor=\"#B59C34\"\r\n        android:textSize=\"10sp\"\r\n        android:textStyle=\"bold\"\r\n        android:typeface=\"monospace\" />\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\"\r\n        android:orientation=\"vertical\"\r\n        android:paddingTop=\"100dp\"\r\n        android:paddingBottom=\"50dp\">\r\n\r\n\r\n        <EditText\r\n            android:id=\"@+id/editUserName\"\r\n            android:layout_width=\"250dp\"\r\n            android:layout_height=\"0dp\"\r\n            android:layout_gravity=\"center\"\r\n            android:layout_marginTop=\"100dp\"\r\n            android:layout_marginBottom=\"100dp\"\r\n            android:layout_weight=\"3\"\r\n            android:background=\"#00000000\"\r\n            android:ems=\"10\"\r\n            android:hint=\"User Name\"\r\n            android:inputType=\"textPersonName\"\r\n            android:textColor=\"#B59C34\" />\r\n\r\n        <EditText\r\n            android:id=\"@+id/editUserPassword\"\r\n            android:layout_width=\"250dp\"\r\n            android:layout_height=\"0dp\"\r\n            android:layout_gravity=\"center\"\r\n            android:layout_marginTop=\"5dp\"\r\n            android:layout_marginBottom=\"100dp\"\r\n            android:layout_weight=\"3\"\r\n            android:background=\"#00000000\"\r\n            android:ems=\"10\"\r\n            android:hint=\"Password\"\r\n            android:inputType=\"textPassword\"\r\n            android:textColor=\"#B59C34\" />\r\n\r\n        <LinearLayout\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_weight=\"1\"\r\n            android:orientation=\"horizontal\">\r\n\r\n            <Button\r\n                android:id=\"@+id/login_button\"\r\n                android:layout_width=\"120dp\"\r\n                android:layout_height=\"50dp\"\r\n                android:layout_marginLeft=\"50dp\"\r\n                android:layout_marginTop=\"100dp\"\r\n                android:background=\"@drawable/gradient\"\r\n                android:foreground=\"?attr/selectableItemBackgroundBorderless\"\r\n                android:onClick=\"displayToastMessage\"\r\n                android:text=\"LOGIN\" />\r\n\r\n            <Button\r\n                android:id=\"@+id/signup_button\"\r\n                android:layout_width=\"120dp\"\r\n                android:layout_height=\"50dp\"\r\n                android:layout_marginLeft=\"50dp\"\r\n                android:layout_marginTop=\"100dp\"\r\n                android:background=\"@drawable/gradient\"\r\n                android:foreground=\"?attr/selectableItemBackgroundBorderless\"\r\n                android:onClick=\"displayToastMessage\"\r\n                android:text=\"SIGN UP\" />\r\n\r\n        </LinearLayout>\r\n    </LinearLayout>\r\n</RelativeLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/activity_main.xml	(revision fb5d0c5862c8da206c8b4bc8e08247145fce2e2c)
++++ app/src/main/res/layout/activity_main.xml	(date 1606094134327)
+@@ -44,7 +44,7 @@
+             android:layout_width="250dp"
+             android:layout_height="0dp"
+             android:layout_gravity="center"
+-            android:layout_marginTop="100dp"
++            android:layout_marginTop="10dp"
+             android:layout_marginBottom="100dp"
+             android:layout_weight="3"
+             android:background="#00000000"
+@@ -58,7 +58,7 @@
+             android:layout_width="250dp"
+             android:layout_height="0dp"
+             android:layout_gravity="center"
+-            android:layout_marginTop="5dp"
++            android:layout_marginTop="0dp"
+             android:layout_marginBottom="100dp"
+             android:layout_weight="3"
+             android:background="#00000000"
