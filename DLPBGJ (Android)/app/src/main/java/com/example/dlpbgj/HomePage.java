@@ -35,6 +35,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
 
     ImageButton viewNotifications;
     ImageButton info_button;
+    ImageButton userProfiles;
     ImageButton myBooksButton;
     ImageButton search;
     ImageButton requests;
@@ -60,6 +61,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
 
         currentUser = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE1);//Catching the user object given by the MainActivity
         info_button = findViewById(R.id.MyInfo);
+        userProfiles = findViewById(R.id.UserProfiles);
         myBooksButton = findViewById(R.id.MyBooks);
         search = findViewById(R.id.Search);
         requests = findViewById(R.id.Requests);
@@ -146,6 +148,15 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 Toast toast = Toast.makeText(view.getContext(), success, Toast.LENGTH_SHORT);
                 toast.show();
                 startActivity(nIntent);
+            }
+        });
+
+        userProfiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {        //When user clicks this button, a list of all users using the app is shown
+                Intent intent = new Intent(getApplicationContext(), allUserProfiles.class);
+                intent.putExtra(EXTRA_MESSAGE2, currentUser);   //Sending the current user as a parameter to the allUserProfiles activity
+                startActivity(intent);
             }
         });
 
