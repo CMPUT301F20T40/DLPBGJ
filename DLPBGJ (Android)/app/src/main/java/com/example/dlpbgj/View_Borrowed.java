@@ -1,7 +1,10 @@
 package com.example.dlpbgj;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
@@ -30,6 +33,8 @@ public class View_Borrowed extends AppCompatActivity {
         bookDataList = new ArrayList<>();
         bookAdapter = new customBookAdapter(this, bookDataList);
         bookList.setAdapter(bookAdapter);
+        Button returnBook = findViewById(R.id.ReturnorBorrow);
+        returnBook.setText("Return Book");
         final FirebaseFirestore Db = FirebaseFirestore.getInstance();
         final CollectionReference cr = Db.collection("Users");
         currentUser = (User) getIntent().getSerializableExtra("User");
@@ -63,6 +68,15 @@ public class View_Borrowed extends AppCompatActivity {
                         }
                     });
                 }
+            }
+        });
+
+        returnBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ReturnBook.class);
+                intent.putExtra("User", currentUser);
+                startActivity(intent);
             }
         });
     }

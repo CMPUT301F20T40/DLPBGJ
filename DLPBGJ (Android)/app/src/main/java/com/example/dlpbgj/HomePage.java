@@ -286,18 +286,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
-        /**
-         * On press of Button getLocation the activity for geoLocation
-         * is initialized
-         */
-        getLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),UserLocation.class);
-                intent.putExtra("Flag", "11429 University Ave");
-                startActivity(intent);
-            }
-        });
+
     }
 
     @Override

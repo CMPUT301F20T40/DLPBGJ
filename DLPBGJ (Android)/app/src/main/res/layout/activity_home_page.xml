@@ -358,7 +358,7 @@
                 <TextView
                     android:layout_marginTop="12dp"
                     android:textSize="18sp"
-                    android:text="Search Location"
+                    android:text="Notifications"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
@@ -416,6 +416,7 @@
                     <ImageButton
                         android:id="@+id/UserProfiles"
                         android:layout_width="80dp"
+                        android:src="@drawable/users"
                         android:layout_height="80dp">
                     </ImageButton>
 
