@@ -59,7 +59,7 @@
                 android:layout_below="@+id/Picture1"
                 android:layout_toRightOf="@+id/bookPic"
                 android:background="@drawable/custom_button"
-                android:text="Delete"
+                android:text="DELETE"
                 android:textColor="#FFFFFF"/>
 
         </RelativeLayout>

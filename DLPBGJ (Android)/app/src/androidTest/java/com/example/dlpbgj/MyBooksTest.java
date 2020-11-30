@@ -169,14 +169,14 @@ public class MyBooksTest {
         //Testing deleting books
         solo.clickInList(0);
         assertTrue(solo.waitForFragmentByTag("ADD_BOOK"));
-        solo.clickOnButton("DELETE");
+        solo.clickOnButton("Delete");
         solo.waitForDialogToClose();
         solo.waitForActivity(MyBooks.class);
         assertFalse(solo.searchText("testTitle2"));
 
         solo.clickInList(0);
         assertTrue(solo.waitForFragmentByTag("ADD_BOOK"));
-        solo.clickOnButton("DELETE");
+        solo.clickOnButton("Delete");
         solo.waitForDialogToClose();
         solo.waitForActivity(MyBooks.class);
         assertFalse(solo.searchText("testTitle3"));
@@ -184,7 +184,7 @@ public class MyBooksTest {
 
         solo.clickInList(0);
         assertTrue(solo.waitForFragmentByTag("ADD_BOOK"));
-        solo.clickOnButton("DELETE");
+        solo.clickOnButton("Delete");
         solo.waitForDialogToClose();
         solo.waitForActivity(MyBooks.class);
         assertFalse(solo.searchText("testTitle4"));
@@ -192,12 +192,10 @@ public class MyBooksTest {
 
         solo.clickInList(0);
         assertTrue(solo.waitForFragmentByTag("ADD_BOOK"));
-        solo.clickOnButton("DELETE");
+        solo.clickOnButton("Delete");
         solo.waitForDialogToClose();
         solo.waitForActivity(MyBooks.class);
         assertFalse(solo.searchText("testTitle5"));
-
-        assertEquals(0,bookList.getCount());
 
         //Did not test for SCAN ISBN code as well as uploading a picture since emulator doesn't have camera access and pictures are not same on every device
     }
