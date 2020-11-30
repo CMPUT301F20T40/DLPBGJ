@@ -55,9 +55,11 @@ public class MainActivityTest {
         solo.clickOnButton("LOGIN");
 
         //After successful login the current activity should be the home page activity
+        solo.waitForActivity(HomePage.class);
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
         solo.clickOnView(solo.getView(R.id.SignOut));
-        //solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.waitForActivity(MainActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
     }
 
     @After

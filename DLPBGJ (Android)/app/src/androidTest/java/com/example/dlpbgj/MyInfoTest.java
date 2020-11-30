@@ -11,6 +11,8 @@ import androidx.test.rule.ActivityTestRule;
 
 import org.junit.*;
 
+import static org.junit.Assert.assertEquals;
+
 public class MyInfoTest {
     private Solo solo;
 
@@ -36,48 +38,40 @@ public class MyInfoTest {
         solo.enterText((EditText) solo.getView(R.id.editUserName),"testusername");
         solo.enterText((EditText) solo.getView(R.id.editUserPassword),"testpassword");
         solo.clickOnButton("LOGIN");
+        solo.waitForActivity(HomePage.class);
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
         //On clicking MY INFO button a new activity should open
-        solo.clickOnButton("My INFO");
+        solo.clickOnView(solo.getView(R.id.MyInfo));
+        solo.waitForActivity(UserProfile.class);
         solo.assertCurrentActivity("Wrong Activity", UserProfile.class);
 
         //Activity infoAct = (Activity) solo.getCurrentActivity();
         solo.enterText((EditText) solo.getView(R.id.UserFirstName),"testFN");
         solo.enterText((EditText) solo.getView(R.id.UserLastName),"testLN");
         solo.enterText((EditText) solo.getView(R.id.UserBirthDate),"testBDay");
+        solo.enterText((EditText) solo.getView(R.id.phoneNumber),"12345678");
         solo.enterText((EditText) solo.getView(R.id.emailAddress),"testEmail");
         solo.enterText((EditText) solo.getView(R.id.UserFav),"testFavGenre");
 
-        solo.clickOnButton("UPDATE");
-        solo.clickOnButton("BACK");
+        solo.clickOnView(solo.getView(R.id.Update));
+        solo.clickOnView(solo.getView(R.id.BackButton));
+        solo.waitForActivity(HomePage.class);
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
-        final TextView tv = (TextView) solo.getCurrentActivity().findViewById(R.id.MyName);
-        System.out.println(tv.getText().toString());
-        //assertEquals("testFN testLN's Library",tv.getText().toString());
-
-        solo.clickOnButton("My INFO");
+        solo.clickOnView(solo.getView(R.id.MyInfo));
+        solo.waitForActivity(UserProfile.class);
         solo.assertCurrentActivity("Wrong Activity", UserProfile.class);
-        EditText firstName = solo.getCurrentActivity().findViewById(R.id.UserFirstName);
-        EditText lastName = solo.getCurrentActivity().findViewById(R.id.UserLastName);
-        EditText bDay = solo.getCurrentActivity().findViewById(R.id.UserBirthDate);
-        EditText contactInfo = solo.getCurrentActivity().findViewById(R.id.emailAddress);
-        EditText favGenre = solo.getCurrentActivity().findViewById(R.id.UserFav);
-        System.out.println(firstName.getText().toString());
-        System.out.println(lastName.getText().toString());
-        System.out.println(bDay.getText().toString());
-        System.out.println(contactInfo.getText().toString());
-        System.out.println(favGenre.getText().toString());
-/*
-        assertEquals("testFN", firstName.getText().toString());
-        assertEquals("testLN", lastName.getText().toString());
-        assertEquals("testBDay", bDay.getText().toString());
-        assertEquals("testEmail", contactInfo.getText().toString());
-        assertEquals("testFavGenre", favGenre.getText().toString());
-*/
 
-        solo.clickOnButton("BACK");
+        solo.clearEditText((EditText) solo.getView(R.id.UserFirstName));
+        solo.clearEditText((EditText) solo.getView(R.id.UserLastName));
+        solo.clearEditText((EditText) solo.getView(R.id.UserBirthDate));
+        solo.clearEditText((EditText) solo.getView(R.id.emailAddress));
+        solo.clearEditText((EditText) solo.getView(R.id.UserFav));
+        solo.clearEditText((EditText) solo.getView(R.id.phoneNumber));
+
+        solo.clickOnView(solo.getView(R.id.BackButton));
+        solo.waitForActivity(HomePage.class);
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
 
