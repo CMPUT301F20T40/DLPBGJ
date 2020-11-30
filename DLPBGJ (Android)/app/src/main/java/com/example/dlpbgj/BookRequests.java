@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -33,6 +34,10 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
     CollectionReference userBookCollectionReference;    //This is the sub-collection reference for the user who's logged in pointing to the collection of owned books
     String TAG = "BookRequests";
     private User currentUser;
+    String Location = "";
+    Book book;
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         bookDataList = new ArrayList<>();
         bookAdapter = new customBookAdapter(this, bookDataList);   //Implementing a custom adapter that connects the ListView with the ArrayList using bookcontent.xml layout
         reqList.setAdapter(bookAdapter);
+        Button handover = findViewById(R.id.handover);
+        Button returnBook = findViewById(R.id.returnBook);
 
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");//Creating/pointing to a sub-collection of the books that user owns
@@ -54,14 +61,14 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                 bookDataList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     HashMap<String,String> req = (HashMap<String, String>) doc.getData().get("Requests");
-                    if (req != null && req.size() > 0) {
-                        Log.d(TAG, String.valueOf(doc.getData().get("Requests")));
+                    if (req != null && !req.containsValue(status.getBorrowed())) {
+                        Log.d(TAG, String.valueOf(doc.getData().get(access.getRequests())));
                         String book_title = doc.getId();
-                        String book_author = (String) doc.getData().get("Book Author");
-                        String book_ISBN = (String) doc.getData().get("Book ISBN");
-                        String book_status = (String) doc.getData().get("Book Status");
-                        String book_description = (String) doc.getData().get("Book Description");
-                        String book_owner = (String) doc.getData().get("Owner");
+                        String book_author = (String) doc.getData().get(access.getAuthor());
+                        String book_ISBN = (String) doc.getData().get(access.getISBN());
+                        String book_status = (String) doc.getData().get(access.getStatus());
+                        String book_description = (String) doc.getData().get(access.getDescription());
+                        String book_owner = (String) doc.getData().get(access.getOwner());
                         bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner, req));
                     }
                 }
@@ -78,40 +85,33 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
             }
         });
 
+        handover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), HandBook.class);
+                intent.putExtra("User", currentUser);
+                startActivity(intent);
+            }
+        });
+
+        returnBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AcceptBook.class);
+                intent.putExtra("User", currentUser);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
-    public void onAcceptPressed(Book book) {
-        db = FirebaseFirestore.getInstance();
-        userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
-        HashMap<String, Object> map = new HashMap<>();
-        HashMap<String,Integer> notifs = book.getNotifications();
-        notifs.put(book.getBorrower(),0);
-        map.put("Borrower", book.getBorrower());
-        map.put("Notifications",notifs);
-        book.setStatus("Accepted");
-        //book.emptyRequests();
-        map.put("Requests", book.getRequests());
-        map.put("Book Status", book.getStatus());
-        //book.addAcceptNotification(currentUser.getUsername());
-        //map.put("AcceptNotifications",book.getAcceptNotifications());
-        userBookCollectionReference
-                .document(book.getTitle())
-                .update(map)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Book data successfully updated");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Book Data failed to update");
-                    }
-                });
+    public void onAcceptPressed(Book newBook) {
+        book = newBook;
         Toast toast = Toast.makeText(getApplicationContext(), "Please Select a Pickup Location!", Toast.LENGTH_SHORT);
         toast.show();
+        Intent intent = new Intent(getApplicationContext(), UserLocation.class);
+        intent.putExtra("Flag","None");
+        startActivityForResult(intent,1);
     }
 
     @Override
@@ -119,9 +119,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("Requests", book.getRequests());
-        //book.addDeclineNotification(currentUser.getUsername());
-        //map.put("DeclineNotifications",book.getDeclineNotifications());
+        map.put(access.getRequests(), book.getRequests());
         userBookCollectionReference
                 .document(book.getTitle())
                 .update(map)
@@ -137,6 +135,43 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                         Log.d(TAG, "Book Data failed to update");
                     }
                 });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if (resultCode == -1) {
+                Location = data.getStringExtra("Location");
+                db = FirebaseFirestore.getInstance();
+                userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
+                HashMap<String, Object> map = new HashMap<>();
+                HashMap<String,Integer> notifs = book.getNotifications();
+                notifs.put(book.getBorrower(),0);
+                 map.put("Notifications",notifs);
+                //map.put("Borrower", book.getBorrower());
+                book.setStatus(status.getAccepted());
+                map.put(access.getRequests(), book.getRequests());
+                map.put(access.getStatus(), book.getStatus());
+                map.put(access.getLocation(),Location);
+                book.setLocation(Location);
+                userBookCollectionReference
+                        .document(book.getTitle())
+                        .update(map)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Book data successfully updated");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(TAG, "Book Data failed to update");
+                            }
+                        });
+            }
+        }
     }
 
 }

@@ -42,7 +42,7 @@ public class MyBooksTest {
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
         //On clicking MY BOOKS button a new activity should open
-        solo.clickOnButton("My Books");
+        solo.clickOnView(solo.getView(R.id.MyBooks));
         solo.assertCurrentActivity("Wrong Activity", MyBooks.class);
 
         //Testing Add Book
@@ -50,13 +50,12 @@ public class MyBooksTest {
         solo.clickOnView(fab);
         solo.waitForFragmentByTag("ADD_BOOK",5000);
         solo.enterText((EditText) solo.getView(R.id.book_title_editText),"testTitle");
-        solo.enterText((EditText) solo.getView(R.id.book_status_editText),"invalidStatus");
-        solo.enterText((EditText) solo.getView(R.id.book_description_editText),"testDescription");
+        solo.pressSpinnerItem(0,1);
+        solo.isSpinnerTextSelected("Available");
         solo.clickOnButton("OK");
         assertTrue(solo.waitForFragmentByTag("ADD_BOOK"));
 
-        solo.clearEditText((EditText) solo.getView(R.id.book_status_editText));
-        solo.enterText((EditText) solo.getView(R.id.book_status_editText),"Available");
+        solo.enterText((EditText) solo.getView(R.id.book_description_editText),"testDescription");
         solo.clickOnButton("OK");
 
         solo.waitForDialogToClose();

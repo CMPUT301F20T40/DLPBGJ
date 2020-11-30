@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,6 +34,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
 
     ImageButton viewNotifications;
     ImageButton info_button;
+    ImageButton userProfiles;
     ImageButton myBooksButton;
     ImageButton search;
     ImageButton requests;
@@ -60,6 +60,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
 
         currentUser = (User) getIntent().getSerializableExtra(MainActivity.EXTRA_MESSAGE1);//Catching the user object given by the MainActivity
         info_button = findViewById(R.id.MyInfo);
+        userProfiles = findViewById(R.id.UserProfiles);
         myBooksButton = findViewById(R.id.MyBooks);
         search = findViewById(R.id.Search);
         requests = findViewById(R.id.Requests);
@@ -128,6 +129,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 }
             }
         });
+        /**
+         * on press of button Book Requests the activity to borrow books
+         * is initialized
+         */
 
 
         myBooksButton.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +143,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Book Requests the activity to borrow books
+         * is initialized
+         */
 
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +157,23 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(nIntent);
             }
         });
+        /**
+         * on press of button Book Requests the activity to borrow books
+         * is initialized
+         */
+
+        userProfiles.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {        //When user clicks this button, a list of all users using the app is shown
+                Intent intent = new Intent(getApplicationContext(), allUserProfiles.class);
+                intent.putExtra(EXTRA_MESSAGE2, currentUser);   //Sending the current user as a parameter to the allUserProfiles activity
+                startActivity(intent);
+            }
+        });
+        /**
+         * on press of button info_button the activity to User info
+         * is initialized
+         */
 
         info_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +183,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Search Books the activity to search
+         * is initialized
+         */
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +196,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Book Requests the activity to request books
+         * is initialized
+         */
 
         requests.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,6 +209,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Borrowed the activity to borrow books
+         * is initialized
+         */
 
         borrowed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,6 +223,13 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
             }
         });
 
+
+
+
+        /**
+         * on press of button my info the activity to configure my info
+         * is initialized
+         */
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -192,7 +237,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 fragment.show(getSupportFragmentManager(), "Profile Picture");
             }
         });
-
+        /**
+         * on press of button Book Requests the activity to request books
+         * is initialized
+         */
         bookRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,7 +249,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
-
+        /**
+         * on press of button Return Book the activity to return the books
+         * is initialized
+         */
         returnBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -210,7 +261,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
-
+        /**
+         * on press of button Accept Book the activity to accept the books
+         * is initialized
+         */
         acceptBook.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,14 +273,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
-        getLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), LocationDetails.class);
-                startActivity(intent);
-            }
-        });
-
+        /**
+         * on press of button View Notification the activity to view the notification
+         * is initialized
+         */
         viewNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,6 +285,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+
     }
 
     @Override

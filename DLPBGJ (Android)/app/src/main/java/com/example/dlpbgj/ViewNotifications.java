@@ -42,9 +42,11 @@ public class ViewNotifications extends AppCompatActivity {
     FirebaseFirestore db2;
     FirebaseFirestore db3;
     CollectionReference userBookCollectionReference;
+
     CollectionReference userBookCollectionReference2;
     CollectionReference userBookCollectionReference3;
     Button clear;
+    DatabaseAccess access = new DatabaseAccess();
 
 
     @Override
@@ -86,7 +88,7 @@ public class ViewNotifications extends AppCompatActivity {
                                             notifications.add(key + " requested " + doc.getId());
                                             allNotifications.put(key,one);
                                             HashMap<String,Object> data = new HashMap<>();
-                                            data.put("Notifications",allNotifications);
+                                            data.put(access.getNotifications(),allNotifications);
                                             userBookCollectionReference
                                                     .document(doc.getId())
                                                     .update(data)
@@ -218,6 +220,7 @@ public class ViewNotifications extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
 /*
         clear.setOnClickListener(new View.OnClickListener() {
             @Override

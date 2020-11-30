@@ -79,166 +79,166 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-                android:layout_columnWeight = "1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+            android:layout_columnWeight = "1"
+            android:layout_rowWeight="1"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp">
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/MyBooks"
+                    android:src="@drawable/books2"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                </ImageButton>
+
+                <TextView
+                    android:layout_marginTop="12dp"
+                    android:textSize="18sp"
+                    android:text="My Books"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/MyBooks"
-                        android:src="@drawable/books2"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-                    </ImageButton>
+        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            android:layout_columnWeight = "1"
+            android:layout_rowWeight="1"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp">
 
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textSize="18sp"
-                        android:text="My Books"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-                android:layout_columnWeight = "1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+                <ImageButton
+                    android:id="@+id/Search"
+                    android:src="@drawable/search"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                </ImageButton>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_marginTop="12dp"
+                    android:textSize="18sp"
+                    android:text="Search Books"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/Search"
-                        android:src="@drawable/search"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-                    </ImageButton>
+        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            android:layout_columnWeight = "1"
+            android:layout_rowWeight="1"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp">
 
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textSize="18sp"
-                        android:text="Search Books"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-                android:layout_columnWeight = "1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+                <ImageButton
+                    android:id="@+id/Requests"
+                    android:src="@drawable/myrequest"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                </ImageButton>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_marginTop="12dp"
+                    android:textSize="18sp"
+                    android:text="My Requests"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/Requests"
-                        android:src="@drawable/myrequest"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-                    </ImageButton>
+        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            android:layout_columnWeight = "1"
+            android:layout_rowWeight="1"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp">
 
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textSize="18sp"
-                        android:text="My Requests"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-                android:layout_columnWeight = "1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+                <ImageButton
+                    android:id="@+id/BookRequests"
+                    android:src="@drawable/request"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                </ImageButton>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_marginTop="12dp"
+                    android:textSize="18sp"
+                    android:text="Book Requests"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/BookRequests"
-                        android:src="@drawable/request"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-                    </ImageButton>
+        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            android:layout_columnWeight = "1"
+            android:layout_rowWeight="1"
+            app:cardElevation="6dp"
+            app:cardCornerRadius="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp">
 
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textSize="18sp"
-                        android:text="Book Requests"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-                android:layout_columnWeight = "1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
+                <ImageButton
+                    android:id="@+id/Return"
+                    android:src="@drawable/returnb"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp">
+                </ImageButton>
 
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_marginTop="12dp"
+                    android:textSize="18sp"
+                    android:text="Return Book"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
+                </TextView>
+            </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/Return"
-                        android:src="@drawable/returnb"
-                        android:layout_width="80dp"
-                        android:layout_height="80dp">
-                    </ImageButton>
-
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textSize="18sp"
-                        android:text="Return Book"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
             android:layout_columnWeight = "1"
             android:layout_rowWeight="1"
             app:cardElevation="6dp"
@@ -333,8 +333,6 @@
                     android:layout_height="wrap_content">
                 </TextView>
             </LinearLayout>
-
-
         </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
             android:layout_columnWeight = "1"
             android:layout_rowWeight="1"
@@ -360,7 +358,7 @@
                 <TextView
                     android:layout_marginTop="12dp"
                     android:textSize="18sp"
-                    android:text="View Notifications"
+                    android:text="Notifications"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                 </TextView>
@@ -398,9 +396,40 @@
                 </TextView>
             </LinearLayout>
 
-
-
         </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_columnWeight = "1"
+                android:layout_rowWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/UserProfiles"
+                        android:layout_width="80dp"
+                        android:src="@drawable/users"
+                        android:layout_height="80dp">
+                    </ImageButton>
+
+                    <TextView
+                        android:layout_marginTop="12dp"
+                        android:textSize="18sp"
+                        android:text="Users"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
 
 
 

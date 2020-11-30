@@ -27,6 +27,7 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
     private BookRequestsFragment.OnFragmentInteractionListener listener;
     private Book book;
     private String selection;
+    Statuses status = new Statuses();
 
     static BookRequestsFragment newInstance(Book book) {
         Bundle args = new Bundle();
@@ -80,8 +81,16 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                 .setPositiveButton("Accept", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        book.setBorrower(selection);
-                        book.addRequest(selection,"Borrowed");
+                        //book.setBorrower(selection);
+                        //book.addRequest(selection,"Accepted");
+                        for (String key : book.getRequests().keySet()){
+                            if (key.equals(selection)){
+                                book.addRequest(selection,status.getAccepted());
+                            }
+                            else{
+                                book.addRequest(key,status.getDeclined());
+                            }
+                        }
                         Toast toast = Toast.makeText(getContext(), selection + "'s request accepted!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onAcceptPressed(book);
@@ -91,7 +100,7 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //book.removeRequest(selection);
-                        book.addRequest(selection,"Declined");
+                        book.addRequest(selection,status.getDeclined());
                         Toast toast = Toast.makeText(getContext(), selection + "'s request declined!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onDeclinePressed(book);

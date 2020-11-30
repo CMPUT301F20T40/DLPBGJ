@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -53,8 +54,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     String TAG = "MyBooks";
     CheckBox checkAvail;
     CheckBox checkBorrowed;
-    String availableConstraint = "available";
-    String borrowedConstraint = "borrowed";
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
+    String availableConstraint = status.getAvailable();
+    String borrowedConstraint = status.getBorrowed();
     private User currentUser;
     private Uri path;
 
@@ -91,32 +94,75 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         addCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AddBookFragment().show(getSupportFragmentManager(), "ADD_BOOK");
+                arrayReference = db.collection("GlobalArray");
+                DocumentReference docRef = arrayReference.document("Array"); //If username does not exist then prompt for a sign-up
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Map<String, Object> temp = document.getData();
+                                ArrayList<String> name = (ArrayList<String>) temp.get("Array");
+                                String uid = Integer.toString(name.size() + 1);
+                                AddBookFragment fragment = AddBookFragment.newInstance(uid);
+                                fragment.show(getSupportFragmentManager(), "ADD_BOOK");
+                            }
+                        }
+                    }
+                });
             }
         });
 
         db = FirebaseFirestore.getInstance();
-        userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");//Creating/pointing to a sub-collection of the books that user owns
+        userBookCollectionReference = db.collection("Users");
         userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
-                    FirebaseFirestoreException error) { //Manages the state of the sub-collection
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 bookDataList.clear();
-                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                    String book_title = doc.getId();
-                    String book_author = (String) doc.getData().get("Book Author");
-                    String book_ISBN = (String) doc.getData().get("Book ISBN");
-                    String book_status = (String) doc.getData().get("Book Status");
-                    String book_description = (String) doc.getData().get("Book Description");
-                    String book_owner = (String) doc.getData().get("Owner");
-                    String book_uid = (String) doc.getData().get("Uid");
-                    Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
-                    temp.setUid(book_uid);
-                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
+                bookAdapter.notifyDataSetChanged();
+                for (QueryDocumentSnapshot d : value) {
+                    final String username = d.getId();
+                    CollectionReference eachUser = db.collection("Users/" + username + "/MyBooks");
+                    eachUser.addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
+                            for (QueryDocumentSnapshot newBook : value2) {
+                                String owner = (String)newBook.getData().get(access.getOwner());
+                                HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get(access.getRequests());
+                                String borrower = "";
+                                if (map != null){
+                                    for (String key : map.keySet()){
+                                        if ((status.getBorrowed()).equals(map.get(key))){
+                                            borrower = key;
+                                        }
+                                    }
+                                }
+                                String current = currentUser.getUsername();
+                                if (owner.equals(current) || borrower.equals(current)) {
+                                    String book_title = newBook.getId();
+                                    String book_author = (String) newBook.getData().get(access.getAuthor());
+                                    String book_ISBN = (String) newBook.getData().get(access.getISBN());
+                                    String book_status;
+                                   if(borrower.equals(current)){
+                                         book_status = status.getBorrowed();
+                                    }
+                                    else{
+                                        book_status = (String) newBook.getData().get(access.getStatus());
+                                    }
+                                    String book_description = (String) newBook.getData().get(access.getDescription());
+                                    String book_owner = (String) newBook.getData().get(access.getOwner());
+                                    String book_uid = (String) newBook.getData().get(access.getUID());
+                                    Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
+                                    temp.setUid(book_uid);
+                                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
+                                    bookAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
                 }
-                bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
             }
-
         });
 
         checkAvail = findViewById(R.id.checkAvailable);
@@ -214,8 +260,14 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Book temp = bookDataList.get(i);
-                AddBookFragment fragment = AddBookFragment.newInstance(temp, currentUser);
-                fragment.show(getSupportFragmentManager(), "ADD_BOOK");
+                if (temp.getOwner().equals(currentUser.getUsername())){
+                    AddBookFragment fragment = AddBookFragment.newInstance(temp, currentUser);
+                    fragment.show(getSupportFragmentManager(), "ADD_BOOK");
+                }
+                else{
+                    Toast toast = Toast.makeText(adapterView.getContext(), "Cannot Edit/Delete a Borrowed book :)", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 
@@ -239,12 +291,13 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         String bookOwner = currentUser.getUsername();
         if (bookTitle.length() > 0 && bookAuthor.length() > 0 && bookISBN.length() > 0 && bookStatus.length() > 0) {//Data inside the document will consist of the following
             //Adding data inside the hash map
-            data.put("Book Author", bookAuthor);
-            data.put("Book ISBN", bookISBN);
-            data.put("Book Status", bookStatus);
-            data.put("Book Description", bookDescription);
-            data.put("Owner", bookOwner);
+            data.put(access.getAuthor(), bookAuthor);
+            data.put(access.getISBN(), bookISBN);
+            data.put(access.getStatus(), bookStatus);
+            data.put(access.getDescription(), bookDescription);
+            data.put(access.getOwner(), bookOwner);
         }
+        CollectionReference collectionReference = db.collection("Users/" + currentUser.getUsername()+"/MyBooks");
         arrayReference = db.collection("GlobalArray");
         DocumentReference docRef = arrayReference.document("Array"); //If username does not exist then prompt for a sign-up
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -255,7 +308,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                     if (document.exists()) {
                         Map<String, Object> temp = document.getData();
                         ArrayList<String> name = (ArrayList<String>) temp.get("Array");
-                        data.put("Uid", Integer.toString(name.size() + 1));
+                        data.put(access.getUID(), Integer.toString(name.size() + 1));
                         name.add(Integer.toString(name.size() + 1));
                         HashMap<String, Object> array = new HashMap<>();
                         array.put("Array", name);
@@ -274,7 +327,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                         Log.d(TAG, "Failed to update Array Size");
                                     }
                                 });
-                        userBookCollectionReference
+                        collectionReference
                                 .document(bookTitle)
                                 .set(data)
                                 //Debugging methods
@@ -309,21 +362,21 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     @Override
     public void onOkPressed(final Book newBook, final String oldBookName) {
         final HashMap<String, Object> data = new HashMap<>();
-        data.put("Book Author", newBook.getAuthor());
-        data.put("Book ISBN", newBook.getISBN());
-        data.put("Book Status", newBook.getStatus());
-        data.put("Book Description", newBook.getDescription());
-        data.put("Owner", newBook.getOwner());
-        data.put("Uid", newBook.getUid());
-
-        DocumentReference docRef = userBookCollectionReference.document(newBook.getTitle());
+        data.put(access.getAuthor(), newBook.getAuthor());
+        data.put(access.getISBN(), newBook.getISBN());
+        data.put(access.getStatus(), newBook.getStatus());
+        data.put(access.getDescription(), newBook.getDescription());
+        data.put(access.getOwner(), newBook.getOwner());
+        data.put(access.getUID(), newBook.getUid());
+        CollectionReference collectionReference = db.collection("Users/"+currentUser.getUsername()+"/MyBooks");
+        DocumentReference docRef = collectionReference.document(newBook.getTitle());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        userBookCollectionReference
+                        collectionReference
                                 .document(newBook.getTitle())
                                 .update(data)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -339,7 +392,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                     }
                                 });
                     } else {
-                        userBookCollectionReference
+                        collectionReference
                                 .document(oldBookName)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -355,7 +408,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                     }
                                 });
                         bookDataList.remove(newBook);
-                        userBookCollectionReference
+                        collectionReference
                                 .document(newBook.getTitle())
                                 .set(data)
                                 //Debugging methods
@@ -388,7 +441,8 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
 
     @Override
     public void onDeletePressed(Book book) {
-        userBookCollectionReference
+        CollectionReference collectionReference = db.collection("Users/"+currentUser.getUsername()+"/MyBooks");
+        collectionReference
                 .document(book.getTitle())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -406,13 +460,10 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         bookDataList.remove(book);
         bookAdapter.notifyDataSetChanged();
     }
-
     @Override
     public void onOkPressed() {
         //Do nothing
     }
-
-
 }
 
 

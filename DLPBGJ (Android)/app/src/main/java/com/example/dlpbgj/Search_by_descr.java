@@ -1,5 +1,6 @@
 package com.example.dlpbgj;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -45,12 +46,15 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     String TAG = "BookSearch";
     CheckBox checkAvail;
     CheckBox checkBorr;
-    String availableConstraint = "available";
-    String borrowedConstraint = "borrowed";
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
+    String availableConstraint = status.getAvailable();
+    String borrowedConstraint = status.getBorrowed();
     private User currentUser;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        currentUser = (User) getIntent().getSerializableExtra("User");
         setContentView(R.layout.search_books);
         bookList = findViewById(R.id.book_list);
         description = findViewById(R.id.description);
@@ -84,40 +88,41 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                                     for (QueryDocumentSnapshot newBook : value2) {
-                                        String book_description = (String) newBook.getData().get("Book Description");
-                                        if (book_description != null) {
-                                            if (book_description.contains(descrInput)) {
-                                                String book_title = newBook.getId();
-                                                String book_author = (String) newBook.getData().get("Book Author");
-                                                String book_ISBN = (String) newBook.getData().get("Book ISBN");
-                                                String book_status = (String) newBook.getData().get("Book Status");
-                                                HashMap<String,String> req = (HashMap<String, String>) newBook.getData().get("Requests");
-                                                Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
-                                                bookDataList.add(thisBook);
-                                                bookAdapter.notifyDataSetChanged();
-                                                if (checkAvail.isChecked() && checkBorr.isChecked()) {
-                                                    if (!(book_status.toLowerCase().equals(availableConstraint) || book_status.toLowerCase().equals(borrowedConstraint))) {
-                                                        bookDataList.remove(thisBook);
-                                                        //bookList.setAdapter(bookAdapter);
+                                        String book_description = (String) newBook.getData().get(access.getDescription());
+                                        if (!currentUser.getUsername().equals(newBook.getData().get(access.getOwner()))){
+                                            if (book_description != null) {
+                                                if (book_description.contains(descrInput)) {
+                                                    if (!(status.getBorrowed()).equals(newBook.getData().get(access.getStatus())) && !(status.getAccepted()).equals(newBook.getData().get(access.getStatus()))){
+                                                        String book_title = newBook.getId();
+                                                        String book_author = (String) newBook.getData().get(access.getAuthor());
+                                                        String book_ISBN = (String) newBook.getData().get(access.getISBN());
+                                                        String book_status = (String) newBook.getData().get(access.getStatus());
+                                                        HashMap<String,String> req = (HashMap<String, String>) newBook.getData().get(access.getRequests());
+                                                        Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
+                                                        bookDataList.add(thisBook);
                                                         bookAdapter.notifyDataSetChanged();
+                                                        if (checkAvail.isChecked() && checkBorr.isChecked()) {
+                                                            if (!(book_status.toLowerCase().equals(availableConstraint) || book_status.toLowerCase().equals(borrowedConstraint))) {
+                                                                bookDataList.remove(thisBook);
+                                                                bookAdapter.notifyDataSetChanged();
+                                                            }
+                                                        }
+                                                        if (checkBorr.isChecked() && !checkAvail.isChecked()) {
+                                                            if (!(book_status.toLowerCase().equals(borrowedConstraint))) {
+                                                                bookDataList.remove(thisBook);
+                                                                bookAdapter.notifyDataSetChanged();
+                                                            }
+                                                        }
+                                                        if (!checkBorr.isChecked() && checkAvail.isChecked()) {
+                                                            if (!(book_status.toLowerCase().equals(availableConstraint))) {
+                                                                bookDataList.remove(thisBook);
+                                                                bookAdapter.notifyDataSetChanged();
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                                if (checkBorr.isChecked() && !checkAvail.isChecked()) {
-                                                    if (!(book_status.toLowerCase().equals(borrowedConstraint))) {
-                                                        bookDataList.remove(thisBook);
-                                                        bookAdapter.notifyDataSetChanged();
-                                                        //bookList.setAdapter(bookAdapter);
-                                                    }
-                                                }
-                                                if (!checkBorr.isChecked() && checkAvail.isChecked()) {
-                                                    if (!(book_status.toLowerCase().equals(availableConstraint))) {
-                                                        bookDataList.remove(thisBook);
-                                                        bookAdapter.notifyDataSetChanged();
-                                                        //bookList.setAdapter(bookAdapter);
-                                                    }
-                                                }
-
                                             }
+
                                         }
                                     }
                                 }
@@ -127,8 +132,6 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                 });
             }
         });
-
-        currentUser = (User) getIntent().getSerializableExtra("User");
 
         checkAvail.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -228,18 +231,18 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     public void onOkPressed(final Book book, User user) {
         final HashMap<String, Object> data = new HashMap<>();
         HashMap<String,String> req = book.getRequests();
-        if (book.getStatus().equals("Accepted")) {
+        /*if (book.getStatus().equals("Accepted")) {
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST A BORROWED BOOK!! ;)", Toast.LENGTH_SHORT);
             toast.show();
         } else if (currentUser.getUsername().equals(book.getOwner())) {
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST YOUR OWN BOOK!! :)", Toast.LENGTH_SHORT);
             toast.show();
-        } else if (!req.containsKey(user.getUsername())) {
-            req.put(user.getUsername(),"Requested");
+        }*/ if (!req.containsKey(user.getUsername())) {
+            req.put(user.getUsername(),status.getRequested());
             book.addNotification(user.getUsername());
-            data.put("Notifications",book.getNotifications());
-            data.put("Requests", req);
-            data.put("Book Status", "Requested");
+            data.put(access.getNotifications(),book.getNotifications());
+            data.put(access.getRequests(), req);
+            data.put(access.getStatus(), status.getRequested());
             userBookCollectionReference = db.collection("Users/" + book.getOwner() + "/MyBooks");
             DocumentReference docRef = userBookCollectionReference.document(book.getTitle());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -271,5 +274,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             toast.show();
         }
     }
+
+
 }
 

@@ -4,33 +4,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#202F65"
     tools:context=".ViewBookDetails">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/bookphoto"
+        android:layout_gravity="center"/>
 
     <TextView
         android:id="@+id/Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:ems="10"
-        android:textColor="#B59C34"
-        android:textSize="20dp" />
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/Author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
         android:layout_weight="1"
-        android:ems="10"
-        android:textColor="#B59C34"
-        android:textSize="20dp" />
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/ISBN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="10"
-        android:textColor="#B59C34"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="italic"
         android:textSize="20dp" />
 
     <TextView
@@ -38,8 +56,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="10"
-        android:textColor="#B59C34"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="italic"
         android:textSize="20dp" />
 
     <TextView
@@ -47,25 +68,36 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="10"
-        android:textColor="#B59C34"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="italic"
         android:textSize="20dp" />
 
     <TextView
         android:id="@+id/Description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="5dp"
         android:layout_weight="1"
-        android:ems="10"
-        android:textColor="#B59C34"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="italic"
         android:textSize="20dp" />
 
     <Button
         android:id="@+id/Back"
         android:layout_width="100dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:background="@drawable/gradient"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/custom_button"
         android:text="Back" />
+
 
 </LinearLayout>

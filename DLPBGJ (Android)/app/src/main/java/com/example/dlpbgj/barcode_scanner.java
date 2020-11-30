@@ -25,6 +25,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class barcode_scanner extends AppCompatActivity implements ZXingScannerView.ResultHandler {
     private ZXingScannerView scanB;
     private TextView seeResult;
+    DatabaseAccess access = new DatabaseAccess();
 
     public TextView getSeeResult() {
         return seeResult;
@@ -100,7 +101,7 @@ public class barcode_scanner extends AppCompatActivity implements ZXingScannerVi
     public void handleResult(Result isbnCode) {
         getSeeResult().setText(isbnCode.getText());
         Intent i = new Intent();
-        i.putExtra("ISBN", isbnCode.getText());
+        i.putExtra(access.getISBN(), isbnCode.getText());
         setResult(-1, i);
         finish();
     }
