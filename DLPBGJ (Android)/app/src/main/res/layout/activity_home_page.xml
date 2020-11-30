@@ -78,7 +78,43 @@
                     </TextView>
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            </androidx.cardview.widget.CardView>
+            <androidx.cardview.widget.CardView
+                android:layout_columnWeight = "1"
+                android:layout_rowWeight="1"
+                app:cardElevation="6dp"
+                app:cardCornerRadius="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ImageButton
+                        android:id="@+id/UserProfiles"
+                        android:layout_width="80dp"
+                        android:src="@drawable/users"
+                        android:layout_height="80dp">
+                    </ImageButton>
+
+                    <TextView
+                        android:layout_marginTop="12dp"
+                        android:textSize="18sp"
+                        android:text="Users"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                    </TextView>
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
             android:layout_columnWeight = "1"
             android:layout_rowWeight="1"
             app:cardElevation="6dp"
@@ -174,7 +210,9 @@
                 </TextView>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+        </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
             android:layout_columnWeight = "1"
             android:layout_rowWeight="1"
             app:cardElevation="6dp"
@@ -206,71 +244,9 @@
                 </TextView>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-            android:layout_columnWeight = "1"
-            android:layout_rowWeight="1"
-            app:cardElevation="6dp"
-            app:cardCornerRadius="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp">
+        </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/Return"
-                    android:src="@drawable/returnb"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp">
-                </ImageButton>
-
-                <TextView
-                    android:layout_marginTop="12dp"
-                    android:textSize="18sp"
-                    android:text="Return Book"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                </TextView>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-            android:layout_columnWeight = "1"
-            android:layout_rowWeight="1"
-            app:cardElevation="6dp"
-            app:cardCornerRadius="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp">
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/Accept"
-                    android:src="@drawable/accept"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp">
-                </ImageButton>
-
-                <TextView
-                    android:layout_marginTop="12dp"
-                    android:textSize="18sp"
-                    android:text="Accept Book"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                </TextView>
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            <androidx.cardview.widget.CardView
             android:layout_columnWeight = "1"
             android:layout_rowWeight="1"
             app:cardElevation="6dp"
@@ -302,38 +278,9 @@
                 </TextView>
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
-            android:layout_columnWeight = "1"
-            android:layout_rowWeight="1"
-            app:cardElevation="6dp"
-            app:cardCornerRadius="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp">
+        </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageButton
-                    android:id="@+id/getLocation"
-                    android:src="@drawable/location"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp">
-                </ImageButton>
-
-                <TextView
-                    android:layout_marginTop="12dp"
-                    android:textSize="18sp"
-                    android:text="Search Location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-                </TextView>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView><androidx.cardview.widget.CardView
+            <androidx.cardview.widget.CardView
             android:layout_columnWeight = "1"
             android:layout_rowWeight="1"
             app:cardElevation="6dp"
@@ -397,42 +344,6 @@
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
-            <androidx.cardview.widget.CardView
-                android:layout_columnWeight = "1"
-                android:layout_rowWeight="1"
-                app:cardElevation="6dp"
-                app:cardCornerRadius="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="12dp">
-
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:padding="16dp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <ImageButton
-                        android:id="@+id/UserProfiles"
-                        android:layout_width="80dp"
-                        android:src="@drawable/users"
-                        android:layout_height="80dp">
-                    </ImageButton>
-
-                    <TextView
-                        android:layout_marginTop="12dp"
-                        android:textSize="18sp"
-                        android:text="Users"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-                    </TextView>
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-
-
 
         </GridLayout>
     </LinearLayout>

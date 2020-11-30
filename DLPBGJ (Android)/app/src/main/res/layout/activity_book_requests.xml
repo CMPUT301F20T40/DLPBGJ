@@ -14,24 +14,30 @@
         android:layout_marginBottom="40dp"/>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_gravity="bottom"
         android:orientation="horizontal">
 
         <Button
-            android:layout_width="205dp"
+            android:id="@+id/handover"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/custom_button"
             android:text="Hand over book"
-            android:id="@+id/handover">
-        </Button>
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="40dp" />
 
         <Button
-            android:layout_width="205dp"
+            android:id="@+id/returnBook"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/custom_button"
             android:text="Confirm Return"
-            android:id="@+id/returnBook">
-        </Button>
+            android:layout_marginEnd="40dp" />
     </LinearLayout>
 
 
