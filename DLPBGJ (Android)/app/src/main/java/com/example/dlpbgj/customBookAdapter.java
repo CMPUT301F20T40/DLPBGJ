@@ -1,17 +1,29 @@
 package com.example.dlpbgj;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.gson.internal.$Gson$Preconditions;
 
 import java.util.ArrayList;
 
@@ -25,6 +37,7 @@ public class customBookAdapter extends ArrayAdapter<Book> {
         this.books = books;
         this.context = context;
     }
+
 
     /**
      * Function to use our custom array adapter to show the books of a user.
@@ -44,19 +57,32 @@ public class customBookAdapter extends ArrayAdapter<Book> {
         }
 
         Book book = books.get(position);
+        ImageView image = view.findViewById(R.id.textView1);
+        TextView bookTitle = view.findViewById(R.id.textView2);
+        TextView bookStatus = view.findViewById(R.id.textView3);
+        TextView bookOwner = view.findViewById(R.id.textView4);
 
-        TextView bookTitle = view.findViewById(R.id.textView1);
-        TextView bookAuthor = view.findViewById(R.id.textView2);
-        TextView bookISBN = view.findViewById(R.id.textView3);
-        TextView bookStatus = view.findViewById(R.id.textView4);
-        TextView bookOwner = view.findViewById(R.id.textView5);
+        bookTitle.setText("Book Title: " + book.getTitle());
+        bookStatus.setText("Book Status: " + book.getStatus()); //Setting the values of each textView inside the view in ListView
+        bookOwner.setText("Book Owner: " + book.getOwner());
 
-        bookTitle.setText(book.getTitle());
-        bookAuthor.setText(book.getAuthor());
-        bookISBN.setText(book.getISBN());
-        bookStatus.setText(book.getStatus()); //Setting the values of each textView inside the view in ListView
-        bookOwner.setText(book.getOwner());
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+        StorageReference imagesRef = storageReference.child("images/" + book.getUid());
 
+
+
+        imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri downloadUrl) {
+                Glide
+                        .with(context)
+                        .load(downloadUrl.toString())
+                        .centerCrop()
+                        .into(image);
+            }
+
+        });
         return view;
 
     }

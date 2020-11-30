@@ -151,6 +151,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
         if (getArguments().get("Book") != null) {
             book = (Book) getArguments().get("Book");
             title = "Edit Book";
+            bookUid = book.getUid();
             bookTitle.setText(book.getTitle());
             bookAuthor.setText(book.getAuthor());
             bookISBN.setText(book.getISBN());
