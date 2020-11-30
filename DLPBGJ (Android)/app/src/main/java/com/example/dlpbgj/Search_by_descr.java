@@ -95,8 +95,10 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                                         String book_author = (String) newBook.getData().get("Book Author");
                                                         String book_ISBN = (String) newBook.getData().get("Book ISBN");
                                                         String book_status = (String) newBook.getData().get("Book Status");
+                                                        String book_uid = (String) newBook.getData().get("Uid");
                                                         HashMap<String,String> req = (HashMap<String, String>) newBook.getData().get("Requests");
                                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
+                                                        thisBook.setUid(book_uid);
                                                         bookDataList.add(thisBook);
                                                         bookAdapter.notifyDataSetChanged();
                                                         if (checkAvail.isChecked() && checkBorr.isChecked()) {
@@ -253,6 +255,7 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
+                                        search.performClick();
                                         Log.d(TAG, "Data has been updated successfully!");
                                     }
                                 })
@@ -265,8 +268,6 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                     }
                 }
             });
-            bookAdapter.notifyDataSetChanged();
-            filteredBookAdapter.notifyDataSetChanged();
         } else {
             Toast toast = Toast.makeText(Search_by_descr.this, "ALREADY REQUESTED THIS BOOK", Toast.LENGTH_SHORT);
             toast.show();
