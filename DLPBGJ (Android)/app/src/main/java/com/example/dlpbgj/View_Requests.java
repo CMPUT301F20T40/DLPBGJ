@@ -3,11 +3,9 @@ package com.example.dlpbgj;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +20,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class View_Requests extends AppCompatActivity implements ViewRequestFragment.OnFragmentInteractionListener{
+public class View_Requests extends AppCompatActivity {
     ListView bookList;
     ArrayAdapter<Book> bookAdapter;
     ArrayList<Book> bookDataList;
@@ -64,9 +62,7 @@ public class View_Requests extends AppCompatActivity implements ViewRequestFragm
                                         String book_ISBN = (String) newBook.getData().get(access.getISBN());
                                         String book_status = book_requests.get(currentUser.getUsername());
                                         String book_description = (String) newBook.getData().get(access.getDescription());
-                                        String pickupLocation = (String) newBook.getData().get(access.getLocation());
                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, book_requests);
-                                        thisBook.setLocation(pickupLocation);
                                         bookDataList.add(thisBook);
                                         bookAdapter.notifyDataSetChanged();
                                     }
@@ -85,23 +81,5 @@ public class View_Requests extends AppCompatActivity implements ViewRequestFragm
                 startActivity(intent);
             }
         });
-
-        bookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Book temp = bookDataList.get(i);
-                if (("Accepted").equals(temp.getStatus())){
-                    ViewRequestFragment fragment = ViewRequestFragment.newInstance(temp);
-                    fragment.show(getSupportFragmentManager(), "View_Location");
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onViewPressed(String location){
-        Intent intent = new Intent(getApplicationContext(), UserLocation.class);
-        intent.putExtra("Flag",location);
-        startActivity(intent);
     }
 }
