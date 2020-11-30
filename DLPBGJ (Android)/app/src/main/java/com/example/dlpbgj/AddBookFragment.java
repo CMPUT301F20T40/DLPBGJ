@@ -45,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddBookFragment extends DialogFragment implements Serializable {
+    private String bookUid;
     private EditText bookTitle;
     private EditText bookAuthor;
     private EditText bookISBN;
@@ -74,6 +75,14 @@ public class AddBookFragment extends DialogFragment implements Serializable {
         Bundle args = new Bundle();
         args.putSerializable("Book", book);
         args.putSerializable("User", user);
+        AddBookFragment fragment = new AddBookFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    static AddBookFragment newInstance(String uid){
+        Bundle args = new Bundle();
+        args.putSerializable("Uid",uid);
         AddBookFragment fragment = new AddBookFragment();
         fragment.setArguments(args);
         return fragment;
@@ -135,7 +144,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
         spinner.setAdapter(adapter);
 
         String title = "Add Book";
-        if (getArguments() != null) {
+        if (getArguments().get("Book") != null) {
             book = (Book) getArguments().get("Book");
             title = "Edit Book";
             bookTitle.setText(book.getTitle());
@@ -160,6 +169,9 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             }
 
         }
+        else if (getArguments().get("Uid")!=null){
+            bookUid = (String)getArguments().get("Uid");
+        }
         /**
          * When scan button is clicked
          * Starts new activity for scanning the barcode
@@ -177,7 +189,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0){
-                    if (getArguments() != null){
+                    if (getArguments().get("Book") != null){
                         bookStatus.setText(statusStr + book.getStatus());
                     }
                     else{
@@ -192,7 +204,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
 
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                if (getArguments() != null){
+                if (getArguments().get("Book") != null){
                     bookStatus.setText(statusStr + book.getStatus());
                 }
                 else{
@@ -263,7 +275,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                 bDel.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (getArguments() != null) {
+                        if (getArguments().get("Book") != null) {
                             book = (Book) getArguments().get("Book");
                             listener.onDeletePressed(book);
                         } else {
@@ -321,7 +333,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                         if (wrong_input) {
                             focus.requestFocus();
 
-                        } else if (getArguments() != null) {
+                        } else if (getArguments().get("Book") != null) {
 
                             Book book = (Book) getArguments().get("Book");
                             User user = (User) getArguments().get("User");
@@ -400,8 +412,8 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             final ProgressDialog statusDialog = new ProgressDialog(this.getContext());
             statusDialog.setTitle("Uploading");
             statusDialog.show();
-            Log.d("Book Fragment",book.getUid());
-            StorageReference ref = storageReference.child("images/" + book.getUid());
+            //Log.d("Book Fragment",book.getUid());
+            StorageReference ref = storageReference.child("images/" + bookUid);
             ref.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
