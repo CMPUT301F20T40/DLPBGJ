@@ -26,10 +26,6 @@ public class View_Requests extends AppCompatActivity {
     ArrayList<Book> bookDataList;
     private User currentUser;
 
-    /**
-     * This activity lets you view your own requests that you have placed for other user's books
-     * @param savedInstanceState
-     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.requested_books);
@@ -42,8 +38,6 @@ public class View_Requests extends AppCompatActivity {
         final FirebaseFirestore Db = FirebaseFirestore.getInstance();
         final CollectionReference cr = Db.collection("Users");
         currentUser = (User) getIntent().getSerializableExtra("User");
-        DatabaseAccess access = new DatabaseAccess();
-        //This nested loop iterates through the database and gets all the books that has the current user in the requester's list
         cr.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -54,14 +48,14 @@ public class View_Requests extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                             for (QueryDocumentSnapshot newBook : value2) {
-                                HashMap<String,String> book_requests = (HashMap<String, String>) newBook.getData().get(access.getRequests());
+                                HashMap<String,String> book_requests = (HashMap<String, String>) newBook.getData().get("Requests");
                                 if (book_requests != null) {
                                     if (book_requests.containsKey(currentUser.getUsername())) {
                                         String book_title = newBook.getId();
-                                        String book_author = (String) newBook.getData().get(access.getAuthor());
-                                        String book_ISBN = (String) newBook.getData().get(access.getISBN());
+                                        String book_author = (String) newBook.getData().get("Book Author");
+                                        String book_ISBN = (String) newBook.getData().get("Book ISBN");
                                         String book_status = book_requests.get(currentUser.getUsername());
-                                        String book_description = (String) newBook.getData().get(access.getDescription());
+                                        String book_description = (String) newBook.getData().get("Book Description");
                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, book_requests);
                                         bookDataList.add(thisBook);
                                         bookAdapter.notifyDataSetChanged();

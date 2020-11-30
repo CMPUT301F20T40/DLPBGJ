@@ -62,8 +62,6 @@ public class AddBookFragment extends DialogFragment implements Serializable {
     private final String statusStr = "Book Status -";
     FirebaseStorage storage;
     StorageReference storageReference;
-    Statuses status = new Statuses();
-    DatabaseAccess access = new DatabaseAccess();
 
 
     public interface OnFragmentInteractionListener {
@@ -127,10 +125,10 @@ public class AddBookFragment extends DialogFragment implements Serializable {
         bookStatus = view.findViewById(R.id.book_status_editText);
         bookDescription = view.findViewById(R.id.book_description_editText);
         final ArrayList<String> validStatus = new ArrayList<String>();
-        validStatus.add(status.getAvailable());
-        validStatus.add(status.getBorrowed());
-        validStatus.add(status.getAccepted());
-        validStatus.add(status.getRequested());
+        validStatus.add("Available");
+        validStatus.add("Borrowed");
+        validStatus.add("Accepted");
+        validStatus.add("Requested");
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -141,9 +139,9 @@ public class AddBookFragment extends DialogFragment implements Serializable {
         Spinner spinner = view.findViewById(R.id.book_status);
         final ArrayList<String> Statuses = new ArrayList<>();
         Statuses.add("Select Status:");
-        Statuses.add(status.getAvailable());
-        Statuses.add(status.getBorrowed());
-        Statuses.add(status.getRequested());
+        Statuses.add("Available");
+        Statuses.add("Borrowed");
+        Statuses.add("Requested");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_layout, Statuses);
         adapter.setDropDownViewResource(R.layout.spinner_layout);
         spinner.setAdapter(adapter);
@@ -175,8 +173,8 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             }
 
         }
-        else if (getArguments().get(access.getUID())!=null){
-            bookUid = (String)getArguments().get(access.getUID());
+        else if (getArguments().get("Uid")!=null){
+            bookUid = (String)getArguments().get("Uid");
         }
         /**
          * When scan button is clicked
@@ -382,7 +380,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == -1) {
-                String code = data.getStringExtra(access.getISBN());
+                String code = data.getStringExtra("ISBN");
                 bookISBN.setText(code);
             }
         }

@@ -27,7 +27,6 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
     private BookRequestsFragment.OnFragmentInteractionListener listener;
     private Book book;
     private String selection;
-    Statuses status = new Statuses();
 
     static BookRequestsFragment newInstance(Book book) {
         Bundle args = new Bundle();
@@ -85,10 +84,10 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                         //book.addRequest(selection,"Accepted");
                         for (String key : book.getRequests().keySet()){
                             if (key.equals(selection)){
-                                book.addRequest(selection,status.getAccepted());
+                                book.addRequest(selection,"Accepted");
                             }
                             else{
-                                book.addRequest(key,status.getDeclined());
+                                book.addRequest(key,"Declined");
                             }
                         }
                         Toast toast = Toast.makeText(getContext(), selection + "'s request accepted!", Toast.LENGTH_SHORT);
@@ -100,7 +99,7 @@ public class BookRequestsFragment extends DialogFragment implements Serializable
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         //book.removeRequest(selection);
-                        book.addRequest(selection,status.getDeclined());
+                        book.addRequest(selection,"Declined");
                         Toast toast = Toast.makeText(getContext(), selection + "'s request declined!", Toast.LENGTH_SHORT);
                         toast.show();
                         listener.onDeclinePressed(book);

@@ -54,10 +54,8 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     String TAG = "MyBooks";
     CheckBox checkAvail;
     CheckBox checkBorrowed;
-    Statuses status = new Statuses();
-    DatabaseAccess access = new DatabaseAccess();
-    String availableConstraint = status.getAvailable();
-    String borrowedConstraint = status.getBorrowed();
+    String availableConstraint = "available";
+    String borrowedConstraint = "borrowed";
     private User currentUser;
     private Uri path;
 
@@ -107,15 +105,57 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 String uid = Integer.toString(name.size() + 1);
                                 AddBookFragment fragment = AddBookFragment.newInstance(uid);
                                 fragment.show(getSupportFragmentManager(), "ADD_BOOK");
+                                //data.put("Uid", Integer.toString(name.size() + 1));
+                                //name.add(Integer.toString(name.size() + 1));
+                                //HashMap<String, Object> array = new HashMap<>();
+                                //array.put("Array", name);
+                                /*arrayReference
+                                        .document("Array")
+                                        .update(array)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "Array Size successfully updated");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG, "Failed to update Array Size");
+                                            }
+                                        });*/
                             }
                         }
                     }
-                });
+                    });
+
+                //new AddBookFragment().show(getSupportFragmentManager(), "ADD_BOOK");
             }
         });
 
         db = FirebaseFirestore.getInstance();
-        userBookCollectionReference = db.collection("Users");
+        userBookCollectionReference = db.collection("Users");//Creating/pointing to a sub-collection of the books that user owns
+        /*userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable
+                    FirebaseFirestoreException error) { //Manages the state of the sub-collection
+                bookDataList.clear();
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String book_title = doc.getId();
+                    String book_author = (String) doc.getData().get("Book Author");
+                    String book_ISBN = (String) doc.getData().get("Book ISBN");
+                    String book_status = (String) doc.getData().get("Book Status");
+                    String book_description = (String) doc.getData().get("Book Description");
+                    String book_owner = (String) doc.getData().get("Owner");
+                    String book_uid = (String) doc.getData().get("Uid");
+                    Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
+                    temp.setUid(book_uid);
+                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
+                }
+                bookAdapter.notifyDataSetChanged(); // Notifying the adapter to render any new data fetched from the cloud
+            }
+
+        });*/
         userBookCollectionReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -128,12 +168,12 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                             for (QueryDocumentSnapshot newBook : value2) {
-                                String owner = (String)newBook.getData().get(access.getOwner());
-                                HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get(access.getRequests());
+                                String owner = (String)newBook.getData().get("Owner");
+                                HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get("Requests");
                                 String borrower = "";
                                 if (map != null){
                                     for (String key : map.keySet()){
-                                        if ((status.getBorrowed()).equals(map.get(key))){
+                                        if (("Borrowed").equals(map.get(key))){
                                             borrower = key;
                                         }
                                     }
@@ -141,18 +181,18 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 String current = currentUser.getUsername();
                                 if (owner.equals(current) || borrower.equals(current)) {
                                     String book_title = newBook.getId();
-                                    String book_author = (String) newBook.getData().get(access.getAuthor());
-                                    String book_ISBN = (String) newBook.getData().get(access.getISBN());
+                                    String book_author = (String) newBook.getData().get("Book Author");
+                                    String book_ISBN = (String) newBook.getData().get("Book ISBN");
                                     String book_status;
                                    if(borrower.equals(current)){
-                                         book_status = status.getBorrowed();
+                                         book_status = "Borrowed";
                                     }
                                     else{
-                                        book_status = (String) newBook.getData().get(access.getStatus());
+                                        book_status = (String) newBook.getData().get("Book Status");
                                     }
-                                    String book_description = (String) newBook.getData().get(access.getDescription());
-                                    String book_owner = (String) newBook.getData().get(access.getOwner());
-                                    String book_uid = (String) newBook.getData().get(access.getUID());
+                                    String book_description = (String) newBook.getData().get("Book Description");
+                                    String book_owner = (String) newBook.getData().get("Owner");
+                                    String book_uid = (String) newBook.getData().get("Uid");
                                     Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
                                     temp.setUid(book_uid);
                                     bookDataList.add(temp); // Adding the cities and provinces from FireStore
@@ -291,11 +331,11 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         String bookOwner = currentUser.getUsername();
         if (bookTitle.length() > 0 && bookAuthor.length() > 0 && bookISBN.length() > 0 && bookStatus.length() > 0) {//Data inside the document will consist of the following
             //Adding data inside the hash map
-            data.put(access.getAuthor(), bookAuthor);
-            data.put(access.getISBN(), bookISBN);
-            data.put(access.getStatus(), bookStatus);
-            data.put(access.getDescription(), bookDescription);
-            data.put(access.getOwner(), bookOwner);
+            data.put("Book Author", bookAuthor);
+            data.put("Book ISBN", bookISBN);
+            data.put("Book Status", bookStatus);
+            data.put("Book Description", bookDescription);
+            data.put("Owner", bookOwner);
         }
         CollectionReference collectionReference = db.collection("Users/" + currentUser.getUsername()+"/MyBooks");
         arrayReference = db.collection("GlobalArray");
@@ -308,7 +348,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                     if (document.exists()) {
                         Map<String, Object> temp = document.getData();
                         ArrayList<String> name = (ArrayList<String>) temp.get("Array");
-                        data.put(access.getUID(), Integer.toString(name.size() + 1));
+                        data.put("Uid", Integer.toString(name.size() + 1));
                         name.add(Integer.toString(name.size() + 1));
                         HashMap<String, Object> array = new HashMap<>();
                         array.put("Array", name);
@@ -362,12 +402,12 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
     @Override
     public void onOkPressed(final Book newBook, final String oldBookName) {
         final HashMap<String, Object> data = new HashMap<>();
-        data.put(access.getAuthor(), newBook.getAuthor());
-        data.put(access.getISBN(), newBook.getISBN());
-        data.put(access.getStatus(), newBook.getStatus());
-        data.put(access.getDescription(), newBook.getDescription());
-        data.put(access.getOwner(), newBook.getOwner());
-        data.put(access.getUID(), newBook.getUid());
+        data.put("Book Author", newBook.getAuthor());
+        data.put("Book ISBN", newBook.getISBN());
+        data.put("Book Status", newBook.getStatus());
+        data.put("Book Description", newBook.getDescription());
+        data.put("Owner", newBook.getOwner());
+        data.put("Uid", newBook.getUid());
         CollectionReference collectionReference = db.collection("Users/"+currentUser.getUsername()+"/MyBooks");
         DocumentReference docRef = collectionReference.document(newBook.getTitle());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -460,10 +500,13 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         bookDataList.remove(book);
         bookAdapter.notifyDataSetChanged();
     }
+
     @Override
     public void onOkPressed() {
         //Do nothing
     }
+
+
 }
 
 

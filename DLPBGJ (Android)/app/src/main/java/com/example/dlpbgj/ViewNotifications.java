@@ -42,11 +42,10 @@ public class ViewNotifications extends AppCompatActivity {
     FirebaseFirestore db2;
     FirebaseFirestore db3;
     CollectionReference userBookCollectionReference;
-
     CollectionReference userBookCollectionReference2;
     CollectionReference userBookCollectionReference3;
     Button clear;
-    DatabaseAccess access = new DatabaseAccess();
+
 
 
     @Override
@@ -73,6 +72,7 @@ public class ViewNotifications extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
                                 Log.d("sucesss", doc.getId() + " => " + doc.getData());
+
                                 HashMap<String,Long> allNotifications = (HashMap<String,Long>) doc.getData().get("Notifications");
                                 HashMap<String,String> reqs = (HashMap<String,String>) doc.getData().get("Requests");
                                 if(allNotifications!=null) {
@@ -88,7 +88,7 @@ public class ViewNotifications extends AppCompatActivity {
                                             notifications.add(key + " requested " + doc.getId());
                                             allNotifications.put(key,one);
                                             HashMap<String,Object> data = new HashMap<>();
-                                            data.put(access.getNotifications(),allNotifications);
+                                            data.put("Notifications",allNotifications);
                                             userBookCollectionReference
                                                     .document(doc.getId())
                                                     .update(data)
@@ -221,6 +221,7 @@ public class ViewNotifications extends AppCompatActivity {
             }
         });
 
+
 /*
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -229,6 +230,7 @@ public class ViewNotifications extends AppCompatActivity {
                 readNotifAdapter.notifyDataSetChanged();
             }
         });*/
+
 
 
     }

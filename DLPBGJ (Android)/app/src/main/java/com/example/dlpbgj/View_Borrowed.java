@@ -38,7 +38,6 @@ public class View_Borrowed extends AppCompatActivity {
         final FirebaseFirestore Db = FirebaseFirestore.getInstance();
         final CollectionReference cr = Db.collection("Users");
         currentUser = (User) getIntent().getSerializableExtra("User");
-        DatabaseAccess access = new DatabaseAccess();
         cr.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -50,15 +49,16 @@ public class View_Borrowed extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                             for (QueryDocumentSnapshot newBook : value2) {
-                                String borrower = (String) newBook.getData().get(access.getBorrower());
+                                String borrower = (String) newBook.getData().get("Borrower");
                                 if (borrower != null) {
                                     if (borrower.equals(currentUser.getUsername())) {
-                                        HashMap<String,String> book_requests = (HashMap<String, String>) newBook.getData().get(access.getRequests());
+                                        HashMap<String,String> book_requests = (HashMap<String, String>) newBook.getData().get("Requests");
                                         String book_title = newBook.getId();
-                                        String book_author = (String) newBook.getData().get(access.getAuthor());
-                                        String book_ISBN = (String) newBook.getData().get(access.getISBN());
+                                        String book_author = (String) newBook.getData().get("Book Author");
+                                        String book_ISBN = (String) newBook.getData().get("Book ISBN");
                                         String book_status = book_requests.get(currentUser.getUsername());
-                                        String book_description = (String) newBook.getData().get(access.getDescription());
+                                        String book_description = (String) newBook.getData().get("Book Description");
+                                        System.out.println("Reached compare\n");
                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, book_requests);
                                         bookDataList.add(thisBook);
                                         bookAdapter.notifyDataSetChanged();

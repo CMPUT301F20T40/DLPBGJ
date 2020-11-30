@@ -51,7 +51,7 @@ public class allUserProfiles extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                Log.d("success", doc.getId() + " => " + doc.getData());
+                                Log.d("sucesss", doc.getId() + " => " + doc.getData());
                                 if (user.getUsername().equals(doc.getId())){
                                     continue;
                                 }
