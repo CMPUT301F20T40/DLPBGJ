@@ -194,14 +194,14 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i == 0){
                     if (getArguments().get("Book") != null){
-                        bookStatus.setText(statusStr + book.getStatus());
+                        bookStatus.setText("Book Status -" + book.getStatus());
                     }
                     else{
-                        bookStatus.setText(statusStr);
+                        bookStatus.setText("Book Status -");
                     }
                 }
                 else{
-                    bookStatus.setText("Book Status - " + Statuses.get(i));
+                    bookStatus.setText("Book Status -" + Statuses.get(i));
                 }
 
             }
@@ -209,7 +209,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
                 if (getArguments().get("Book") != null){
-                    bookStatus.setText(statusStr + book.getStatus());
+                    bookStatus.setText("Book Status -" + book.getStatus());
                 }
                 else{
                     bookStatus.setText(statusStr);
@@ -307,12 +307,12 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                             wrong_input = true;
                             focus = bookTitle;
                         }
-
-                        if (book_status.equals(statusStr)) { //Mandatory to enter book's status
+/*
+                        if (book_status.equals("")) { //Mandatory to enter book's status
                             bookStatus.setError("Please select the book's status");
                             wrong_input = true;
                             focus = bookStatus;
-                        }
+                        }*/
 
                         if (book_description.equals("")) {    //Mandatory to enter book's description
                             bookDescription.setError("Please enter the book's description");
@@ -320,12 +320,12 @@ public class AddBookFragment extends DialogFragment implements Serializable {
                             focus = bookDescription;
 
                         }
-                     /*   if (!validStatus.contains(book_status)) { //Input validation for the status
+                       if (!validStatus.contains(book_status)) { //Input validation for the status
                             bookStatus.setError("Please enter a valid status: Available, Borrowed, Requested, Accepted");
                             wrong_input = true;
-                            focus = bookStatus;
+                            focus = spinner;
 
-                        }*/
+                        }
                         if (book_author.equals("")) {
                             book_author = "Unknown";
 

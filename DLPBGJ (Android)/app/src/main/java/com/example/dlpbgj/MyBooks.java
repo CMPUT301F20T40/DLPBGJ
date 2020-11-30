@@ -171,6 +171,8 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 String owner = (String)newBook.getData().get("Owner");
                                 HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get("Requests");
                                 String borrower = "";
+                                if(newBook.getId().equals("Nbok"))
+                                    continue;
                                 if (map != null){
                                     for (String key : map.keySet()){
                                         if (("Borrowed").equals(map.get(key))){
