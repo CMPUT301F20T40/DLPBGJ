@@ -73,6 +73,7 @@ public class HandBook extends AppCompatActivity {
                         borrower = null;
                         book = null;
                         bookISBN = null;
+                        ISBN.setText("ISBN-");
                         Toast toast = Toast.makeText(getApplicationContext(), "Scanned ISBN code either does not match any book or you haven't accepted a request for this book.!\nPlease scan again.", Toast.LENGTH_SHORT);
                         toast.show();
                     }
@@ -157,8 +158,10 @@ public class HandBook extends AppCompatActivity {
                     if (isbn.equals(doc.getData().get("Book ISBN"))){
                         if (("Accepted").equals(doc.getData().get("Book Status"))){
                             HashMap<String,String> temp = (HashMap<String, String>)doc.getData().get("Requests");
+                            System.out.println(temp.keySet());
                             for (String key : temp.keySet()){
                                 if (("Accepted").equals(temp.get(key))){
+                                    System.out.println(key);
                                     borrowers.add(key);
                                     bookNames.add(doc.getId());
                                     setSpinner();

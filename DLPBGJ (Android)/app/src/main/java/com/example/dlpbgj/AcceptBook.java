@@ -54,6 +54,7 @@ public class AcceptBook extends AppCompatActivity {
         spinner = findViewById(R.id.returnList);
         borrowers = new ArrayList<>();
         bookNames = new ArrayList<>();
+        maps = new ArrayList<>();
         returnBook.setText("Confirm Return");
         TextView acceptreturn = findViewById(R.id.acceptreturn);
         acceptreturn.setText("Book will be returned from :");
@@ -94,6 +95,7 @@ public class AcceptBook extends AppCompatActivity {
                         borrower = null;
                         book = null;
                         bookISBN = null;
+                        ISBN.setText("ISBN-");
                         Toast toast = Toast.makeText(getApplicationContext(),
                                 "Scanned ISBN code does not match any book that is currently borrowed or returned by the borrower!\nPlease scan again.", Toast.LENGTH_SHORT);
                         toast.show();
@@ -199,11 +201,11 @@ public class AcceptBook extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, borrowers);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
-                    if ((isbn.equals(newBook.getData().get("Book ISBN")))) {
-                        if (newBook.getData().get("Borrower") != null) {
+                    if ((isbn.equals((String)newBook.getData().get("Book ISBN")))) {
+                        if (null != (String)newBook.getData().get("Borrower")) {
                             String temp = (String) newBook.getData().get("Borrower");
                             HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get("Requests");
-                            if (("Returned").equals(map.get(temp))){
+                            if (("Borrowed").equals(map.get(temp))){
                                 borrowers.add(temp);
                                 bookNames.add(newBook.getId());
                                 maps.add(map);

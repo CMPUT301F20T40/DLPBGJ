@@ -51,6 +51,7 @@ public class ReturnBook extends AppCompatActivity {
         spinner = findViewById(R.id.returnList);
         owners = new ArrayList<>();
         bookNames = new ArrayList<>();
+        maps = new ArrayList<>();
         returnBook.setText("Return Book");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,6 +74,7 @@ public class ReturnBook extends AppCompatActivity {
                         book = null;
                         bookISBN = null;
                         finalMap = null;
+                        ISBN.setText("ISBN-");
                         Toast toast = Toast.makeText(getApplicationContext(), "Scanned ISBN code does not match any borrowed book!\nPlease scan again.", Toast.LENGTH_SHORT);
                         toast.show();
                     }
@@ -162,8 +164,14 @@ public class ReturnBook extends AppCompatActivity {
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, owners);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(adapter);
-                                if (f.getData().get("Book ISBN").equals(isbn)) {
-                                    if (currentUser.getUsername().equals(f.getData().get("Borrower"))) {
+                                String borrower = (String)f.getData().get("Borrower");
+                                System.out.println("The borrower is " + borrower);
+                                String current = currentUser.getUsername();
+                                System.out.println("The current is " + current);
+                                System.out.println("The current isbn " + isbn);
+                                if (isbn.equals(f.getData().get("Book ISBN"))) {
+                                    if (current.equals(borrower)) {
+                                        System.out.println("inside if");
                                         final String temp = (String) f.getData().get("Owner");
                                         HashMap<String,String> map = (HashMap<String, String>)f.getData().get("Requests");
                                         owners.add(temp);
