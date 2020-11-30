@@ -1,11 +1,18 @@
 package com.example.dlpbgj;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ViewBookDetails extends AppCompatActivity {
     Button backButton;
@@ -13,6 +20,7 @@ public class ViewBookDetails extends AppCompatActivity {
     TextView author;
     TextView isbn;
     TextView status;
+    ImageView photo;
 
 
     /**
@@ -36,12 +44,29 @@ public class ViewBookDetails extends AppCompatActivity {
         backButton = findViewById(R.id.Back);
         description = findViewById(R.id.Description);
         owner = findViewById(R.id.Owner);
-        title.setText("Book Title :\n" + book.getTitle());
-        author.setText("Book Author :\n" + book.getAuthor());
-        isbn.setText("Book ISBN :\n" + book.getISBN());
-        status.setText("Book Status :\n" + book.getStatus());
-        description.setText("Book Description :\n" + book.getDescription());
-        owner.setText("Current Owner : " + book.getOwner());
+        title.setText("Book Title: " + book.getTitle());
+        author.setText("Book Author: " + book.getAuthor());
+        isbn.setText("Book ISBN: " + book.getISBN());
+        status.setText("Book Status: " + book.getStatus());
+        description.setText("Book Description: " + book.getDescription());
+        owner.setText("Current Owner: " + book.getOwner());
+        photo = findViewById(R.id.bookphoto);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageReference = storage.getReference();
+
+        StorageReference imagesRef = storageReference.child("images/" + book.getUid());
+        imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri downloadUrl) {
+                Glide
+                        .with(getApplicationContext())
+                        .load(downloadUrl.toString())
+                        .centerCrop()
+                        .into(photo);
+            }
+        });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
