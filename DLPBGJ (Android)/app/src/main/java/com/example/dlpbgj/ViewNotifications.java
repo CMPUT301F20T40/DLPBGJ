@@ -60,7 +60,7 @@ public class ViewNotifications extends AppCompatActivity {
         notifAdapter = new CustomNotificationAdapter(this, notifications);   //Implementing a custom adapter that connects the ListView with the ArrayList using bookcontent.xml layout
         readNotifAdapter = new CustomNotificationAdapter(this,readNotifications);
         notificationList.setAdapter(notifAdapter);
-        //clear = findViewById(R.id.clearButton);
+        clear = findViewById(R.id.clearButton);
         readNotificationList.setAdapter(readNotifAdapter);
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");//Creating/pointing to a sub-collection of the books that user owns
@@ -212,6 +212,7 @@ public class ViewNotifications extends AppCompatActivity {
                         }
                     }
                 });
+
         notificationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -222,14 +223,14 @@ public class ViewNotifications extends AppCompatActivity {
         });
 
 
-/*
+
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 readNotifications.clear();
                 readNotifAdapter.notifyDataSetChanged();
             }
-        });*/
+        });
 
 
 
