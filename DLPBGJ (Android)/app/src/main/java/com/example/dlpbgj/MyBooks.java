@@ -81,7 +81,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         currentUser = (User) getIntent().getSerializableExtra(HomePage.EXTRA_MESSAGE2);  //Catching the object of current user who's logged in
 
         bookDataList = new ArrayList<>();
-        bookAdapter = new customBookAdapter(this, bookDataList);   //Implementing a custom adapter that connects the ListView with the ArrayList using bookcontent.xml layout
+        bookAdapter = new customBookAdapter(getApplicationContext(), bookDataList);   //Implementing a custom adapter that connects the ListView with the ArrayList using bookcontent.xml layout
         bookList.setAdapter(bookAdapter);
 
         filteredDataList = new ArrayList<>();
@@ -179,24 +179,25 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                     }
                                 }
                                 String current = currentUser.getUsername();
-                                if (owner.equals(current) || borrower.equals(current)) {
-                                    String book_title = newBook.getId();
-                                    String book_author = (String) newBook.getData().get("Book Author");
-                                    String book_ISBN = (String) newBook.getData().get("Book ISBN");
-                                    String book_status;
-                                   if(borrower.equals(current)){
-                                         book_status = "Borrowed";
+                                if(owner!=null) {
+                                    if (owner.equals(current) || borrower.equals(current)) {
+                                        String book_title = newBook.getId();
+                                        String book_author = (String) newBook.getData().get("Book Author");
+                                        String book_ISBN = (String) newBook.getData().get("Book ISBN");
+                                        String book_status;
+                                        if (borrower.equals(current)) {
+                                            book_status = "Borrowed";
+                                        } else {
+                                            book_status = (String) newBook.getData().get("Book Status");
+                                        }
+                                        String book_description = (String) newBook.getData().get("Book Description");
+                                        String book_owner = (String) newBook.getData().get("Owner");
+                                        String book_uid = (String) newBook.getData().get("Uid");
+                                        Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
+                                        temp.setUid(book_uid);
+                                        bookDataList.add(temp); // Adding the cities and provinces from FireStore
+                                        bookAdapter.notifyDataSetChanged();
                                     }
-                                    else{
-                                        book_status = (String) newBook.getData().get("Book Status");
-                                    }
-                                    String book_description = (String) newBook.getData().get("Book Description");
-                                    String book_owner = (String) newBook.getData().get("Owner");
-                                    String book_uid = (String) newBook.getData().get("Uid");
-                                    Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
-                                    temp.setUid(book_uid);
-                                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
-                                    bookAdapter.notifyDataSetChanged();
                                 }
                             }
                         }

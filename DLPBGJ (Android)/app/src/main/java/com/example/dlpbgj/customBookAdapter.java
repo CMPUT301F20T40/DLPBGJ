@@ -31,6 +31,8 @@ public class customBookAdapter extends ArrayAdapter<Book> {
 
     private final ArrayList<Book> books;
     private final Context context;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     public customBookAdapter(Context context, ArrayList<Book> books) {
         super(context, 0, books);
@@ -62,16 +64,14 @@ public class customBookAdapter extends ArrayAdapter<Book> {
         TextView bookStatus = view.findViewById(R.id.textView3);
         TextView bookOwner = view.findViewById(R.id.textView4);
 
-        bookTitle.setText("Book Title: " + book.getTitle());
-        bookStatus.setText("Book Status: " + book.getStatus()); //Setting the values of each textView inside the view in ListView
-        bookOwner.setText("Book Owner: " + book.getOwner());
+        bookTitle.setText("Title: " + book.getTitle());
+        bookStatus.setText("Status: " + book.getStatus()); //Setting the values of each textView inside the view in ListView
+        bookOwner.setText("Owner: " + book.getOwner());
 
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageReference = storage.getReference();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+        System.out.println(book.getUid());
         StorageReference imagesRef = storageReference.child("images/" + book.getUid());
-
-
-
         imagesRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri downloadUrl) {
