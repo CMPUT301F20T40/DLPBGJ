@@ -64,24 +64,34 @@
 
     </LinearLayout>
 
-    <Spinner
-        android:layout_marginTop="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/book_status"
-        android:layout_weight="1"
-        />
-
-    <TextView
-        android:id="@+id/book_status_editText"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:textSize="18sp"
-        android:hint="Book's status*"
-        android:inputType="textPersonName"
-        android:textColor="#B59C34"
-        android:layout_weight="1"/>
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        >
+
+        <TextView
+            android:id="@+id/book_status_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:textSize="18sp"
+            android:hint="Book's status*"
+            android:inputType="textPersonName"
+            android:textColor="#B59C34"
+            android:layout_weight="1"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/book_status"
+            android:layout_weight="1"
+            />
+
+
+    </LinearLayout>
+
 
     <EditText
         android:id="@+id/book_description_editText"

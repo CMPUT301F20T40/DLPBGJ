@@ -12,6 +12,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -399,6 +400,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
             final ProgressDialog statusDialog = new ProgressDialog(this.getContext());
             statusDialog.setTitle("Uploading");
             statusDialog.show();
+            Log.d("Book Fragment",book.getUid());
             StorageReference ref = storageReference.child("images/" + book.getUid());
             ref.putFile(path).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
