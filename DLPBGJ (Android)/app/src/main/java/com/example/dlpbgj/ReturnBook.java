@@ -40,6 +40,7 @@ public class ReturnBook extends AppCompatActivity {
     String book;
     Button scan;
     Button returnBook;
+    DatabaseAccess access = new DatabaseAccess();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class ReturnBook extends AppCompatActivity {
         owners = new ArrayList<>();
         bookNames = new ArrayList<>();
         returnBook.setText("Return Book");
+        Statuses status = new Statuses();
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,9 +85,8 @@ public class ReturnBook extends AppCompatActivity {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference collectionReference = db.collection("Users/" + owner + "/MyBooks");
                     HashMap<String, Object> map = new HashMap<>();
-                    finalMap.put(currentUser.getUsername(),"Returned");
-                    //map.put("Borrower", null);
-                    map.put("Book Status", "Returned");
+                    finalMap.put(currentUser.getUsername(),status.getReturned());
+                    map.put(access.getStatus(), status.getReturned());
                     collectionReference
                             .document(book)
                             .update(map)
@@ -162,9 +163,9 @@ public class ReturnBook extends AppCompatActivity {
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, owners);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(adapter);
-                                if (f.getData().get("Book ISBN").equals(isbn)) {
-                                    if (currentUser.getUsername().equals(f.getData().get("Borrower"))) {
-                                        final String temp = (String) f.getData().get("Owner");
+                                if (f.getData().get(access.getISBN()).equals(isbn)) {
+                                    if (currentUser.getUsername().equals(f.getData().get(access.getBorrower()))) {
+                                        final String temp = (String) f.getData().get(access.getOwner());
                                         HashMap<String,String> map = (HashMap<String, String>)f.getData().get("Requests");
                                         owners.add(temp);
                                         bookNames.add(f.getId());

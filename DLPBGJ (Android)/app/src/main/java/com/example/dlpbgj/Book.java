@@ -5,6 +5,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Book implements Serializable {
+    /**
+     * This class creates book objects that are needed for the application to run
+     *
+     * It has multiple attributes that have the following uses:
+     *
+     * Title: Contains the title of the book
+     * Author: Contains the author of the book
+     * ISBN: Contains the unique code that each book has
+     * Status: Denotes whether the book is available, borrowed, requested or accepted to be borrowed
+     * Description: Contains the user-inputed description of the book
+     * Owner: Stores the username of the person who owns the book
+     * Requests: An array that stores the usernames of all users that have requested this specific book
+     * Notifications: Stores all the notifications for the current book in terms of who has requested it and returned it
+     * UID: Contains a unique code that is created for each and every book in the database. It helps store their photos.
+     * Borrower: This stores the name of the current borrower of the book. If a borrower exists, the requests list is cleared
+     * Location: Stores the location where the exchange for this book will happen
+     */
     String title;
     String author;
     String ISBN;

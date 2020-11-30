@@ -41,6 +41,7 @@ public class ViewNotifications extends AppCompatActivity {
     FirebaseFirestore db;
     CollectionReference userBookCollectionReference;
     Button back;
+    DatabaseAccess access = new DatabaseAccess();
 
 
     @Override
@@ -65,7 +66,7 @@ public class ViewNotifications extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                Log.d("sucesss", doc.getId() + " => " + doc.getData());
+                                Log.d("success", doc.getId() + " => " + doc.getData());
 
                                 System.out.println("Book name : " + doc.getId());
                                 HashMap<String,Long> allNotifications = (HashMap<String,Long>) doc.getData().get("Notifications");
@@ -83,7 +84,7 @@ public class ViewNotifications extends AppCompatActivity {
                                             notifications.add(key + " requested " + doc.getId());
                                             allNotifications.put(key,one);
                                             HashMap<String,Object> data = new HashMap<>();
-                                            data.put("Notifications",allNotifications);
+                                            data.put(access.getNotifications(),allNotifications);
                                             userBookCollectionReference
                                                     .document(doc.getId())
                                                     .update(data)
@@ -123,7 +124,5 @@ public class ViewNotifications extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 }

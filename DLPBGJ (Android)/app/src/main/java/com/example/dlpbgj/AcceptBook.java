@@ -41,6 +41,8 @@ public class AcceptBook extends AppCompatActivity {
     HashMap<String,String> finalMap;
     Button scan;
     Button returnBook;
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -90,9 +92,9 @@ public class AcceptBook extends AppCompatActivity {
                     CollectionReference collectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
                     HashMap<String, Object> data = new HashMap<>();
                     finalMap.put(borrower,null);
-                    data.put("Borrower", null);
-                    data.put("Book Status", "Available");
-                    data.put("Requests",finalMap);
+                    data.put(access.getBorrower(), null);
+                    data.put(access.getStatus(), status.getAvailable());
+                    data.put(access.getRequests(),finalMap);
                     collectionReference
                             .document(book)
                             .update(data)
@@ -162,11 +164,11 @@ public class AcceptBook extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, borrowers);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
-                    if ((isbn.equals(newBook.getData().get("Book ISBN")))) {
-                        if (newBook.getData().get("Borrower") != null) {
-                            String temp = (String) newBook.getData().get("Borrower");
-                            HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get("Requests");
-                            if (("Returned").equals(map.get(temp))){
+                    if ((isbn.equals(newBook.getData().get(access.getISBN())))) {
+                        if (newBook.getData().get(access.getBorrower()) != null) {
+                            String temp = (String) newBook.getData().get(access.getBorrower());
+                            HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get(access.getRequests());
+                            if ((status.getReturned()).equals(map.get(temp))){
                                 borrowers.add(temp);
                                 bookNames.add(newBook.getId());
                                 maps.add(map);

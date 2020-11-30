@@ -40,7 +40,13 @@ public class BorrowBook extends AppCompatActivity {
     String book;
     Button scan;
     Button returnBook;
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
 
+    /**
+     * This activity lets one confirm that they want to borrow another user's book
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,10 +92,10 @@ public class BorrowBook extends AppCompatActivity {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference collectionReference = db.collection("Users/" + owner + "/MyBooks");
                     HashMap<String, Object> map = new HashMap<>();
-                    finalMap.put(currentUser.getUsername(),"Borrowed");
-                    map.put("Borrower", owner);
-                    map.put("Book Status", "Borrowed");
-                    map.put("Requests",finalMap);
+                    finalMap.put(currentUser.getUsername(),status.getBorrowed());
+                    map.put(access.getBorrower(), owner);
+                    map.put(access.getStatus(), status.getBorrowed());
+                    map.put(access.getRequests(),finalMap);
                     collectionReference
                             .document(book)
                             .update(map)
@@ -115,6 +121,7 @@ public class BorrowBook extends AppCompatActivity {
             }
         });
 
+        //This method is what helps implement the drop down menu for viewing all your requests that have been accepted
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -166,10 +173,10 @@ public class BorrowBook extends AppCompatActivity {
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, owners);
                                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                 spinner.setAdapter(adapter);
-                                if (isbn.equals(f.getData().get("Book ISBN"))) {
-                                    if (currentUser.getUsername().equals(f.getData().get("Borrower"))) {
-                                        final String temp = (String) f.getData().get("Owner");
-                                        HashMap<String,String> map = (HashMap<String, String>)f.getData().get("Requests");
+                                if (isbn.equals(f.getData().get(access.getISBN()))) {
+                                    if (currentUser.getUsername().equals(f.getData().get(access.getBorrower()))) {
+                                        final String temp = (String) f.getData().get(access.getOwner());
+                                        HashMap<String,String> map = (HashMap<String, String>)f.getData().get(access.getRequests());
                                         owners.add(temp);
                                         bookNames.add(f.getId());
                                         maps.add(map);

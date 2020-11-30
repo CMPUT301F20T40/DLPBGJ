@@ -46,8 +46,10 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
     String TAG = "BookSearch";
     CheckBox checkAvail;
     CheckBox checkBorr;
-    String availableConstraint = "available";
-    String borrowedConstraint = "borrowed";
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
+    String availableConstraint = status.getAvailable();
+    String borrowedConstraint = status.getBorrowed();
     private User currentUser;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -86,16 +88,16 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
                                 @Override
                                 public void onEvent(@Nullable QuerySnapshot value2, @Nullable FirebaseFirestoreException error) {
                                     for (QueryDocumentSnapshot newBook : value2) {
-                                        String book_description = (String) newBook.getData().get("Book Description");
-                                        if (!currentUser.getUsername().equals(newBook.getData().get("Owner"))){
+                                        String book_description = (String) newBook.getData().get(access.getDescription());
+                                        if (!currentUser.getUsername().equals(newBook.getData().get(access.getOwner()))){
                                             if (book_description != null) {
                                                 if (book_description.contains(descrInput)) {
-                                                    if (!("Borrowed").equals(newBook.getData().get("Book Status")) && !("Accepted").equals(newBook.getData().get("Book Status"))){
+                                                    if (!(status.getBorrowed()).equals(newBook.getData().get(access.getStatus())) && !(status.getAccepted()).equals(newBook.getData().get(access.getStatus()))){
                                                         String book_title = newBook.getId();
-                                                        String book_author = (String) newBook.getData().get("Book Author");
-                                                        String book_ISBN = (String) newBook.getData().get("Book ISBN");
-                                                        String book_status = (String) newBook.getData().get("Book Status");
-                                                        HashMap<String,String> req = (HashMap<String, String>) newBook.getData().get("Requests");
+                                                        String book_author = (String) newBook.getData().get(access.getAuthor());
+                                                        String book_ISBN = (String) newBook.getData().get(access.getISBN());
+                                                        String book_status = (String) newBook.getData().get(access.getStatus());
+                                                        HashMap<String,String> req = (HashMap<String, String>) newBook.getData().get(access.getRequests());
                                                         Book thisBook = new Book(book_title, book_author, book_ISBN, book_status, book_description, username, req);
                                                         bookDataList.add(thisBook);
                                                         bookAdapter.notifyDataSetChanged();
@@ -236,11 +238,11 @@ public class Search_by_descr extends AppCompatActivity implements RequestBookFra
             Toast toast = Toast.makeText(Search_by_descr.this, "CAN'T REQUEST YOUR OWN BOOK!! :)", Toast.LENGTH_SHORT);
             toast.show();
         }*/ if (!req.containsKey(user.getUsername())) {
-            req.put(user.getUsername(),"Requested");
+            req.put(user.getUsername(),status.getRequested());
             book.addNotification(user.getUsername());
-            data.put("Notifications",book.getNotifications());
-            data.put("Requests", req);
-            data.put("Book Status", "Requested");
+            data.put(access.getNotifications(),book.getNotifications());
+            data.put(access.getRequests(), req);
+            data.put(access.getStatus(), status.getRequested());
             userBookCollectionReference = db.collection("Users/" + book.getOwner() + "/MyBooks");
             DocumentReference docRef = userBookCollectionReference.document(book.getTitle());
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

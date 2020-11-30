@@ -36,6 +36,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
     private User currentUser;
     String Location = "";
     Book book;
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,14 +61,14 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                 bookDataList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     HashMap<String,String> req = (HashMap<String, String>) doc.getData().get("Requests");
-                    if (req != null && !req.containsValue("Borrowed")) {
-                        Log.d(TAG, String.valueOf(doc.getData().get("Requests")));
+                    if (req != null && !req.containsValue(status.getBorrowed())) {
+                        Log.d(TAG, String.valueOf(doc.getData().get(access.getRequests())));
                         String book_title = doc.getId();
-                        String book_author = (String) doc.getData().get("Book Author");
-                        String book_ISBN = (String) doc.getData().get("Book ISBN");
-                        String book_status = (String) doc.getData().get("Book Status");
-                        String book_description = (String) doc.getData().get("Book Description");
-                        String book_owner = (String) doc.getData().get("Owner");
+                        String book_author = (String) doc.getData().get(access.getAuthor());
+                        String book_ISBN = (String) doc.getData().get(access.getISBN());
+                        String book_status = (String) doc.getData().get(access.getStatus());
+                        String book_description = (String) doc.getData().get(access.getDescription());
+                        String book_owner = (String) doc.getData().get(access.getOwner());
                         bookDataList.add(new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner, req));
                     }
                 }
@@ -116,7 +118,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         HashMap<String, Object> map = new HashMap<>();
-        map.put("Requests", book.getRequests());
+        map.put(access.getRequests(), book.getRequests());
         userBookCollectionReference
                 .document(book.getTitle())
                 .update(map)
@@ -144,10 +146,10 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                 userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
                 HashMap<String, Object> map = new HashMap<>();
                 //map.put("Borrower", book.getBorrower());
-                book.setStatus("Accepted");
-                map.put("Requests", book.getRequests());
-                map.put("Book Status", book.getStatus());
-                map.put("Pickup Location",Location);
+                book.setStatus(status.getAccepted());
+                map.put(access.getRequests(), book.getRequests());
+                map.put(access.getStatus(), book.getStatus());
+                map.put(access.getLocation(),Location);
                 book.setLocation(Location);
                 userBookCollectionReference
                         .document(book.getTitle())

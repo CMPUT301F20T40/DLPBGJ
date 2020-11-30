@@ -38,7 +38,13 @@ public class HandBook extends AppCompatActivity {
     String book;
     Button scan;
     Button returnBook;
-
+    Statuses status = new Statuses();
+    DatabaseAccess access = new DatabaseAccess();
+    /**
+     * This activity is for handing over books
+     * Books are either handed over from a borrower back to the owner
+     * Or books are handed by an owner to a borrower
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +89,8 @@ public class HandBook extends AppCompatActivity {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     CollectionReference collectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("Borrower", borrower);
-                    map.put("Book Status", "Borrowed");
+                    map.put(access.getBorrower(), borrower);
+                    map.put(access.getStatus(), status.getBorrowed());
                     collectionReference
                             .document(book)
                             .update(map)
@@ -110,6 +116,7 @@ public class HandBook extends AppCompatActivity {
             }
         });
 
+        //The spinner is a drop down menu that helps select the owner or borrower to whom the book must be given
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -123,10 +130,9 @@ public class HandBook extends AppCompatActivity {
                 book = null;
             }
         });
-
-
     }
 
+    //This method helps get the ISBN code after scanning it
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -154,11 +160,11 @@ public class HandBook extends AppCompatActivity {
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, borrowers);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     spinner.setAdapter(adapter);
-                    if (isbn.equals(doc.getData().get("Book ISBN"))){
-                        if (("Accepted").equals(doc.getData().get("Book Status"))){
-                            HashMap<String,String> temp = (HashMap<String, String>)doc.getData().get("Requests");
+                    if (isbn.equals(doc.getData().get(access.getISBN()))){
+                        if ((status.getAccepted()).equals(doc.getData().get(access.getStatus()))){
+                            HashMap<String,String> temp = (HashMap<String, String>)doc.getData().get(access.getRequests());
                             for (String key : temp.keySet()){
-                                if (("Accepted").equals(temp.get(key))){
+                                if ((status.getAccepted()).equals(temp.get(key))){
                                     borrowers.add(key);
                                     bookNames.add(doc.getId());
                                     setSpinner();
