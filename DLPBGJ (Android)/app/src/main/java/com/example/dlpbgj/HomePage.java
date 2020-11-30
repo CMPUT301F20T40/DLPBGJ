@@ -41,9 +41,6 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
     ImageButton borrowed;
     ImageButton signOut;
     ImageButton bookRequests;
-    ImageButton returnBook;
-    ImageButton acceptBook;
-    ImageButton getLocation;
     FirebaseStorage storage;
     FirebaseFirestore Userdb;
     private User currentUser;
@@ -67,9 +64,6 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
         borrowed = findViewById(R.id.Borrowed);
         signOut = findViewById(R.id.SignOut);
         bookRequests = findViewById(R.id.BookRequests);
-        returnBook = findViewById(R.id.Return);
-        acceptBook = findViewById(R.id.Accept);
-        getLocation = findViewById(R.id.getLocation);
         viewNotifications = findViewById(R.id.viewNotifications);
         final ImageView profile = findViewById(R.id.Profile);
         storage = FirebaseStorage.getInstance();
@@ -249,30 +243,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
-        /**
-         * on press of button Return Book the activity to return the books
-         * is initialized
-         */
-        returnBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ReturnBook.class);
-                intent.putExtra("User", currentUser);
-                startActivity(intent);
-            }
-        });
-        /**
-         * on press of button Accept Book the activity to accept the books
-         * is initialized
-         */
-        acceptBook.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), AcceptBook.class);
-                intent.putExtra("User", currentUser);
-                startActivity(intent);
-            }
-        });
+
         /**
          * on press of button View Notification the activity to view the notification
          * is initialized
