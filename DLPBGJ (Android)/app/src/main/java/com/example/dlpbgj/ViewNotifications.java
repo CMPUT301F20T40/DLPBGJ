@@ -44,7 +44,7 @@ public class ViewNotifications extends AppCompatActivity {
     CollectionReference userBookCollectionReference;
     CollectionReference userBookCollectionReference2;
     CollectionReference userBookCollectionReference3;
-    Button back;
+    Button clear;
 
 
     @Override
@@ -59,6 +59,7 @@ public class ViewNotifications extends AppCompatActivity {
         notifAdapter = new CustomNotificationAdapter(this, notifications);   //Implementing a custom adapter that connects the ListView with the ArrayList using bookcontent.xml layout
         readNotifAdapter = new CustomNotificationAdapter(this,readNotifications);
         notificationList.setAdapter(notifAdapter);
+        //clear = findViewById(R.id.clearButton);
         readNotificationList.setAdapter(readNotifAdapter);
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");//Creating/pointing to a sub-collection of the books that user owns
@@ -71,8 +72,11 @@ public class ViewNotifications extends AppCompatActivity {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
                                 Log.d("sucesss", doc.getId() + " => " + doc.getData());
                                 HashMap<String,Long> allNotifications = (HashMap<String,Long>) doc.getData().get("Notifications");
+                                HashMap<String,String> reqs = (HashMap<String,String>) doc.getData().get("Requests");
                                 if(allNotifications!=null) {
-                                    for (String key : allNotifications.keySet()) {
+                                    for (String key : reqs.keySet()) {
+                                        if(!reqs.get(key).equals("Requested"))
+                                            continue;
                                         long zero = 0;
                                         long one = 1;
                                         long temp = allNotifications.get(key);
@@ -141,24 +145,26 @@ public class ViewNotifications extends AppCompatActivity {
                                                             Log.d("sucesss", doc3.getId() + " => " + doc3.getData());
 
                                                             System.out.println("Reading Book name : " + doc3.getId());
-                                                            HashMap<String,Long> acceptNotifications= (HashMap<String,Long>) doc3.getData().get("AcceptNotifications");
+                                                            HashMap<String,Long> acceptNotifications= (HashMap<String,Long>) doc3.getData().get("Notifications");
+                                                            HashMap<String,String> reqs = (HashMap<String,String>) doc3.getData().get("Requests");
                                                             if(acceptNotifications!=null) {
-                                                                for (String key : acceptNotifications.keySet()) {
-                                                                    if(key.equals(currentUser.getUsername())){
+                                                                for (String key : reqs.keySet()) {
+                                                                    if(!key.equals(currentUser.getUsername())){
                                                                         continue;
                                                                     }
-                                                                    System.out.println("Acceptor : " + key + " Book name = " + doc3.getId());
+                                                                    if(!(reqs.get(key).equals("Borrowed")))
+                                                                        continue;
                                                                     long zero = 0;
                                                                     long one = 1;
                                                                     long temp = acceptNotifications.get(key);
                                                                     if(temp==1)
-                                                                        readNotifications.add(key+" accepted " + doc3.getId());
+                                                                        readNotifications.add(doc2.getId()+" accepted " + doc3.getId());
                                                                     else if (temp == 0) {
-                                                                        notifications.add(key + " accepted " + doc3.getId());
+                                                                        notifications.add(doc2.getId() + " accepted " + doc3.getId());
                                                                         System.out.println(key + " accepted " + doc3.getId()+"******");
                                                                         acceptNotifications.put(key,one);
                                                                         HashMap<String,Object> data2 = new HashMap<>();
-                                                                        data2.put("AcceptNotifications",acceptNotifications);
+                                                                        data2.put("Notifications",acceptNotifications);
                                                                         System.out.println("***************************" + doc3.getId() +" Acceptor : " +doc2.getId() + "Req : " + currentUser.getUsername());
                                                                         userBookCollectionReference3
                                                                                 .document(doc3.getId())
@@ -212,6 +218,14 @@ public class ViewNotifications extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+/*
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readNotifications.clear();
+                readNotifAdapter.notifyDataSetChanged();
+            }
+        });*/
 
 
     }

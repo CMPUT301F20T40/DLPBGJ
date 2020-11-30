@@ -85,13 +85,16 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         HashMap<String, Object> map = new HashMap<>();
+        HashMap<String,Integer> notifs = book.getNotifications();
+        notifs.put(book.getBorrower(),0);
         map.put("Borrower", book.getBorrower());
+        map.put("Notifications",notifs);
         book.setStatus("Accepted");
         //book.emptyRequests();
         map.put("Requests", book.getRequests());
         map.put("Book Status", book.getStatus());
-        book.addAcceptNotification(currentUser.getUsername());
-        map.put("AcceptNotifications",book.getAcceptNotifications());
+        //book.addAcceptNotification(currentUser.getUsername());
+        //map.put("AcceptNotifications",book.getAcceptNotifications());
         userBookCollectionReference
                 .document(book.getTitle())
                 .update(map)
@@ -117,8 +120,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         HashMap<String, Object> map = new HashMap<>();
         map.put("Requests", book.getRequests());
-        book.addDeclineNotification(currentUser.getUsername());
-        map.put("DeclineNotifications",book.getDeclineNotifications());
+        //book.addDeclineNotification(currentUser.getUsername());
+        //map.put("DeclineNotifications",book.getDeclineNotifications());
         userBookCollectionReference
                 .document(book.getTitle())
                 .update(map)
