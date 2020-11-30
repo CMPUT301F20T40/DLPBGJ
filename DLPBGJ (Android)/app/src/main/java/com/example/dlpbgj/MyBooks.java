@@ -92,7 +92,44 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         addCityButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new AddBookFragment().show(getSupportFragmentManager(), "ADD_BOOK");
+                arrayReference = db.collection("GlobalArray");
+                DocumentReference docRef = arrayReference.document("Array"); //If username does not exist then prompt for a sign-up
+                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Map<String, Object> temp = document.getData();
+                                ArrayList<String> name = (ArrayList<String>) temp.get("Array");
+                                String uid = Integer.toString(name.size() + 1);
+                                AddBookFragment fragment = AddBookFragment.newInstance(uid);
+                                fragment.show(getSupportFragmentManager(), "ADD_BOOK");
+                                //data.put("Uid", Integer.toString(name.size() + 1));
+                                //name.add(Integer.toString(name.size() + 1));
+                                //HashMap<String, Object> array = new HashMap<>();
+                                //array.put("Array", name);
+                                /*arrayReference
+                                        .document("Array")
+                                        .update(array)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "Array Size successfully updated");
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG, "Failed to update Array Size");
+                                            }
+                                        });*/
+                            }
+                        }
+                    }
+                    });
+
+                //new AddBookFragment().show(getSupportFragmentManager(), "ADD_BOOK");
             }
         });
 
@@ -300,6 +337,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
             data.put("Book Description", bookDescription);
             data.put("Owner", bookOwner);
         }
+        CollectionReference collectionReference = db.collection("Users/" + currentUser.getUsername()+"/MyBooks");
         arrayReference = db.collection("GlobalArray");
         DocumentReference docRef = arrayReference.document("Array"); //If username does not exist then prompt for a sign-up
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -329,7 +367,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                         Log.d(TAG, "Failed to update Array Size");
                                     }
                                 });
-                        userBookCollectionReference
+                        collectionReference
                                 .document(bookTitle)
                                 .set(data)
                                 //Debugging methods
@@ -370,15 +408,15 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
         data.put("Book Description", newBook.getDescription());
         data.put("Owner", newBook.getOwner());
         data.put("Uid", newBook.getUid());
-
-        DocumentReference docRef = userBookCollectionReference.document(newBook.getTitle());
+        CollectionReference collectionReference = db.collection("Users/"+currentUser.getUsername()+"/MyBooks");
+        DocumentReference docRef = collectionReference.document(newBook.getTitle());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        userBookCollectionReference
+                        collectionReference
                                 .document(newBook.getTitle())
                                 .update(data)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -394,7 +432,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                     }
                                 });
                     } else {
-                        userBookCollectionReference
+                        collectionReference
                                 .document(oldBookName)
                                 .delete()
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -410,7 +448,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                     }
                                 });
                         bookDataList.remove(newBook);
-                        userBookCollectionReference
+                        collectionReference
                                 .document(newBook.getTitle())
                                 .set(data)
                                 //Debugging methods
@@ -443,7 +481,8 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
 
     @Override
     public void onDeletePressed(Book book) {
-        userBookCollectionReference
+        CollectionReference collectionReference = db.collection("Users/"+currentUser.getUsername()+"/MyBooks");
+        collectionReference
                 .document(book.getTitle())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

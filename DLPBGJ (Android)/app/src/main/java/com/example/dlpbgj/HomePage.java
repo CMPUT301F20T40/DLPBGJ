@@ -239,6 +239,15 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+
+        getLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),UserLocation.class);
+                intent.putExtra("Flag", "11429 University Ave");
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

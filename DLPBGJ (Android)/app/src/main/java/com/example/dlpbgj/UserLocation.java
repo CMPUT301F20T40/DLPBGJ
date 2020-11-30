@@ -47,6 +47,7 @@ import java.util.List;
 import static com.google.android.gms.common.internal.safeparcel.SafeParcelable.NULL;
 
 public class UserLocation extends FragmentActivity implements OnMapReadyCallback {
+
     LocationManager LocM;
     LocationListener LocL;
     LatLng UserLongLat;
@@ -57,7 +58,8 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     FusedLocationProviderClient FPC;
     String returnAddress;
     Marker marker;
-
+    // The temp variable will hold the address if the user eneters the address
+    String temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +72,13 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         geocoder = new Geocoder(this);
         FPC = LocationServices.getFusedLocationProviderClient(this);
+        temp = (String) getIntent().getSerializableExtra("Flag");
+
 
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(view.getContext(),"The selected location is " + returnAddress, Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(view.getContext(), "The selected location is " + returnAddress, Toast.LENGTH_SHORT);
                 toast.show();
                 Intent intent = new Intent();
                 intent.putExtra("Location", returnAddress);
@@ -97,24 +101,41 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                try {
-                    List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                    if (addressList.size() > 0) {
-                        Address tempAddress = addressList.get(0);
-                        String tempAddressString = tempAddress.getAddressLine(0);
-                        returnAddress = tempAddressString;
-                        marker.setPosition(latLng);
-                        marker.setTitle(tempAddressString);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+        if (!temp.equals(NULL)) {
+            try {
+                List<Address> newAddress = geocoder.getFromLocationName(temp, 1);
+                if (newAddress.size() > 0) {
+                    Address address = newAddress.get(0);
+                    LatLng newLoc = new LatLng(address.getLatitude(), address.getLongitude());
+                    MarkerOptions markerOptions = new MarkerOptions()
+                            .position(new LatLng(address.getLatitude(), address.getLongitude()))
+                            .title(address.getLocality());
+                    mMap.addMarker(markerOptions);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLoc, 16));
                 }
-            }
-        });
 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else {
+            mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+                @Override
+                public void onMapClick(LatLng latLng) {
+                    try {
+                        List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                        if (addressList.size() > 0) {
+                            Address tempAddress = addressList.get(0);
+                            String tempAddressString = tempAddress.getAddressLine(0);
+                            returnAddress = tempAddressString;
+                            marker.setPosition(latLng);
+                            marker.setTitle(tempAddressString);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
         mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
             public void onMarkerDragStart(Marker marker) {
@@ -163,6 +184,7 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
+        //if
         Task<Location> LocationTask = FPC.getLastLocation();
         LocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
