@@ -171,8 +171,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 String owner = (String)newBook.getData().get("Owner");
                                 HashMap<String,String> map = (HashMap<String, String>)newBook.getData().get("Requests");
                                 String borrower = "";
-                                if(newBook.getId().equals("Nbok"))
-                                    continue;
                                 if (map != null){
                                     for (String key : map.keySet()){
                                         if (("Borrowed").equals(map.get(key))){
@@ -180,25 +178,26 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                         }
                                     }
                                 }
-                                String current = currentUser.getUsername();
-                                if (owner.equals(current) || borrower.equals(current)) {
-                                    String book_title = newBook.getId();
-                                    String book_author = (String) newBook.getData().get("Book Author");
-                                    String book_ISBN = (String) newBook.getData().get("Book ISBN");
-                                    String book_status;
-                                   if(borrower.equals(current)){
-                                         book_status = "Borrowed";
+                                if(owner!=null) {
+                                    String current = currentUser.getUsername();
+                                    if (owner.equals(current) || borrower.equals(current)) {
+                                        String book_title = newBook.getId();
+                                        String book_author = (String) newBook.getData().get("Book Author");
+                                        String book_ISBN = (String) newBook.getData().get("Book ISBN");
+                                        String book_status;
+                                        if (borrower.equals(current)) {
+                                            book_status = "Borrowed";
+                                        } else {
+                                            book_status = (String) newBook.getData().get("Book Status");
+                                        }
+                                        String book_description = (String) newBook.getData().get("Book Description");
+                                        String book_owner = (String) newBook.getData().get("Owner");
+                                        String book_uid = (String) newBook.getData().get("Uid");
+                                        Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
+                                        temp.setUid(book_uid);
+                                        bookDataList.add(temp); // Adding the cities and provinces from FireStore
+                                        bookAdapter.notifyDataSetChanged();
                                     }
-                                    else{
-                                        book_status = (String) newBook.getData().get("Book Status");
-                                    }
-                                    String book_description = (String) newBook.getData().get("Book Description");
-                                    String book_owner = (String) newBook.getData().get("Owner");
-                                    String book_uid = (String) newBook.getData().get("Uid");
-                                    Book temp = new Book(book_title, book_author, book_ISBN, book_status, book_description, book_owner);
-                                    temp.setUid(book_uid);
-                                    bookDataList.add(temp); // Adding the cities and provinces from FireStore
-                                    bookAdapter.notifyDataSetChanged();
                                 }
                             }
                         }

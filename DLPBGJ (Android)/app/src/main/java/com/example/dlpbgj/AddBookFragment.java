@@ -321,7 +321,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
 
                         }
                        if (!validStatus.contains(book_status)) { //Input validation for the status
-                            bookStatus.setError("Please enter a valid status: Available, Borrowed, Requested, Accepted");
+                            bookStatus.setError("Please choose a valid status from drop-down menu");
                             wrong_input = true;
                             focus = spinner;
 
