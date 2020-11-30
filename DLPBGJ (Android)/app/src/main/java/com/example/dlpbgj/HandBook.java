@@ -51,6 +51,8 @@ public class HandBook extends AppCompatActivity {
         borrowers = new ArrayList<>();
         bookNames = new ArrayList<>();
         returnBook.setText("Hand Over a Book");
+        TextView acceptreturn = findViewById(R.id.acceptreturn);
+        acceptreturn.setText("Book will be given to: ");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

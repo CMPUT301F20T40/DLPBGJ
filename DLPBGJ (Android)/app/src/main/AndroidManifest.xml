@@ -41,6 +41,8 @@
         <activity android:name=".ReturnBook" />
         <activity android:name=".AcceptBook" />
         <activity android:name=".BookRequests" />
+        <activity android:name=".BorrowBook" />
+        <activity android:name=".HandBook" />
         <activity android:name=".UserProfile" />
         <activity android:name=".ViewBookDetails" />
         <activity android:name=".barcode_scanner" />

@@ -53,7 +53,9 @@ public class AcceptBook extends AppCompatActivity {
         spinner = findViewById(R.id.returnList);
         borrowers = new ArrayList<>();
         bookNames = new ArrayList<>();
-        returnBook.setText("Get Book Back");
+        returnBook.setText("Confirm Return");
+        TextView acceptreturn = findViewById(R.id.acceptreturn);
+        acceptreturn.setText("Book will be returned from :");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

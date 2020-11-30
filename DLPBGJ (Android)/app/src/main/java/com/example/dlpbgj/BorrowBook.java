@@ -53,6 +53,8 @@ public class BorrowBook extends AppCompatActivity {
         owners = new ArrayList<>();
         bookNames = new ArrayList<>();
         returnBook.setText("Confirm Borrow");
+        TextView acceptreturn = findViewById(R.id.acceptreturn);
+        acceptreturn.setText("Book will be borrowed from: ");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

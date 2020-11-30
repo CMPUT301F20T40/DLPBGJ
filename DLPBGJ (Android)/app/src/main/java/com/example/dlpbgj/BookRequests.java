@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -45,6 +46,8 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         bookDataList = new ArrayList<>();
         bookAdapter = new customBookAdapter(this, bookDataList);   //Implementing a custom adapter that connects the ListView with the ArrayList using bookcontent.xml layout
         reqList.setAdapter(bookAdapter);
+        Button handover = findViewById(R.id.handover);
+        Button returnBook = findViewById(R.id.returnBook);
 
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");//Creating/pointing to a sub-collection of the books that user owns
@@ -80,6 +83,23 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
             }
         });
 
+        handover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), HandBook.class);
+                intent.putExtra("User", currentUser);
+                startActivity(intent);
+            }
+        });
+
+        returnBook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AcceptBook.class);
+                intent.putExtra("User", currentUser);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
