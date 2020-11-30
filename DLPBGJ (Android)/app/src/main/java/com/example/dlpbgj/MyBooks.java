@@ -375,10 +375,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
                                         // These are a method which gets executed when the task is succeeded
                                         Log.d(TAG, "Data has been added successfully!");
                                     }
@@ -386,10 +382,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
                                         // These are a method which gets executed if there’s any problem
                                         Log.d(TAG, "Data could not be added!" + e.toString());
                                     }
@@ -400,7 +392,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 }
             }
         });
-
     }
 
     /**
@@ -432,20 +423,12 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
                                         Log.d(TAG, "Data has been updated successfully!");
                                     }
                                 })
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
                                         Log.d(TAG, "Data could not be updated!" + e.toString());
                                     }
                                 });
@@ -473,10 +456,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
                                         // These are a method which gets executed when the task is succeeded
                                         Log.d(TAG, "Data has been added successfully!");
                                     }
@@ -484,10 +463,6 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        finish();
-                                        overridePendingTransition(0, 0);
-                                        startActivity(getIntent());
-                                        overridePendingTransition(0, 0);
                                         // These are a method which gets executed if there’s any problem
                                         Log.d(TAG, "Data could not be added!" + e.toString());
                                     }
@@ -496,7 +471,7 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 }
             }
         });
-
+        bookAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -514,25 +489,17 @@ public class MyBooks extends AppCompatActivity implements AddBookFragment.OnFrag
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        finish();
-                        overridePendingTransition(0, 0);
-                        startActivity(getIntent());
-                        overridePendingTransition(0, 0);
                         Log.d(TAG, "user book data has been deleted");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        finish();
-                        overridePendingTransition(0, 0);
-                        startActivity(getIntent());
-                        overridePendingTransition(0, 0);
                         Log.d(TAG, "Failed to delete the user book data");
                     }
                 });
-        //bookDataList.remove(book);
-        //bookAdapter.notifyDataSetChanged();
+        bookDataList.remove(book);
+        bookAdapter.notifyDataSetChanged();
     }
 
     @Override

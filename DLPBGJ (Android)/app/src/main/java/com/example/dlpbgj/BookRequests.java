@@ -59,7 +59,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                 bookDataList.clear();
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     HashMap<String,String> req = (HashMap<String, String>) doc.getData().get("Requests");
-                    if (req != null && !req.containsValue("Borrowed") && !req.containsValue("Accepted")) {
+                    if (req != null && !req.containsValue("Borrowed")) {
                         Log.d(TAG, String.valueOf(doc.getData().get("Requests")));
                         String book_title = doc.getId();
                         String book_author = (String) doc.getData().get("Book Author");
@@ -145,11 +145,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                 userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
                 HashMap<String, Object> map = new HashMap<>();
                 HashMap<String,Integer> notifs = book.getNotifications();
-                for (String key : book.getRequests().keySet()){
-                    if (("Accepted").equals(book.getRequests().get(key))){
-                        notifs.put(key,0);
-                    }
-                }
+                notifs.put(book.getBorrower(),0);
                  map.put("Notifications",notifs);
                 //map.put("Borrower", book.getBorrower());
                 book.setStatus("Accepted");

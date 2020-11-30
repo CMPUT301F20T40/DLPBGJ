@@ -43,6 +43,7 @@ public class ViewNotifications extends AppCompatActivity {
     FirebaseFirestore db3;
     CollectionReference userBookCollectionReference;
     CollectionReference userBookCollectionReference2;
+    CollectionReference userBookCollectionReference3;
     Button clear;
 
 
@@ -135,7 +136,7 @@ public class ViewNotifications extends AppCompatActivity {
                                 else{
                                     System.out.println("Running User: "+doc2.getId());
                                     db3 = FirebaseFirestore.getInstance();
-                                    CollectionReference userBookCollectionReference3 = db.collection("Users/" + doc2.getId() + "/MyBooks");
+                                    userBookCollectionReference3 = db.collection("Users/" + doc2.getId() + "/MyBooks");
                                     userBookCollectionReference3
                                             .get()
                                             .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -153,7 +154,7 @@ public class ViewNotifications extends AppCompatActivity {
                                                                     if(!key.equals(currentUser.getUsername())){
                                                                         continue;
                                                                     }
-                                                                    if(!(reqs.get(key).equals("Accepted")))
+                                                                    if(!(reqs.get(key).equals("Borrowed")))
                                                                         continue;
                                                                     long zero = 0;
                                                                     long one = 1;
@@ -164,8 +165,6 @@ public class ViewNotifications extends AppCompatActivity {
                                                                         notifications.add(doc2.getId() + " accepted " + doc3.getId());
                                                                         System.out.println(key + " accepted " + doc3.getId()+"******");
                                                                         acceptNotifications.put(key,one);
-                                                                        System.out.println("FFF:"+key);
-                                                                        System.out.println("NNN:"+acceptNotifications.get(key));
                                                                         HashMap<String,Object> data2 = new HashMap<>();
                                                                         data2.put("Notifications",acceptNotifications);
                                                                         System.out.println("***************************" + doc3.getId() +" Acceptor : " +doc2.getId() + "Req : " + currentUser.getUsername());
