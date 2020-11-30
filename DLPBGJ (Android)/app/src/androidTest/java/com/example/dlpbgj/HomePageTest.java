@@ -42,44 +42,68 @@ public class HomePageTest {
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
         //On clicking MY BOOKS button a new activity should open
-        solo.clickOnButton("My Books");
+        solo.clickOnView(solo.getView(R.id.MyBooks));
         solo.assertCurrentActivity("Wrong Activity", MyBooks.class);
 
         solo.goBack();
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
-        solo.clickOnButton("My INFO");
+        solo.clickOnView(solo.getView(R.id.MyInfo));
         solo.assertCurrentActivity("Wrong Activity", UserProfile.class);
 
         solo.goBack();
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
-        solo.clickOnButton("Search");
+        solo.clickOnView(solo.getView(R.id.Search));
         solo.assertCurrentActivity("Wrong Activity", Search_by_descr.class);
 
         solo.goBack();
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
-        solo.clickOnButton("Book Requests");
-        solo.assertCurrentActivity("Wrong Activity", BookRequests.class);
-
-        solo.goBack();
-        solo.assertCurrentActivity("Wrong Activity", HomePage.class);
-
-        solo.clickOnButton("My Requests");
+        solo.clickOnView(solo.getView(R.id.Requests));
         solo.assertCurrentActivity("Wrong Activity", View_Requests.class);
 
         solo.goBack();
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
-        solo.clickOnButton("Return a Book");
+        solo.clickOnView(solo.getView(R.id.BookRequests));
+        solo.assertCurrentActivity("Wrong Activity", BookRequests.class);
+
+        solo.goBack();
+        solo.assertCurrentActivity("Wrong Activity", HomePage.class);
+
+        solo.clickOnView(solo.getView(R.id.Return));
         solo.assertCurrentActivity("Wrong Activity", ReturnBook.class);
 
         solo.goBack();
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
 
-        solo.clickOnButton("Borrowed Books");
+        solo.clickOnView(solo.getView(R.id.Accept));
+        solo.assertCurrentActivity("Wrong Activity", AcceptBook.class);
+
+        solo.goBack();
+        solo.assertCurrentActivity("Wrong Activity", HomePage.class);
+
+        solo.clickOnView(solo.getView(R.id.Borrowed));
         solo.assertCurrentActivity("Wrong Activity", View_Borrowed.class);
+
+        solo.goBack();
+        solo.assertCurrentActivity("Wrong Activity", HomePage.class);
+
+        solo.clickOnView(solo.getView(R.id.getLocation));
+        solo.assertCurrentActivity("Wrong Activity", UserLocation.class);
+
+        solo.goBack();
+        solo.assertCurrentActivity("Wrong Activity", HomePage.class);
+
+        solo.clickOnView(solo.getView(R.id.viewNotifications));
+        solo.assertCurrentActivity("Wrong Activity", ViewNotifications.class);
+
+        solo.goBack();
+        solo.assertCurrentActivity("Wrong Activity", HomePage.class);
+
+        solo.clickOnView(solo.getView(R.id.UserProfiles));
+        solo.assertCurrentActivity("Wrong Activity", allUserProfiles.class);
 
         solo.goBack();
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);

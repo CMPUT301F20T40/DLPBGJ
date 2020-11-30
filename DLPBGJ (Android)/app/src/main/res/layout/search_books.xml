@@ -39,32 +39,35 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        >
 
         <CheckBox
             android:id="@+id/check_available"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="20dp"
             android:layout_marginTop="80dp"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="90dp"
             android:ems="10"
-            android:hint="Description"
-            android:text="Show Available">
+            android:text="Available"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/checkbox_selector">
 
         </CheckBox>
 
 
         <CheckBox
             android:id="@+id/check_borrowed"
-            android:layout_width="150dp"
+            android:layout_width="100dp"
             android:layout_height="20dp"
             android:layout_marginTop="80dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="100dp"
             android:layout_marginLeft="10dp"
             android:ems="10"
-            android:hint="Description"
-            android:text="Show Borrowed">
+            android:text="Borrowed"
+            android:background="@drawable/checkbox_selector">
 
         </CheckBox>
 
