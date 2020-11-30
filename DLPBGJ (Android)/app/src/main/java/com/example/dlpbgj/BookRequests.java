@@ -108,6 +108,7 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
         Toast toast = Toast.makeText(getApplicationContext(), "Please Select a Pickup Location!", Toast.LENGTH_SHORT);
         toast.show();
         Intent intent = new Intent(getApplicationContext(), UserLocation.class);
+        intent.putExtra("Flag","None");
         startActivityForResult(intent,1);
     }
 

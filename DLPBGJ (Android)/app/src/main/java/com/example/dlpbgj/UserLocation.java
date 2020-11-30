@@ -57,14 +57,18 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
     FusedLocationProviderClient FPC;
     String returnAddress;
     Marker marker;
+    String flag;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_location);
+        flag = (String) getIntent().getSerializableExtra("Flag");
         select = findViewById(R.id.getLocation);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        if (!flag.equals("None")){
+            select.setText("Go Back");
+        }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -74,11 +78,13 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         select.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast toast = Toast.makeText(view.getContext(),"The selected location is " + returnAddress, Toast.LENGTH_SHORT);
-                toast.show();
-                Intent intent = new Intent();
-                intent.putExtra("Location", returnAddress);
-                setResult(-1, intent);
+                if (flag.equals("None")) {
+                    Toast toast = Toast.makeText(view.getContext(), "The selected location is " + returnAddress, Toast.LENGTH_SHORT);
+                    toast.show();
+                    Intent intent = new Intent();
+                    intent.putExtra("Location", returnAddress);
+                    setResult(-1, intent);
+                }
                 finish();
             }
         });
@@ -100,17 +106,20 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                try {
-                    List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
-                    if (addressList.size() > 0) {
-                        Address tempAddress = addressList.get(0);
-                        String tempAddressString = tempAddress.getAddressLine(0);
-                        returnAddress = tempAddressString;
-                        marker.setPosition(latLng);
-                        marker.setTitle(tempAddressString);
+                if (flag.equals("None")){
+                    try {
+                        List<Address> addressList = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                        if (addressList.size() > 0) {
+                            Address tempAddress = addressList.get(0);
+                            String tempAddressString = tempAddress.getAddressLine(0);
+                            returnAddress = tempAddressString;
+                            marker.setPosition(latLng);
+                            marker.setTitle(tempAddressString);
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -126,17 +135,19 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                LatLng markerPosition = marker.getPosition();
-                try {
-                    List<Address> addressList = geocoder.getFromLocation(markerPosition.latitude, markerPosition.longitude, 1);
-                    if (addressList.size() > 0) {
-                        Address tempAddress = addressList.get(0);
-                        String tempAddressString = tempAddress.getAddressLine(0);
-                        returnAddress = tempAddressString;
-                        marker.setTitle(tempAddressString);
+                if (flag.equals("None")){
+                    LatLng markerPosition = marker.getPosition();
+                    try {
+                        List<Address> addressList = geocoder.getFromLocation(markerPosition.latitude, markerPosition.longitude, 1);
+                        if (addressList.size() > 0) {
+                            Address tempAddress = addressList.get(0);
+                            String tempAddressString = tempAddress.getAddressLine(0);
+                            returnAddress = tempAddressString;
+                            marker.setTitle(tempAddressString);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         });
@@ -167,24 +178,45 @@ public class UserLocation extends FragmentActivity implements OnMapReadyCallback
         LocationTask.addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location != null){
-                    marker = mMap.addMarker(new MarkerOptions()
-                            .position(new LatLng(location.getLatitude(),location.getLongitude()))
-                            .title("Current Location")
-                            .draggable(true));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
+                if (!flag.equals("None")){
                     try {
-                        List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                        if (addresses.size() > 0) {
-                            Address tempAddress = addresses.get(0);
-                            String tempAddressString = tempAddress.getAddressLine(0);
-                            returnAddress = tempAddressString;
+                        List<Address> geoAddress = geocoder.getFromLocationName(flag, 1);
+                        if (geoAddress.size() > 0) {
+                            Address address = geoAddress.get(0);
+                            LatLng newLoc = new LatLng(address.getLatitude(), address.getLongitude());
+                            MarkerOptions markerOptions = new MarkerOptions()
+                                    .position(new LatLng(address.getLatitude(), address.getLongitude()))
+                                    .title(flag)
+                                    .draggable(false);
+                            mMap.addMarker(markerOptions);
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLoc, 16));
                         }
-                    } catch (IOException e) {
-                        Log.d("UserLocation", e.getMessage());
                     }
-
+                    catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
+                else{
+                    if(location != null){
+                        marker = mMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(location.getLatitude(),location.getLongitude()))
+                                .title("Current Location")
+                                .draggable(true));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(),location.getLongitude()), 16));
+                        try {
+                            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            if (addresses.size() > 0) {
+                                Address tempAddress = addresses.get(0);
+                                String tempAddressString = tempAddress.getAddressLine(0);
+                                returnAddress = tempAddressString;
+                            }
+                        } catch (IOException e) {
+                            Log.d("UserLocation", e.getMessage());
+                        }
+
+                    }
+                }
+
             }
         });
         LocationTask.addOnFailureListener(new OnFailureListener() {
