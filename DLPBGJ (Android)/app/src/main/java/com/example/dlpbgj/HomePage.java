@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -124,6 +123,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 }
             }
         });
+        /**
+         * on press of button Book Requests the activity to borrow books
+         * is initialized
+         */
 
 
         myBooksButton.setOnClickListener(new View.OnClickListener() {
@@ -134,6 +137,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Book Requests the activity to borrow books
+         * is initialized
+         */
 
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -144,6 +151,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(nIntent);
             }
         });
+        /**
+         * on press of button Book Requests the activity to borrow books
+         * is initialized
+         */
 
         userProfiles.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +164,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button info_button the activity to User info
+         * is initialized
+         */
 
         info_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,6 +177,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Search Books the activity to search
+         * is initialized
+         */
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +190,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Book Requests the activity to request books
+         * is initialized
+         */
 
         requests.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,6 +203,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+        /**
+         * on press of button Borrowed the activity to borrow books
+         * is initialized
+         */
 
         borrowed.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +217,13 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
             }
         });
 
+
+
+
+        /**
+         * on press of button my info the activity to configure my info
+         * is initialized
+         */
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -197,7 +231,10 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 fragment.show(getSupportFragmentManager(), "Profile Picture");
             }
         });
-
+        /**
+         * on press of button Book Requests the activity to request books
+         * is initialized
+         */
         bookRequests.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -219,6 +256,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
                 startActivity(intent);
             }
         });
+
     }
 
     @Override
