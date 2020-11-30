@@ -30,6 +30,9 @@ public class Book implements Serializable {
     String owner;
     HashMap<String,String> requests;
     HashMap<String,Integer> notifications;
+    //HashMap<String,Integer> acceptNotifications;
+    //HashMap<String,Integer> declineNotifications;
+
     String uid;
     String borrower;
     String location;
@@ -77,6 +80,8 @@ public class Book implements Serializable {
             this.requests = req;
         }
         this.notifications = new HashMap<>();
+        //this.acceptNotifications = new HashMap<>();
+        //this.declineNotifications = new HashMap<>();
     }
 
     public String getTitle() {
@@ -173,7 +178,15 @@ public class Book implements Serializable {
     public HashMap<String, Integer> getNotifications() {
         return notifications;
     }
+/*
+    public HashMap<String, Integer> getAcceptNotifications() {
+        return acceptNotifications;
+    }
 
+    public HashMap<String, Integer> getDeclineNotifications() {
+        return declineNotifications;
+    }
+*/
     public void setNotifications(HashMap<String, Integer> notifications) {
         if (notifications!=null){
             this.notifications = notifications;
@@ -183,7 +196,15 @@ public class Book implements Serializable {
     public void addNotification(String user){
         notifications.put(user,0);
     }
+/*
+    public void addAcceptNotification(String user){
+        acceptNotifications.put(user,0);
+    }
 
+    public void addDeclineNotification(String user){
+        declineNotifications.put(user,0);
+    }
+*/
     public void updateNotification(String user){
         notifications.put(user,1);
     }

@@ -39,8 +39,13 @@ public class ViewNotifications extends AppCompatActivity {
     ArrayAdapter<String> notifAdapter;
     ArrayAdapter<String> readNotifAdapter;
     FirebaseFirestore db;
+    FirebaseFirestore db2;
+    FirebaseFirestore db3;
     CollectionReference userBookCollectionReference;
-    Button back;
+
+    CollectionReference userBookCollectionReference2;
+    CollectionReference userBookCollectionReference3;
+    Button clear;
     DatabaseAccess access = new DatabaseAccess();
 
 
@@ -56,6 +61,7 @@ public class ViewNotifications extends AppCompatActivity {
         notifAdapter = new CustomNotificationAdapter(this, notifications);   //Implementing a custom adapter that connects the ListView with the ArrayList using bookcontent.xml layout
         readNotifAdapter = new CustomNotificationAdapter(this,readNotifications);
         notificationList.setAdapter(notifAdapter);
+        //clear = findViewById(R.id.clearButton);
         readNotificationList.setAdapter(readNotifAdapter);
         db = FirebaseFirestore.getInstance();
         userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");//Creating/pointing to a sub-collection of the books that user owns
@@ -66,18 +72,16 @@ public class ViewNotifications extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot doc : task.getResult()) {
-                                Log.d("success", doc.getId() + " => " + doc.getData());
-
-                                System.out.println("Book name : " + doc.getId());
+                                Log.d("sucesss", doc.getId() + " => " + doc.getData());
                                 HashMap<String,Long> allNotifications = (HashMap<String,Long>) doc.getData().get("Notifications");
+                                HashMap<String,String> reqs = (HashMap<String,String>) doc.getData().get("Requests");
                                 if(allNotifications!=null) {
-                                    for (String key : allNotifications.keySet()) {
-                                        System.out.println("Current User is : "+currentUser.getUsername());
-                                        System.out.println("Borrower : " + key + " Book name = " + doc.getId());
+                                    for (String key : reqs.keySet()) {
+                                        if(!reqs.get(key).equals("Requested"))
+                                            continue;
                                         long zero = 0;
                                         long one = 1;
                                         long temp = allNotifications.get(key);
-                                        System.out.println("@Book Seen : " + temp);
                                         if(temp==1)
                                             readNotifications.add(key+" requested " + doc.getId());
                                         else if (temp == 0) {
@@ -92,7 +96,6 @@ public class ViewNotifications extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             Log.d("ViewNotif","Notifications updated");
-                                                            System.out.println("Database Updated");
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
@@ -101,13 +104,10 @@ public class ViewNotifications extends AppCompatActivity {
                                                             Log.d("ViewNotif","Failed to update Notifications");
                                                         }
                                                     });
-                                            System.out.println("Book Added*********************");
                                         }
                                     }
                                 }
-
                             } //For loop ends
-                            System.out.println(notifications.size());
                             notifAdapter.notifyDataSetChanged();
                             readNotifAdapter.notifyDataSetChanged();
                         } else {
@@ -116,6 +116,102 @@ public class ViewNotifications extends AppCompatActivity {
                     }
                 });
 
+
+
+        db2 = FirebaseFirestore.getInstance();
+        userBookCollectionReference2 = db2.collection("Users/");//Creating/pointing to a sub-collection of the books that user owns
+        userBookCollectionReference2
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task2) {
+                        if (task2.isSuccessful()) {
+                            System.out.println("Starting NOW : ");
+                            for (QueryDocumentSnapshot doc2 : task2.getResult()) {
+                                Log.d("sucesss", doc2.getId() + " => " + doc2.getData());
+                                System.out.println("User: "+doc2.getId());
+                                if(doc2.getId().equals(currentUser.getUsername())){
+                                    System.out.println("Skipping User: "+doc2.getId());
+                                    continue;}
+                                else{
+                                    System.out.println("Running User: "+doc2.getId());
+                                    db3 = FirebaseFirestore.getInstance();
+                                    userBookCollectionReference3 = db.collection("Users/" + doc2.getId() + "/MyBooks");
+                                    userBookCollectionReference3
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task3) {
+                                                    if (task3.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot doc3 : task3.getResult()) {
+                                                            Log.d("sucesss", doc3.getId() + " => " + doc3.getData());
+
+                                                            System.out.println("Reading Book name : " + doc3.getId());
+                                                            HashMap<String,Long> acceptNotifications= (HashMap<String,Long>) doc3.getData().get("Notifications");
+                                                            HashMap<String,String> reqs = (HashMap<String,String>) doc3.getData().get("Requests");
+                                                            if(acceptNotifications!=null) {
+                                                                for (String key : reqs.keySet()) {
+                                                                    if(!key.equals(currentUser.getUsername())){
+                                                                        continue;
+                                                                    }
+                                                                    if(!(reqs.get(key).equals("Borrowed")))
+                                                                        continue;
+                                                                    long zero = 0;
+                                                                    long one = 1;
+                                                                    long temp = acceptNotifications.get(key);
+                                                                    if(temp==1)
+                                                                        readNotifications.add(doc2.getId()+" accepted " + doc3.getId());
+                                                                    else if (temp == 0) {
+                                                                        notifications.add(doc2.getId() + " accepted " + doc3.getId());
+                                                                        System.out.println(key + " accepted " + doc3.getId()+"******");
+                                                                        acceptNotifications.put(key,one);
+                                                                        HashMap<String,Object> data2 = new HashMap<>();
+                                                                        data2.put("Notifications",acceptNotifications);
+                                                                        System.out.println("***************************" + doc3.getId() +" Acceptor : " +doc2.getId() + "Req : " + currentUser.getUsername());
+                                                                        userBookCollectionReference3
+                                                                                .document(doc3.getId())
+                                                                                .update(data2)
+                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onSuccess(Void aVoid) {
+                                                                                        Log.d("ViewNotif","AcceptNotifications updated");
+                                                                                        System.out.println("Database Updated");
+                                                                                    }
+                                                                                })
+                                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                                    @Override
+                                                                                    public void onFailure(@NonNull Exception e) {
+                                                                                        Log.d("ViewNotif","Failed to update AcceptNotifications");
+                                                                                    }
+                                                                                });
+
+                                                                        System.out.println("Book Added*********************");
+                                                                    }
+                                                                }
+                                                            }
+                                                        } //For loop ends
+                                                        notifAdapter.notifyDataSetChanged();
+                                                        readNotifAdapter.notifyDataSetChanged();
+                                                    } else {
+                                                        Log.d("fail", "Error getting documents: ", task3.getException());
+                                                    }
+                                                }
+                                            });
+
+
+
+
+                                }
+
+
+                            } //For loop ends
+                            notifAdapter.notifyDataSetChanged();
+                            readNotifAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.d("fail", "Error getting documents: ", task2.getException());
+                        }
+                    }
+                });
         notificationList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -124,5 +220,16 @@ public class ViewNotifications extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+/*
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                readNotifications.clear();
+                readNotifAdapter.notifyDataSetChanged();
+            }
+        });*/
+
+
     }
 }

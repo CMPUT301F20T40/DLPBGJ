@@ -146,6 +146,9 @@ public class BookRequests extends AppCompatActivity implements BookRequestsFragm
                 db = FirebaseFirestore.getInstance();
                 userBookCollectionReference = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
                 HashMap<String, Object> map = new HashMap<>();
+                HashMap<String,Integer> notifs = book.getNotifications();
+                notifs.put(book.getBorrower(),0);
+                 map.put("Notifications",notifs);
                 //map.put("Borrower", book.getBorrower());
                 book.setStatus(status.getAccepted());
                 map.put(access.getRequests(), book.getRequests());
