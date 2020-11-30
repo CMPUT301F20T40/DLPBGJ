@@ -212,6 +212,7 @@ public class HomePage extends AppCompatActivity implements ImageFragment.OnFragm
          * is initialized
          */
 
+
         viewNotifications.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
