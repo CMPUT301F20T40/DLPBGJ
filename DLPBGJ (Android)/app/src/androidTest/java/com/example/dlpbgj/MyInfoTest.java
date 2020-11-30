@@ -70,6 +70,7 @@ public class MyInfoTest {
         solo.clearEditText((EditText) solo.getView(R.id.UserFav));
         solo.clearEditText((EditText) solo.getView(R.id.phoneNumber));
 
+        solo.clickOnView(solo.getView(R.id.Update));
         solo.clickOnView(solo.getView(R.id.BackButton));
         solo.waitForActivity(HomePage.class);
         solo.assertCurrentActivity("Wrong Activity", HomePage.class);
