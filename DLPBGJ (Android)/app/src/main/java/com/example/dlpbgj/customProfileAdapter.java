@@ -13,10 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.awt.font.NumericShaper;
 import java.util.ArrayList;
 
 public class customProfileAdapter extends ArrayAdapter<String> {
@@ -69,7 +72,7 @@ public class customProfileAdapter extends ArrayAdapter<String> {
                         .into(dispImage);
             }
         });
-        return view;
+    return view;
 
     }
 }

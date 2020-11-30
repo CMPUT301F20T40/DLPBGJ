@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -45,12 +48,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AddBookFragment extends DialogFragment implements Serializable {
+    private TextInputEditText bookTitle;
+    private TextInputEditText bookAuthor;
+    private TextInputEditText bookISBN;
     private String bookUid;
-    private EditText bookTitle;
-    private EditText bookAuthor;
-    private EditText bookISBN;
     private TextView bookStatus;
-    private EditText bookDescription;
+    private TextInputEditText bookDescription;
     private OnFragmentInteractionListener listener;
     private final int REQUEST = 22;
     private Uri path;
@@ -129,13 +132,13 @@ public class AddBookFragment extends DialogFragment implements Serializable {
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
-        Button scan = view.findViewById(R.id.scan2);
+        ImageButton scan = view.findViewById(R.id.scan2);
         Button picture = view.findViewById(R.id.Picture);
         Button picture2 = view.findViewById(R.id.Picture1);
         Button deletePhoto = view.findViewById(R.id.delete_photo);
         Spinner spinner = view.findViewById(R.id.book_status);
         final ArrayList<String> Statuses = new ArrayList<>();
-        Statuses.add("Please Select a Status from the drop down");
+        Statuses.add("Select Status:");
         Statuses.add("Available");
         Statuses.add("Borrowed");
         Statuses.add("Requested");
@@ -144,6 +147,7 @@ public class AddBookFragment extends DialogFragment implements Serializable {
         spinner.setAdapter(adapter);
 
         String title = "Add Book";
+
         if (getArguments().get("Book") != null) {
             book = (Book) getArguments().get("Book");
             title = "Edit Book";
@@ -395,9 +399,9 @@ public class AddBookFragment extends DialogFragment implements Serializable {
     @Override
     public void onStart() {
         super.onStart();
-        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#B59C34"));
-        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#B59C34"));
-        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#B59C34"));
+        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#202F65"));
+        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#202F65"));
+        ((AlertDialog) getDialog()).getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(Color.parseColor("#202F65"));
     }
 
     private void SelectPhoto() {
