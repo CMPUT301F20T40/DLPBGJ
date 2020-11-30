@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class AcceptBook extends AppCompatActivity {
     String bookISBN;
     User currentUser;
@@ -60,6 +61,13 @@ public class AcceptBook extends AppCompatActivity {
         acceptreturn.setText("Book will be returned from :");
         scan.setOnClickListener(new View.OnClickListener() {
             @Override
+            /**
+             * @param view (View)
+             * This method takes in the given view, it initialize the new activity
+             * To scan the barcode for the isbn purposes.
+             * @return null
+             * This method initialize another activity and it doesn't return anything.
+             */
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), barcode_scanner.class);
                 startActivityForResult(intent, 1);
@@ -68,6 +76,14 @@ public class AcceptBook extends AppCompatActivity {
 
         returnBook.setOnClickListener(new View.OnClickListener() {
             @Override
+            /** The given method is initialized when the button "return book"
+             * is clicked
+             * @param view (View) View according to the context of the environment
+             * @return null The method returns nothing but does display important
+             * messages for the user. While simultaneously making changes in the firebasedatabase
+             * The function primarily serves the important function to display the message to the user and
+             * scan the ISBN of the book entered and search through out the entire database.
+             */
             public void onClick(View view) {
 
                 if (borrowers.size() == 0) {
@@ -121,6 +137,11 @@ public class AcceptBook extends AppCompatActivity {
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
+            /** @param adapterView (AdapterView)
+             * @param view (View)
+             * @param i (int)
+             * @param l (long)
+             */
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 borrower = borrowers.get(i);
                 book = bookNames.get(i);
@@ -128,6 +149,9 @@ public class AcceptBook extends AppCompatActivity {
             }
 
             @Override
+            /**
+             * @param adapterView (AdapterView)
+             */
             public void onNothingSelected(AdapterView<?> adapterView) {
                 borrower = null;
                 book = null;
@@ -139,6 +163,11 @@ public class AcceptBook extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     @Override
+    /**
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
@@ -151,6 +180,10 @@ public class AcceptBook extends AppCompatActivity {
         }
     }
 
+    /**
+     *
+     * @param isbn
+     */
     public void checkFunc(final String isbn) {
         borrowers.clear();
         bookNames.clear();
@@ -159,6 +192,10 @@ public class AcceptBook extends AppCompatActivity {
         final CollectionReference userCollection = db.collection("Users/" + currentUser.getUsername() + "/MyBooks");
         userCollection.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
+            /**
+             * @param QuerySnapshot value
+             * @param FirebaseFirestoreException error
+             */
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 for (QueryDocumentSnapshot newBook : value) {
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, borrowers);
@@ -181,6 +218,9 @@ public class AcceptBook extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     */
     public void setSpinner() {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item, borrowers);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
