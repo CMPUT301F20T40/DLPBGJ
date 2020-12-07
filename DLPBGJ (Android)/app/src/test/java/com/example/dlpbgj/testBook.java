@@ -35,7 +35,7 @@ public class testBook {
             testBook.removeRequest("R5");
         });
         testBook.removeRequest("R4");
-        assertFalse(testBook.getRequests().contains("R4"));
+        assertFalse(testBook.getRequests().containsValue("R4"));
         assertEquals(3,testBook.getRequests().size());
         testBook.emptyRequests();
         assertEquals(0,testBook.getRequests().size());
